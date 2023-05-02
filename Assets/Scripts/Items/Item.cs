@@ -2,7 +2,6 @@
 
 namespace Items
 {
-    [CreateAssetMenu(fileName = "Item", menuName = "Game/new Item", order = 0)]
     public class Item : ScriptableObject, IName
     {
 #if UNITY_EDITOR
