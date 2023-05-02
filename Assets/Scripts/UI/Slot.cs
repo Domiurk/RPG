@@ -37,7 +37,7 @@ namespace UI
 
         public void SetItem(Item item)
         {
-            _item = Instantiate(item);
+            _item = item;
             UpdateReference();
         }
 

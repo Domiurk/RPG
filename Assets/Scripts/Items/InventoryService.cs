@@ -8,11 +8,12 @@ namespace Items
     public class InventoryService : MonoBehaviour
     {
         public static InventoryService Current { get; private set; }
-
+        
         public ItemDatabase ItemDatabase => _itemDatabase;
 
         [SerializeField] private ItemDatabase _itemDatabase;
-        [SerializeField] private List<Container> _containers;
+        
+        private List<Container> _containers;
 
         private void Awake()
         {
@@ -24,16 +25,22 @@ namespace Items
             _containers = new List<Container>(GameObject.FindObjectsByType<Container>(FindObjectsSortMode.None));
         }
 
-        public bool AddItemForWindow(string nameWindow, Item item)
+        public bool TryAdd(string nameWindow, Item item)
         {
             Item itemInstance = Instantiate(item);
 
-            foreach(Container container in _containers.Where(container => container.Name == nameWindow)){
-                container.TryAddItem(itemInstance);
-                return true;
-            }
-
-            return false;
+            return _containers.Where(container => container.Name == nameWindow)
+                              .Select(container => container.TryAddItem(itemInstance))
+                              .FirstOrDefault();
         }
+
+        public bool TryAdd(string nameWindow, string nameItem)
+        {
+            Item item = GetItem(nameItem);
+            return item != null && TryAdd(nameWindow, item);
+        }
+
+        private Item GetItem(string nameItem)
+            => Instantiate(_itemDatabase.Items.Find(item => item.Name == nameItem));
     }
 }
