@@ -50,7 +50,7 @@
      <Compile Include="Assets\Scripts\Triggers\Interactable.cs" />
      <Compile Include="Assets\Scripts\UI\Container.cs" />
      <Compile Include="Assets\Utilities\Runtime\EnumAttribute.cs" />
-     <Compile Include="Assets\Scripts\Player\PlayerInventory.cs" />
+     <Compile Include="Assets\Scripts\Player\EquipHandler.cs" />
      <Compile Include="Assets\Scripts\Items\Interfaces.cs" />
      <Compile Include="Assets\Scripts\Items\ItemOffset.cs" />
      <Folder Include="Assets" />

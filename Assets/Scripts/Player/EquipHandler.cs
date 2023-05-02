@@ -3,22 +3,21 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerInventory : MonoBehaviour
+    public class EquipHandler : MonoBehaviour
     {
         [SerializeField] private Transform _rightHand;
         [SerializeField] private Transform _leftHand;
-        [SerializeField] private Item _item;
 
         public void Equip(Item item)
         {
-            if(!InventoryService.Current.AddItemForWindow("Inventory", item))
-                return;
-            _item = Instantiate(item);
+            /*if(!InventoryService.Current.AddItemForWindow("Inventory", item))
+                return;*/
+            Item instantiate = Instantiate(item);
 
-            GameObject instance = Instantiate(_item.Prefab, Vector3.zero, Quaternion.Euler(Vector3.zero));
+            GameObject instance = Instantiate(instantiate.Prefab, Vector3.zero, Quaternion.Euler(Vector3.zero));
 
-            if((_rightHand != null || _leftHand != null) && _item.TypeEquip != BoneHandType.None){
-                switch(_item.TypeEquip){
+            if((_rightHand != null || _leftHand != null) && instantiate.TypeEquip != BoneHandType.None){
+                switch(instantiate.TypeEquip){
                     case BoneHandType.Right:
                         instance.transform.SetParent(_rightHand);
                         break;
@@ -30,9 +29,9 @@ namespace Player
                         break;
                 }
 
-                instance.transform.localPosition = _item.Offset.Position;
-                instance.transform.localRotation = Quaternion.Euler(_item.Offset.Rotation);
-                instance.transform.localScale = _item.Offset.Scale;
+                instance.transform.localPosition = instantiate.Offset.Position;
+                instance.transform.localRotation = Quaternion.Euler(instantiate.Offset.Rotation);
+                instance.transform.localScale = instantiate.Offset.Scale;
             }
         }
     }

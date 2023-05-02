@@ -6,29 +6,31 @@ namespace Triggers
 {
     public class ItemInteractable : Interactable
     {
+        [SerializeField] private string _nameWindow = "Inventory";
         [SerializeField] private Item _item;
-    
-        private PlayerInventory _inventory;
-
+        private EquipHandler _equipHandler;
+        
         protected override void Interact()
         {
-            if(_item != null && _inventory != null){
-                _inventory.Equip(_item);
+            if(_item != null && _equipHandler != null){
+                if(InventoryService.Current.TryAdd(_nameWindow,_item))
+                    Debug.Log($"You pickup {_item.Name}.");
+                _equipHandler.Equip(_item);
                 Destroy(gameObject);
             }
         }
 
         protected override void Enter(Collider other)
         {
-            var inventory = other.GetComponent<PlayerInventory>();
+            var inventory = other.GetComponent<EquipHandler>();
             if(inventory != null)
-                _inventory = inventory;
+                _equipHandler = inventory;
         }
 
         protected override void Exit(Collider other)
         {
-            if(other.GetComponent<PlayerInventory>() && _inventory != null)
-                _inventory = null;
+            if(other.GetComponent<EquipHandler>() && _equipHandler != null)
+                _equipHandler = null;
         }
     }
 }

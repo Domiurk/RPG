@@ -25,8 +25,7 @@ namespace UI
                 return false;
 
             foreach(Slot slot in _slots.Where(slot => slot.IsEmpty)){
-                AddItem(slot, item);
-                return true;
+                return AddItem(slot, item);
             }
 
             return false;
@@ -36,12 +35,12 @@ namespace UI
         {
             if(!CanDragOut)
                 return;
-        
         }
-    
-        private void AddItem(Slot slot, Item item)
+
+        private bool AddItem(Slot slot, Item item)
         {
             slot.SetItem(item);
+            return true;
         }
     }
 }

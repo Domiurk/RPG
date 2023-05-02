@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Utilities.Runtime;
 
 namespace Triggers
@@ -10,6 +11,14 @@ namespace Triggers
         [SerializeField] private float _radius = 0.5f;
 
         private bool isRange;
+
+        protected virtual void Init()
+        { }
+
+        private void Awake()
+        {
+            Init();
+        }
 
         private void Start()
         {
@@ -31,8 +40,11 @@ namespace Triggers
             Debug.Log("Interact");
         }
 
-        protected virtual void Enter(Collider other){ }
-        protected virtual void Exit(Collider other){ }
+        protected virtual void Enter(Collider other)
+        { }
+
+        protected virtual void Exit(Collider other)
+        { }
 
         private void OnTriggerEnter(Collider other)
         {
