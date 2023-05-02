@@ -7,8 +7,8 @@ namespace Items
     public class ItemDatabase : ScriptableObject
     {
 #if UNITY_EDITOR
-        public static string PropNameItems => nameof(_items);
-        public static string PropNameNames => nameof(_namesParent);
+        public static string PropItems => nameof(_items);
+        public static string PropNames => nameof(_namesParent);
 #endif
 
         public List<Item> Items => _items;

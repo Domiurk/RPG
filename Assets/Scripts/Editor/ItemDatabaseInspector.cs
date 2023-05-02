@@ -17,8 +17,8 @@ namespace Editor
         private void OnEnable()
         {
             _script = serializedObject.FindProperty("m_Script");
-            _items = serializedObject.FindProperty(ItemDatabase.PropNameItems);
-            _names = serializedObject.FindProperty(ItemDatabase.PropNameNames);
+            _items = serializedObject.FindProperty(ItemDatabase.PropItems);
+            _names = serializedObject.FindProperty(ItemDatabase.PropNames);
             CreateList();
         }
 
@@ -42,46 +42,28 @@ namespace Editor
                     EditorGUI.LabelField(rect, nameList, style);
                 },
                 drawElementCallback = DrawElementCallback,
-                onAddCallback = OnAddCallback,
-                onRemoveCallback = list => { DeleteAsset(list.index); }
+                onRemoveCallback = list => { DeleteAsset(list.index); },
+                onAddDropdownCallback = OnAddDropdownCallback,
             };
         }
 
-        private void OnAddCallback(ReorderableList list)
+        private void OnAddDropdownCallback(Rect buttonRect, ReorderableList list)
         {
-            _items.arraySize++;
-            _items.GetArrayElementAtIndex(_items.arraySize - 1).objectReferenceValue = CreateAsset();
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(new GUIContent("Static Item"), false, CreateElement<StaticItem>);
+            menu.AddItem(new GUIContent("Usable Item"), false, CreateElement<UsableItem>);
+            menu.AddItem(new GUIContent("Equip Item"), false, CreateElement<EquipItem>);
+            menu.ShowAsContext();
         }
-
-        private Item CreateAsset()
-        {
-            var instance = CreateInstance<Item>();
-            instance.name = "new " + nameof(Item);
-            AssetDatabase.AddObjectToAsset(instance, target);
-            AssetDatabase.SaveAssets();
-            return instance;
-        }
-
-        private void DeleteAsset(int index)
-        {
-            Object obj = _items.GetArrayElementAtIndex(index).objectReferenceValue;
-            _items.GetArrayElementAtIndex(index).objectReferenceValue = null;
-            _items.DeleteArrayElementAtIndex(index);
-            AssetDatabase.RemoveObjectFromAsset(obj);
-            Object.DestroyImmediate(obj, true);
-            AssetDatabase.SaveAssets();
-        }
-
-        private bool _foldout;
 
         private void DrawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
         {
             SerializedObject item = new SerializedObject(_items.GetArrayElementAtIndex(index).objectReferenceValue);
             SerializedProperty nameItem = item.FindProperty(Item.PropName);
             SerializedProperty iconItem = item.FindProperty(Item.PropIcon);
-            SerializedProperty prefabItem = item.FindProperty(Item.PropPrefab);
-            SerializedProperty offsetItem = item.FindProperty(Item.PropOffset);
-            SerializedProperty typeEquipItem = item.FindProperty(Item.PropTypeEquip);
+            SerializedProperty prefabItem = item.FindProperty(StaticItem.PropPrefab);
+            SerializedProperty offsetItem = item.FindProperty(EquipItem.PropOffset);
+            SerializedProperty typeEquipItem = item.FindProperty(EquipItem.PropTypeEquip);
 
             item.Update();
 
@@ -93,21 +75,46 @@ namespace Editor
             EditorGUI.LabelField(propertyRect,
                                  string.IsNullOrEmpty(nameItem.stringValue) ? "new Item" : nameItem.stringValue);
 
-            _foldout = EditorGUI.Foldout(toggleRect, _foldout, "");
-
-            if(_foldout && isActive && _reorderableList.index == index){
+            if(_reorderableList.IsSelected(index)){
                 EditorGUILayout.PropertyField(nameItem);
                 EditorGUILayout.PropertyField(iconItem);
-                EditorGUILayout.PropertyField(prefabItem);
-                EditorGUILayout.PropertyField(offsetItem);
-                EditorGUILayout.PropertyField(typeEquipItem);
-            }
 
+                if(prefabItem != null)
+                    EditorGUILayout.PropertyField(prefabItem);
+
+                if(offsetItem != null && typeEquipItem != null){
+                    EditorGUILayout.PropertyField(offsetItem);
+                    EditorGUILayout.PropertyField(typeEquipItem);
+                }
+            }
             if(item.ApplyModifiedProperties() && item.targetObject.name != nameItem.stringValue &&
                !string.IsNullOrEmpty(nameItem.stringValue)){
                 item.targetObject.name = nameItem.stringValue;
                 AssetDatabase.SaveAssets();
             }
+
+            // item.ApplyModifiedProperties();
+        }
+
+        private void CreateElement<T>() where T : Item, IName
+        {
+            Item instance = ScriptableObject.CreateInstance<T>();
+            instance.name = "new Item";
+            AssetDatabase.AddObjectToAsset(instance, target);
+            AssetDatabase.SaveAssets();
+            _items.arraySize++;
+            _items.GetArrayElementAtIndex(_items.arraySize - 1).objectReferenceValue = instance;
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DeleteAsset(int index)
+        {
+            Object obj = _items.GetArrayElementAtIndex(index).objectReferenceValue;
+            AssetDatabase.RemoveObjectFromAsset(obj);
+            Object.DestroyImmediate(obj, true);
+            _items.GetArrayElementAtIndex(index).objectReferenceValue = null;
+            _items.DeleteArrayElementAtIndex(index);
+            AssetDatabase.SaveAssets();
         }
 
         private void DrawScript()
