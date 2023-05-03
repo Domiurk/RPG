@@ -9,11 +9,11 @@ namespace Runtime.Items
     public class InventoryService : MonoBehaviour
     {
         public static InventoryService Current { get; private set; }
-        
+
         public ItemDatabase ItemDatabase => _itemDatabase;
 
         [SerializeField] private ItemDatabase _itemDatabase;
-        
+
         private List<ItemContainer> _containers;
 
         private void Awake()
@@ -23,7 +23,8 @@ namespace Runtime.Items
             else
                 Current = this;
 
-            _containers = new List<ItemContainer>(GameObject.FindObjectsByType<ItemContainer>(FindObjectsSortMode.None));
+            _containers =
+                new List<ItemContainer>(GameObject.FindObjectsByType<ItemContainer>(FindObjectsSortMode.None));
         }
 
         public bool TryAdd(string nameWindow, Item item)
@@ -41,7 +42,7 @@ namespace Runtime.Items
             return item != null && TryAdd(nameWindow, item);
         }
 
-        private Item GetItem(string nameItem)
-            => Instantiate(_itemDatabase.Items.Find(item => item.Name == nameItem));
+        public Item GetItem(string nameItem)
+            => _itemDatabase.Items.Find(item => item.Name == nameItem);
     }
 }

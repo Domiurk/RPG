@@ -1,4 +1,5 @@
 ﻿using Player;
+using Runtime.Player;
 using UnityEngine;
 
 namespace Items
@@ -12,9 +13,10 @@ namespace Items
         
         [SerializeField] private ItemOffset _offset;
         [SerializeField] private BoneHandType _typeEquip = BoneHandType.None;
+        [SerializeField] private string _nameBone;
         
         public ItemOffset Offset => _offset;
         public BoneHandType TypeEquip => _typeEquip;
-        
+        public string NameBone => _nameBone;
     }
 }

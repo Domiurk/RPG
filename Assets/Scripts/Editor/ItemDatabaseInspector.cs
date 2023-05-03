@@ -1,4 +1,5 @@
 ﻿using Items;
+using Runtime.Items;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace Editor
         {
             _script = serializedObject.FindProperty("m_Script");
             _items = serializedObject.FindProperty(ItemDatabase.PropItems);
-            _names = serializedObject.FindProperty(ItemDatabase.PropNames);
+            _names = serializedObject.FindProperty(ItemDatabase.PropBones);
             CreateList();
         }
 
