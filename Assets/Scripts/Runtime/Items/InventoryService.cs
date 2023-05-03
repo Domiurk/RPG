@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UI;
+using Items;
+using Runtime.UI_Components;
 using UnityEngine;
 
-namespace Items
+namespace Runtime.Items
 {
     public class InventoryService : MonoBehaviour
     {
@@ -13,7 +14,7 @@ namespace Items
 
         [SerializeField] private ItemDatabase _itemDatabase;
         
-        private List<Container> _containers;
+        private List<ItemContainer> _containers;
 
         private void Awake()
         {
@@ -22,7 +23,7 @@ namespace Items
             else
                 Current = this;
 
-            _containers = new List<Container>(GameObject.FindObjectsByType<Container>(FindObjectsSortMode.None));
+            _containers = new List<ItemContainer>(GameObject.FindObjectsByType<ItemContainer>(FindObjectsSortMode.None));
         }
 
         public bool TryAdd(string nameWindow, Item item)

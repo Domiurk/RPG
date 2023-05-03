@@ -1,23 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Items;
 using UnityEngine;
 
-namespace UI
+namespace Runtime.UI_Components
 {
-    public class Container : MonoBehaviour, IName
+    public class ItemContainer : BaseContainer
     {
-        public string Name => _name;
         public bool CanDragIn => _canDragIn;
         public bool CanDragOut => _canDragOut;
-
-        [SerializeField] private string _name;
+        
         [SerializeField] private List<Slot> _slots;
         [SerializeField] private bool _canDragIn;
         [SerializeField] private bool _canDragOut;
 
-        private void Start()
-            => _slots = new List<Slot>(GetComponentsInChildren<Slot>());
+        private GameObject _player;
+
+        private void Awake()
+        {
+            _slots = new List<Slot>(GetComponentsInChildren<Slot>());
+            _player = GameObject.FindWithTag("Player");
+        }
 
         public bool TryAddItem(Item item)
         {
@@ -31,10 +35,11 @@ namespace UI
             return false;
         }
 
-        public void Drop()
+        public void Drop(Slot slot)
         {
             if(!CanDragOut)
                 return;
+            GameObject prefab = Instantiate(slot.Drop(out Item item), transform.position, Quaternion.identity);
         }
 
         private bool AddItem(Slot slot, Item item)

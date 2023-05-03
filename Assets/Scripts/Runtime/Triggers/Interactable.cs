@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Utilities.Runtime;
 
-namespace Triggers
+namespace Runtime.Triggers
 {
     public class Interactable : MonoBehaviour
     {

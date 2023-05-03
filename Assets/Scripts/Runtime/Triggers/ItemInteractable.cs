@@ -1,8 +1,9 @@
 ﻿using Items;
 using Player;
+using Runtime.Items;
 using UnityEngine;
 
-namespace Triggers
+namespace Runtime.Triggers
 {
     public class ItemInteractable : Interactable
     {
@@ -32,5 +33,6 @@ namespace Triggers
             if(other.GetComponent<EquipHandler>() && _equipHandler != null)
                 _equipHandler = null;
         }
+
     }
 }
