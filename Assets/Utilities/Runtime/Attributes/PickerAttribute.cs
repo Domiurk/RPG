@@ -4,14 +4,14 @@ namespace Utilities.Runtime
 {
     public class PickerAttribute : PropertyAttribute
     {
-        public bool Utilities;
+        public bool Utility;
 
         public PickerAttribute() : this(true)
         { }
 
-        public PickerAttribute(bool utilities)
+        public PickerAttribute(bool utility)
         {
-            Utilities = utilities;
+            Utility = utility;
         }
     }
 }

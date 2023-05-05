@@ -2,13 +2,14 @@
 using Runtime.Items;
 using Runtime.Player;
 using UnityEngine;
+using Utilities.Runtime.Attributes;
 
 namespace Runtime.Triggers
 {
     public class ItemInteractable : Interactable
     {
         [SerializeField] private string _nameWindow = "Inventory";
-        [SerializeField] private StaticItem _item;
+        [SerializeField, ItemPicker] private StaticItem _item;
         private EquipHandler _equipHandler;
 
         public void Init(StaticItem item, string nameWindow = "Inventory", KeyCode keyInteract = KeyCode.E)

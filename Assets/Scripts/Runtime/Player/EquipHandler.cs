@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Items;
+﻿using Items;
 using UnityEngine;
 
 namespace Runtime.Player
 {
     public class EquipHandler : MonoBehaviour
     {
-        [SerializeField] private List<Bone> _bones;
+        // [SerializeField] private List<Bone> _bones;
         
         [SerializeField] private Transform _rightHand;
         [SerializeField] private Transform _leftHand;
@@ -42,11 +41,11 @@ namespace Runtime.Player
 
         public void EquipTest(EquipItem item)
         {
-            Bone bone = _bones.Find(bone => bone.Name == item.NameBone);
+            // Bone bone = _bones.Find(bone => bone.Name == item.NameBone);
 
-            if(bone.IsEmpty){
-                bone.SetItem(item);
-            }
+            // if(bone.IsEmpty){
+                // bone.SetItem(item);
+            // }
         }
 
         public void UnEquip(/*EquipItem item*/)
@@ -56,6 +55,7 @@ namespace Runtime.Player
         }
     }
 
+    /*
     [System.Serializable]
     public class Bone : IName
     {
@@ -84,6 +84,7 @@ namespace Runtime.Player
             IsEmpty = true;
         }
     }
+    */
     
     public enum BoneHandType
     {

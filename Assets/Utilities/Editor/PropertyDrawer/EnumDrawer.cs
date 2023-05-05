@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Utilities.Runtime;
@@ -7,7 +6,7 @@ using Utilities.Runtime;
 namespace Utilities.Editor
 {
     [CustomPropertyDrawer(typeof(EnumAttribute))]
-    public class EnumDrawer : PropertyDrawer
+    public class EnumDrawer : UnityEditor.PropertyDrawer
     {
         private SerializedProperty _property;
 
@@ -19,16 +18,15 @@ namespace Utilities.Editor
 
             if(property.propertyType != SerializedPropertyType.Enum){
                 position.height *= 1.5f;
-                EditorGUI.HelpBox(position,$"Sorry but {property} field is not enum", MessageType.Warning);
+                EditorGUI.HelpBox(position, $"Sorry but {property} field is not enum", MessageType.Warning);
                 return;
             }
-            
+
             Type type = ((EnumAttribute)attribute).Type;
             EditorGUI.BeginProperty(position, label, property);
 
-            Rect labelPosition = new Rect(position.x, position.y, position.width / 2, position.height); 
-            EditorGUI.LabelField(labelPosition, label);
-            Rect buttonPosition = new Rect(labelPosition.x + labelPosition.width, labelPosition.y, position.width - labelPosition.width, position.height);
+            position = EditorGUI.PrefixLabel(position, label);
+            Rect buttonPosition = position;
 
             if(GUI.Button(buttonPosition, property.enumDisplayNames[property.enumValueIndex], GUI.skin.textField))
                 EnumWindow.Show(buttonPosition, type, ChangeProperty, property);

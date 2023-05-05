@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using Items;
-using Player;
-using Runtime.Player;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Runtime.Items
 {
@@ -16,9 +13,9 @@ namespace Runtime.Items
 #endif
 
         public List<Item> Items => _items;
-        public List<string> Bones => _bones;
+        public List<Bone> Bones => _bones;
 
         [SerializeField] private List<Item> _items;
-        [SerializeField] private List<string> _bones;
+        [SerializeField] private List<Bone> _bones;
     }
 }
