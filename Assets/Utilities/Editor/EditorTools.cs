@@ -64,8 +64,6 @@ namespace Utilities.Editor
         {
             Object obj = list.GetArrayElementAtIndex(index).objectReferenceValue;
             list.DeleteArrayElementAtIndex(index);
-            // list.arraySize--;
-            // list.GetArrayElementAtIndex(index).objectReferenceValue = null;
             AssetDatabase.RemoveObjectFromAsset(obj);
             Object.DestroyImmediate(obj, true);
             AssetDatabase.SaveAssets();

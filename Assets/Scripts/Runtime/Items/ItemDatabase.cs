@@ -17,5 +17,11 @@ namespace Runtime.Items
 
         [SerializeField] private List<Item> _items;
         [SerializeField] private List<Bone> _bones;
+
+        public Bone GetBone(IName nameBone)
+            => _bones.Find(b => b.Name == nameBone.Name);
+
+        public int GetBoneIndex(Bone bone)
+            => _bones.IndexOf(bone);
     }
 }

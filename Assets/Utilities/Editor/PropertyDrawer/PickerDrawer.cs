@@ -24,7 +24,7 @@ namespace Utilities.Editor.PropertyDrawer
         protected virtual void DoSelection(Rect buttonRect, SerializedProperty property, T current)
         {
             GUIStyle buttonStyle = EditorStyles.objectField;
-            GUIContent buttonContent = new GUIContent(current != null ? current.Name : "NULL");
+            GUIContent buttonContent = new GUIContent(current != null ? current.Name : "Null Element");
 
             if(GUI.Button(buttonRect, buttonContent, buttonStyle))
                 ObjectPickerWindow.ShowWindow(buttonRect, typeof(ItemDatabase), BuildSelectableObjects(),

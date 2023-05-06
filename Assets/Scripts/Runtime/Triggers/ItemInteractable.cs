@@ -10,6 +10,7 @@ namespace Runtime.Triggers
     {
         [SerializeField] private string _nameWindow = "Inventory";
         [SerializeField, ItemPicker] private StaticItem _item;
+        [SerializeField] private MonoBehaviour _behaviour;
         private EquipHandler _equipHandler;
 
         public void Init(StaticItem item, string nameWindow = "Inventory", KeyCode keyInteract = KeyCode.E)
@@ -24,9 +25,13 @@ namespace Runtime.Triggers
             if(_item != null && _equipHandler != null){
                 if(InventoryService.Current.TryAdd(_nameWindow, _item))
                     Debug.Log($"You pickup {_item.Name}.");
-                if(_item is EquipItem equip)
-                    _equipHandler.Equip(equip);
-                Destroy(gameObject);
+
+                if(_item is EquipItem equip && _equipHandler.EquipTest2(gameObject.transform,equip)){
+                    this.enabled = false;
+                    GetComponent<Rigidbody>().isKinematic = true;
+                }
+                    // _equipHandler.Equip(equip);
+                // Destroy(gameObject);
             }
         }
 

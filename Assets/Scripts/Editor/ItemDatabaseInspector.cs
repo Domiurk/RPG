@@ -38,11 +38,7 @@ namespace Editor
 
             DrawScript();
 
-            EditorGUILayout.PropertyField(_items);
             _itemsList.DoLayoutList();
-
-            EditorGUILayout.PropertyField(_bones);
-            EditorGUILayout.PrefixLabel(_bones.arraySize.ToString(), GUI.skin.box);
             _bonesList.DoLayoutList();
         }
 
@@ -119,8 +115,10 @@ namespace Editor
 
             SerializedObject bone = new SerializedObject(_bones.GetArrayElementAtIndex(index).objectReferenceValue);
             SerializedProperty nameBone = bone.FindProperty(Bone.PropName);
+            SerializedProperty indexBone = bone.FindProperty(Bone.PropIndex);
             bone.Update();
             EditorGUI.PropertyField(rect, nameBone);
+            indexBone.intValue = index;
             if(bone.ApplyModifiedProperties() && bone.targetObject.name != nameBone.stringValue &&
                !string.IsNullOrEmpty(nameBone.stringValue)){
                 bone.targetObject.name = $"Bone {nameBone.stringValue}";

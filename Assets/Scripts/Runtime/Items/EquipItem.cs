@@ -1,9 +1,9 @@
-﻿using Player;
+﻿using Items;
 using Runtime.Player;
 using UnityEngine;
 using Utilities.Runtime;
 
-namespace Items
+namespace Runtime.Items
 {
     public class EquipItem : UsableItem
     {
@@ -11,13 +11,12 @@ namespace Items
         public static string PropTypeEquip => nameof(_typeEquip);
         public static string PropOffset => nameof(_offset);
 #endif
-        
-        [SerializeField] private ItemOffset _offset;
-        [SerializeField] private BoneHandType _typeEquip = BoneHandType.None;
-        [SerializeField, BonePicker] private string _nameBone;
-        
         public ItemOffset Offset => _offset;
         public BoneHandType TypeEquip => _typeEquip;
-        public string NameBone => _nameBone;
+        public Bone Bone => _bone;
+
+        [SerializeField] private ItemOffset _offset;
+        [SerializeField] private BoneHandType _typeEquip = BoneHandType.None;
+        [SerializeField, BonePicker] private Bone _bone;
     }
 }
