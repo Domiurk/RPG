@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
-using Utilities.Runtime;
+using Utilities.Runtime.Attributes;
 
-namespace Utilities.Editor
+namespace Utilities.Editor.PropertyDrawer
 {
     [CustomPropertyDrawer(typeof(EnumAttribute))]
     public class EnumDrawer : UnityEditor.PropertyDrawer
@@ -22,7 +22,7 @@ namespace Utilities.Editor
                 return;
             }
 
-            Type type = ((EnumAttribute)attribute).Type;
+            Type type = fieldInfo.FieldType;
             EditorGUI.BeginProperty(position, label, property);
 
             position = EditorGUI.PrefixLabel(position, label);

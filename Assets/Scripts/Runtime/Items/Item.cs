@@ -1,22 +1,16 @@
 ﻿using UnityEngine;
 
-namespace Items
+namespace Runtime.Items
 {
-    public class Item : ScriptableObject, IName
+    [CreateAssetMenu(fileName = "Item", menuName = "Game/Item", order = 0)]
+    public class Item : ScriptableObject
     {
-#if UNITY_EDITOR
-        public static string PropName => nameof(_name);
-        public static string PropIcon => nameof(_icon);
-#endif
+        public string Name => _name;
+        public string Description => _description;
+        public GameObject Prefab => _prefab;
 
         [SerializeField] private string _name;
-        [SerializeField] private Sprite _icon;
-        // [SerializeField] private ItemOffset _offset;
-        // [SerializeField] private BoneHandType _typeEquip = BoneHandType.None;
-
-        public string Name => _name;
-        public Sprite Icon => _icon;
-        // public ItemOffset Offset => _offset;
-        // public BoneHandType TypeEquip => _typeEquip;
+        [SerializeField] private string _description;
+        [SerializeField] private GameObject _prefab;
     }
 }
