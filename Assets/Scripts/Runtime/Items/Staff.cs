@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using Utilities.Runtime.Attributes;
+﻿using Runtime.Player;
+using UnityEngine;
 
 namespace Runtime.Items
 {
@@ -11,13 +11,18 @@ namespace Runtime.Items
         [SerializeField] private Item _itemData;
         [SerializeField] private float _damage;
         [SerializeField] private Projectile _projective;
-        [SerializeField, Enum] private KeyCode _activeKey;
         [SerializeField] private Transform _startPoint;
         [SerializeField] private float _speedProjective = 10;
 
-        private void Update()
+        private void Start()
         {
-            if(Input.GetKeyDown(_activeKey) && _projective != null && _startPoint != null){
+            InputManager.InputController.Mover.Use.performed += _ => { Shoot();};
+        }
+
+        
+        private void Shoot()
+        {
+            if(_projective != null && _startPoint != null){
                 Projectile projectile = Instantiate(_projective, _startPoint.position,Quaternion.identity);
                 projectile.StartActive(this, _speedProjective);
             }

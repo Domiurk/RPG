@@ -7,41 +7,45 @@ namespace Runtime.Items
     public class Projectile : MonoBehaviour
     {
         [SerializeField] private Vector3 _direction = Vector3.forward;
-        [SerializeField] private float _speedProjectile = 500;
-        [SerializeField] private LayerMask _layer;
+        [SerializeField] private LayerMask _ignoreLayer;
         [SerializeField] private float _timer = 10;
+        [SerializeField] private bool _destroyWhenTriggerEnter = true;
+        [SerializeField] private bool _destroyWhenTimer = true;
 
         private Rigidbody _rigidbody;
-        private float speedProjectile;
+        private float _speedProjectile;
         private IDamage _damage;
 
-        public void StartActive(IDamage damage, float speedProjectile = 10)
+        private IEnumerator Start()
         {
-            _rigidbody = GetComponent<Rigidbody>();
-            _damage = damage;
-            this.speedProjectile = speedProjectile;
-            StartCoroutine(Timer());
-        }
-
-        private void FixedUpdate()
-            => _rigidbody.AddForce(_direction * speedProjectile, ForceMode.Impulse);
-
-        private void OnTriggerEnter(Collider other)
-        {
-            other.GetComponent<ITakeDamage>()?.TakeDamage(_damage);
-            if(other.gameObject.layer == _layer)
+            yield return new WaitForSeconds(_timer);
+            if(_destroyWhenTimer)
                 Destroy(gameObject);
         }
 
-        private IEnumerator Timer()
+        public void StartActive(IDamage damage, float speedProjectile)
         {
+            _rigidbody = GetComponent<Rigidbody>();
+            _damage = damage;
+            _speedProjectile = speedProjectile;
+            _rigidbody.velocity = _direction * _speedProjectile;
+        }
 
-            while(_timer > 0){
-                _timer --;
-                yield return new WaitForSeconds(1);
+        /*
+        private void FixedUpdate()
+            => _rigidbody.AddForce(_direction * _speedProjectile, ForceMode.Impulse);
+            */
+
+        private void OnTriggerEnter(Collider other)
+        {
+            ITakeDamage takeDamage = other.GetComponent<ITakeDamage>();
+
+            if(other.gameObject.layer != _ignoreLayer && takeDamage != null){
+                takeDamage.TakeDamage(_damage);
             }
 
-            Destroy(gameObject);
+            if(_destroyWhenTriggerEnter)
+                Destroy(gameObject);
         }
     }
 }
