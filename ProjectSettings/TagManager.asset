@@ -16,6 +16,7 @@ TagManager:
   - Wood (Static)
   - Dirt (Static)
   - Wood
+  - Collide
   layers:
   - Default
   - TransparentFX
@@ -26,13 +27,13 @@ TagManager:
   - 
   - 
   - Wall
-  - First Person View
   - Character
-  - Post Processing
-  - Post Processing Weapon
-  - Post Processing Scope
-  - Invisible Wall
-  - Projectile
+  - Ground
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

@@ -113,6 +113,7 @@
 -define:ENABLE_TILEMAP
 -define:ENABLE_TIMELINE
 -define:ENABLE_INPUT_SYSTEM
+-define:ENABLE_LEGACY_INPUT_MANAGER
 -define:TEXTCORE_FONT_ENGINE_1_5_OR_NEWER
 -define:CROSS_PLATFORM_INPUT
 -define:UNITY_POST_PROCESSING_STACK_V2
@@ -337,6 +338,8 @@
 -r:"D:/Programs/Unity/2021.3.23f1/Editor/Data/PlaybackEngines/AndroidPlayer/Unity.Android.Gradle.dll"
 -r:"D:/Programs/Unity/2021.3.23f1/Editor/Data/PlaybackEngines/AndroidPlayer/Unity.Android.Types.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Analytics.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aEDbg.dag/Extensions.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aEDbg.dag/ExtensionsEditor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.2D.Sprite.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.2D.Tilemap.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.Analytics.DataPrivacy.ref.dll"
@@ -429,6 +432,12 @@
 "Assets/Downloads/Infima Games/Tools/Looping/Loops.cs"
 "Assets/Downloads/Infima Games/Tools/Looping/LoopUtilities.cs"
 "Assets/Downloads/Infima Games/Tools/Looping/RLoops.cs"
+"Assets/Downloads/ModularFirstPersonController/FirstPersonController/FirstPersonController.cs"
+"Assets/Downloads/Samples/Input System/1.5.1/Simple Demo/SimpleController_UsingActionAsset.cs"
+"Assets/Downloads/Samples/Input System/1.5.1/Simple Demo/SimpleController_UsingActions.cs"
+"Assets/Downloads/Samples/Input System/1.5.1/Simple Demo/SimpleController_UsingPlayerInput.cs"
+"Assets/Downloads/Samples/Input System/1.5.1/Simple Demo/SimpleController_UsingState.cs"
+"Assets/Downloads/Samples/Input System/1.5.1/Simple Demo/SimpleControls.cs"
 "Assets/Downloads/UnityTechnologies/EffectExamples/Shared/Scripts/DecalDestroyer.cs"
 "Assets/Downloads/UnityTechnologies/EffectExamples/Shared/Scripts/ExtinguishableFire.cs"
 "Assets/Downloads/UnityTechnologies/EffectExamples/Shared/Scripts/GunAim.cs"
@@ -441,11 +450,14 @@
 "Assets/Scripts/Runtime/Items/Item.cs"
 "Assets/Scripts/Runtime/Items/Projectile.cs"
 "Assets/Scripts/Runtime/Items/Staff.cs"
-"Assets/Scripts/Runtime/Items/StaffV2.cs"
+"Assets/Scripts/Runtime/Player/CameraController.cs"
+"Assets/Scripts/Runtime/Player/CharacterController.cs"
 "Assets/Scripts/Runtime/Player/Input.cs"
+"Assets/Scripts/Runtime/Player/InputCharacter.cs"
 "Assets/Scripts/Runtime/Player/InputManager.cs"
-"Assets/Scripts/Runtime/Player/Move.cs"
+"Assets/Scripts/Runtime/Player/Interfaces.cs"
 "Assets/Scripts/Runtime/Player/Wall.cs"
+"Assets/Scripts/Runtime/TestUI/UIInterface.cs"
 "Assets/Utilities/Runtime/Attributes/EnumAttribute.cs"
 "Assets/Utilities/Runtime/Extensions.cs"
 -langversion:9.0

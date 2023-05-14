@@ -7,13 +7,12 @@ namespace Runtime.Items
     public class Projectile : MonoBehaviour
     {
         [SerializeField] private Vector3 _direction = Vector3.forward;
-        [SerializeField] private LayerMask _ignoreLayer;
         [SerializeField] private float _timer = 10;
         [SerializeField] private bool _destroyWhenTriggerEnter = true;
         [SerializeField] private bool _destroyWhenTimer = true;
+        // [SerializeField] private float _multiplySpeed = 1;
 
         private Rigidbody _rigidbody;
-        private float _speedProjectile;
         private IDamage _damage;
 
         private IEnumerator Start()
@@ -27,25 +26,18 @@ namespace Runtime.Items
         {
             _rigidbody = GetComponent<Rigidbody>();
             _damage = damage;
-            _speedProjectile = speedProjectile;
-            _rigidbody.velocity = _direction * _speedProjectile;
+            _rigidbody.velocity = transform.forward * speedProjectile;
         }
 
-        /*
-        private void FixedUpdate()
-            => _rigidbody.AddForce(_direction * _speedProjectile, ForceMode.Impulse);
-            */
-
-        private void OnTriggerEnter(Collider other)
+        private void OnCollisionEnter(Collision other)
         {
-            ITakeDamage takeDamage = other.GetComponent<ITakeDamage>();
+            var obj = other.gameObject.GetComponent<ITakeDamage>();
 
-            if(other.gameObject.layer != _ignoreLayer && takeDamage != null){
-                takeDamage.TakeDamage(_damage);
+            if(obj != null){
+                obj.TakeDamage(_damage);
+                if(_destroyWhenTriggerEnter)
+                    Destroy(gameObject);
             }
-
-            if(_destroyWhenTriggerEnter)
-                Destroy(gameObject);
         }
     }
 }

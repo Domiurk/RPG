@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\Bin\Debug\Assembly-CSharp\</OutputPath>
-    <DefineConstants>UNITY_2021_3_23;UNITY_2021_3;UNITY_2021;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;PLATFORM_STANDALONE;TEXTCORE_1_0_OR_NEWER;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_NVIDIA;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;CROSS_PLATFORM_INPUT;UNITY_POST_PROCESSING_STACK_V2;ODIN_INSPECTOR;ODIN_INSPECTOR_3;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>UNITY_2021_3_23;UNITY_2021_3;UNITY_2021;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;PLATFORM_STANDALONE;TEXTCORE_1_0_OR_NEWER;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_NVIDIA;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;CROSS_PLATFORM_INPUT;UNITY_POST_PROCESSING_STACK_V2;ODIN_INSPECTOR;ODIN_INSPECTOR_3;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169,0649</NoWarn>
@@ -42,31 +42,35 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\DebrisScript.cs" />
+     <Compile Include="Assets\Downloads\Samples\Input System\1.5.1\Simple Demo\SimpleController_UsingActions.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\Muzzle.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Character\CharacterKinematics.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\ExplosiveBarrelScript.cs" />
+     <Compile Include="Assets\Scripts\Runtime\Player\Input.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Animation\CharacterAnimationEventHandler.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Animation\WeaponAnimationEventHandler.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\WeaponAttachmentManagerBehaviour.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\CasingScript.cs" />
      <Compile Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Scripts\DecalDestroyer.cs" />
-     <Compile Include="Assets\Scripts\Runtime\Items\Staff.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\WeaponBehaviour.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Character\InventoryBehaviour.cs" />
-     <Compile Include="Assets\Scripts\Runtime\Player\Move.cs" />
+     <Compile Include="Assets\Scripts\Runtime\Player\CharacterController.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Services\IAudioManagerService.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Animation\PlaySoundCharacterBehaviour.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Character\CharacterBehaviour.cs" />
-     <Compile Include="Assets\Scripts\Runtime\Items\StaffV2.cs" />
+     <Compile Include="Assets\Scripts\Runtime\Items\Staff.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\Projectile.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Utilities\TimeHandler.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\TextTutorial.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\ImageWeapon.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\ProjectileScript.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\ScopeBehaviour.cs" />
+     <Compile Include="Assets\Downloads\ModularFirstPersonController\FirstPersonController\FirstPersonController.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\Weapon.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Tools\Log.cs" />
+     <Compile Include="Assets\Scripts\Runtime\Player\CameraController.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Tools\Looping\LoopUtilities.cs" />
+     <Compile Include="Assets\Scripts\Runtime\Player\InputManager.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\GasTankScript.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Services\Bootstraper.cs" />
      <Compile Include="Assets\Scripts\Runtime\Interfaces.cs" />
@@ -74,6 +78,8 @@
      <Compile Include="Assets\Scripts\Runtime\Items\Projectile.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Tools\Looping\RLoops.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Services\ServiceLocator.cs" />
+     <Compile Include="Assets\Downloads\Samples\Input System\1.5.1\Simple Demo\SimpleControls.cs" />
+     <Compile Include="Assets\Scripts\Runtime\Player\InputCharacter.cs" />
      <Compile Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Scripts\ExtinguishableFire.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Camera\CameraLook.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Services\IGameModeService.cs" />
@@ -81,10 +87,12 @@
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\TargetScript.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Animation\AnimationReceiver.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Character\Character.cs" />
+     <Compile Include="Assets\Scripts\Runtime\Player\Interfaces.cs" />
      <Compile Include="Assets\Downloads\UnityTechnologies\EffectExamples\TutorialInfo\Scripts\Readme.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\ElementText.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\ExplosionScript.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\Crosshair.cs" />
+     <Compile Include="Assets\Downloads\Samples\Input System\1.5.1\Simple Demo\SimpleController_UsingActionAsset.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\UtilitiesWeapons.cs" />
      <Compile Include="Assets\Scripts\Runtime\Player\Wall.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\ImpactScript.cs" />
@@ -92,6 +100,8 @@
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\MagazineBehaviour.cs" />
      <Compile Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Scripts\ParticleExamples.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\Scope.cs" />
+     <Compile Include="Assets\Scripts\Runtime\TestUI\UIInterface.cs" />
+     <Compile Include="Assets\Downloads\Samples\Input System\1.5.1\Simple Demo\SimpleController_UsingPlayerInput.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Character\Movement.cs" />
      <Compile Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Scripts\ParticleCollision.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\TextMouseLock.cs" />
@@ -110,6 +120,7 @@
      <Compile Include="Assets\Downloads\Infima Games\Tools\Looping\Loops.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\TextAmmunitionTotal.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons\Magazine.cs" />
+     <Compile Include="Assets\Downloads\Samples\Input System\1.5.1\Simple Demo\SimpleController_UsingState.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Services\IGameService.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\TextAmmunitionCurrent.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Demo\DisplayMaterialName.cs" />
@@ -117,8 +128,6 @@
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Interface\TextTimescale.cs" />
      <Compile Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Legacy\PlayParticles.cs" />
      <Compile Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Scripts\GunAim.cs" />
-     <Compile Include="Assets\Scripts\Runtime\Player\InputManager.cs" />
-     <Compile Include="Assets\Scripts\Runtime\Player\Input.cs" />
      <Folder Include="Assets" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\mergetool.ja.txt" />
      <Folder Include="Assets\Scripts\Runtime" />
@@ -175,6 +184,8 @@
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\SubpixelMorphologicalAntialiasing.shader" />
      <Folder Include="Library\PackageCache\com.unity.ide.rider@3.0.21\Rider" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\semantic.zh-Hant.txt" />
+     <Folder Include="Assets\Scripts\Runtime\TestUI" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene\Gridbox Prototype Materials\Resources\Textures" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\Dithering.hlsl" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\Bloom.shader" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\clientcommon.es.txt" />
@@ -201,6 +212,7 @@
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Audio\SFX\Target" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Lighting Settings" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Debug\Waveform.compute" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\xdiff.ja.txt" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\configurehelper.es.txt" />
      <Folder Include="Library\PackageCache\com.unity.burst@1.6.6\Tests" />
@@ -230,6 +242,7 @@
      <Folder Include="Assets\Prefabs\Sword\Materials" />
      <Folder Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM" />
      <Folder Include="Library\PackageCache\com.unity.performance.profile-analyzer@1.2.2" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\FirstPersonController" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Weapons" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\differences.zh-Hant.txt" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Models" />
@@ -272,6 +285,7 @@
      <Folder Include="Library\PackageCache\com.unity.burst@1.6.6" />
      <None Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.17\package.json" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\workspaceserver.ko.txt" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene\Gridbox Prototype Materials\Resources\ProBuilder Data" />
      <Folder Include="Assets\Utilities" />
      <None Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Audio\SFX\Explosives" />
@@ -305,6 +319,7 @@
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\Meshes\Environment\Objects\Explosives" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\WeaponEffects" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\Animations\Character\Handguns" />
+     <Folder Include="Assets\Downloads\Samples\Input System" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\Meshes\Environment\Objects\Signs" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\Textures\Environment" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Animation\Controllers" />
@@ -356,6 +371,7 @@
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\API\Switch.hlsl" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\binmergetool.en.txt" />
      <Folder Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Textures" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene\Gridbox Prototype Materials" />
      <None Include="Library\PackageCache\com.unity.visualscripting@1.8.0\ValidationExceptions.json" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\API\Metal.hlsl" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\Uber.shader" />
@@ -382,6 +398,7 @@
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\clientcommon.zh-Hant.txt" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\xdiff.zh-Hant.txt" />
      <None Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+     <Folder Include="Assets\Downloads\Samples\Input System\1.5.1\Simple Demo" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\CopyStdFromDoubleWide.shader" />
      <Folder Include="Library\PackageCache\com.unity.textmeshpro@3.0.6\Editor Resources\Textures" />
      <Folder Include="Library\PackageCache\com.unity.editorcoroutines@1.0.0" />
@@ -418,6 +435,7 @@
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\DepthOfField.hlsl" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\i3.es.txt" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\TextMesh Pro\Resources\Style Sheets" />
+     <Folder Include="Assets\Downloads\Samples\Input System\1.5.1" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\DiscardAlpha.shader" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Code\Demo" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\mergetool.zh-Hans.txt" />
@@ -437,6 +455,7 @@
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\binmergetool.ja.txt" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\WaterEffects" />
      <None Include="Library\PackageCache\com.unity.testtools.codecoverage@1.2.2\package.json" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene\Gridbox Prototype Materials\Resources\Materials" />
      <Folder Include="Library\PackageCache\com.unity.textmeshpro@3.0.6" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\Materials\Environment" />
      <Folder Include="Library\PackageCache\com.unity.ide.rider@3.0.21" />
@@ -489,6 +508,7 @@
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\semantic.ja.txt" />
      <Folder Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib" />
      <Folder Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\API" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene\Gridbox Prototype Materials\Resources\Textures\Prototype Grid" />
      <None Include="Library\PackageCache\com.unity.ide.vscode@1.2.5\ValidationExceptions.json" />
      <Folder Include="Assets\Downloads\Blink\Art\Weapons\LowPoly\FreeRPGWeapons\Spears\Spear_2H_Textures" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\Misc Effects\Prefabs" />
@@ -503,13 +523,18 @@
      <Folder Include="Assets\Prefabs\Effects\Materials" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Animators" />
      <Folder Include="Library\PackageCache\com.unity.settings-manager@1.0.3\Content" />
+     <Folder Include="Assets\Downloads\Samples\Input System\1.5.1\Gamepad Mouse Cursor" />
      <Folder Include="Assets\Downloads\Infima Games" />
+     <Folder Include="Assets\Downloads\Samples\Input System\1.5.1\On-Screen Controls" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\GaussianDownsample.compute" />
      <Folder Include="Assets\Downloads\Infima Games\Low Poly Shooter Pack - Free Sample\Art\Animations\Character" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\commontypes.ko.txt" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\Misc Effects" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene\Gridbox Prototype Materials\Resources" />
      <Folder Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.17" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\ScreenSpaceReflections.hlsl" />
+     <Folder Include="Assets\Downloads\Redcode" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Scripts" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\WeaponEffects\Models" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\API\XboxOne.hlsl" />
@@ -519,6 +544,7 @@
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\commontypes.ja.txt" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\API\D3D12.hlsl" />
      <Folder Include="Assets\Prefabs\Items" />
+     <Folder Include="Assets\Downloads\Samples" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\configurehelper.ko.txt" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Builtins\DepthOfField.shader" />
      <None Include="Library\PackageCache\com.unity.textmeshpro@3.0.6\PackageConversionData_Assets.json" />
@@ -547,6 +573,7 @@
      <Folder Include="Assets\Downloads\Infima Games\Tools\Looping" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\Shared\Shaders" />
      <Folder Include="Assets\Downloads\UnityTechnologies\EffectExamples\WaterEffects\Models" />
+     <Folder Include="Assets\Downloads\ModularFirstPersonController\DemoScene\Gridbox Prototype Materials\Resources\Materials\Prototype Grid" />
      <None Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Shaders\Editor\Trackball.shader" />
      <Folder Include="Library\PackageCache\com.unity.postprocessing@3.2.2\PostProcessing\Textures\BlueNoise64px" />
      <None Include="Library\PackageCache\com.unity.collab-proxy@2.0.4\Lib\Editor\PlasticSCM\Localization\clientcommon.ko.txt" />
@@ -1318,9 +1345,9 @@
       <Project>{8536f6a2-0f3b-156a-0c60-8152fd2a9af7}</Project>
       <Name>Unity.Rider.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.PlasticSCM.Editor.csproj">
-      <Project>{148b3f9c-572c-f14e-f7f7-5e76f013935a}</Project>
-      <Name>Unity.PlasticSCM.Editor</Name>
+    <ProjectReference Include="Extensions.csproj">
+      <Project>{c367ad87-9654-0c34-d137-78b6e552b3d4}</Project>
+      <Name>Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="Analytics.csproj">
       <Project>{6ed2294d-bc67-3578-80f1-9809c83b4e94}</Project>
@@ -1329,6 +1356,10 @@
     <ProjectReference Include="Unity.VisualScripting.Flow.csproj">
       <Project>{66f844b7-4eb8-116e-0071-cf49453c655d}</Project>
       <Name>Unity.VisualScripting.Flow</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.PlasticSCM.Editor.csproj">
+      <Project>{148b3f9c-572c-f14e-f7f7-5e76f013935a}</Project>
+      <Name>Unity.PlasticSCM.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Analytics.DataPrivacy.csproj">
       <Project>{928b55b8-4f7f-4791-dc88-6e4297d5817e}</Project>
@@ -1353,6 +1384,10 @@
     <ProjectReference Include="Unity.Postprocessing.Runtime.csproj">
       <Project>{e1b3aa24-aee7-3d0b-1a45-bae3ab9e432e}</Project>
       <Name>Unity.Postprocessing.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="ExtensionsEditor.csproj">
+      <Project>{d8894f09-7b97-5758-bfb2-0f00e4ba12b8}</Project>
+      <Name>ExtensionsEditor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Shared.Editor.csproj">
       <Project>{19e14c2c-c880-da78-5fe1-b40dafa8854d}</Project>

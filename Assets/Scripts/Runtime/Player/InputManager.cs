@@ -1,12 +1,12 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Runtime.Player
 {
     public class InputManager : MonoBehaviour
     {
-        public static Input InputController;
         public static InputManager Current;
+        public Input InputController { get; set; }
+        public Vector2 Movement => InputController.Mover.Movement.ReadValue<Vector2>();
 
         private void Awake()
         {
@@ -14,7 +14,9 @@ namespace Runtime.Player
                 Destroy(Current);
             else
                 Current = this;
-            InputController ??= new Input();
+
+            InputController = new Input();
+            InputController.Mover.Enable();
         }
     }
 }

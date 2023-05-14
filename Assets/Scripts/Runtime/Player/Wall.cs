@@ -4,11 +4,10 @@ namespace Runtime.Player
 {
     public class Wall : MonoBehaviour, ITakeDamage
     {
-        [SerializeField] private Health _health = new Health(100); 
+        [SerializeField] private Health _health = new Health(100);
+
         public void TakeDamage(IDamage damage)
-        {
-            _health.TakeDamage(damage);
-        }
+            => _health.TakeDamage(damage);
     }
 
     [System.Serializable]
