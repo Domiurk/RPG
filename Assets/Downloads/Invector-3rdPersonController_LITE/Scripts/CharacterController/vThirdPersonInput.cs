@@ -6,14 +6,14 @@ namespace Invector.vCharacterController
     {
         #region Variables       
 
-        [Header("Controller Input")]
+        [Header("Controller PlayerInput")]
         public string horizontalInput = "Horizontal";
-        public string verticallInput = "Vertical";
+        public string verticalInput = "Vertical";
         public KeyCode jumpInput = KeyCode.Space;
         public KeyCode strafeInput = KeyCode.Tab;
         public KeyCode sprintInput = KeyCode.LeftShift;
 
-        [Header("Camera Input")]
+        [Header("Camera PlayerInput")]
         public string rotateCameraXInput = "Mouse X";
         public string rotateCameraYInput = "Mouse Y";
 
@@ -84,7 +84,7 @@ namespace Invector.vCharacterController
         public virtual void MoveInput()
         {
             cc.input.x = Input.GetAxis(horizontalInput);
-            cc.input.z = Input.GetAxis(verticallInput);
+            cc.input.z = Input.GetAxis(verticalInput);
         }
 
         protected virtual void CameraInput()
@@ -137,7 +137,7 @@ namespace Invector.vCharacterController
         }
 
         /// <summary>
-        /// Input to trigger the Jump 
+        /// PlayerInput to trigger the Jump 
         /// </summary>
         protected virtual void JumpInput()
         {

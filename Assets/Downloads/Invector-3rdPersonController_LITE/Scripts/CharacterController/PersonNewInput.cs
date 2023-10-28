@@ -1,21 +1,22 @@
-﻿using System;
+﻿using Invector.vCharacterController;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Invector.vCharacterController
+namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterController
 {
-    public class vThirdPersonNewInput : MonoBehaviour
+    public class PersonNewInput : MonoBehaviour
     {
-        public InputAction MovementAction;
-        public InputAction JumpAction;
-        public InputAction StrafeAction;
-        public InputAction SprintAction;
+        public PlayerInputActions InputActions { get; private set; }
 
+        private InputAction MovementAction;
+        private InputAction SprintAction;
+        private InputAction CrouchAction;
+        private InputAction JumpAction;
         private vThirdPersonController personController;
         private vThirdPersonCamera personCamera;
         private Camera cameraMain;
 
-        private void Start()
+        private void Awake()
         {
             InitializeController();
             InitializeTpCamera();
@@ -36,18 +37,20 @@ namespace Invector.vCharacterController
 
         private void OnEnable()
         {
+            InputActions.Player.Enable();
             MovementAction.Enable();
-            JumpAction.Enable();
-            StrafeAction.Enable();
             SprintAction.Enable();
+            CrouchAction.Enable();
+            JumpAction.Enable();
         }
 
         private void OnDisable()
         {
+            InputActions.Player.Disable();
             MovementAction.Disable();
-            JumpAction.Disable();
-            StrafeAction.Disable();
             SprintAction.Disable();
+            CrouchAction.Disable();
+            JumpAction.Disable();
         }
 
         public void OnAnimatorMove()
@@ -57,11 +60,20 @@ namespace Invector.vCharacterController
 
         private void InitializeController()
         {
+            InputActions = new PlayerInputActions();
             personController = GetComponent<vThirdPersonController>();
+            MovementAction = InputActions.Player.Moving;
+            SprintAction = InputActions.Player.Sprint;
+            CrouchAction = InputActions.Player.Crouch;
+            JumpAction = InputActions.Player.Jump;
+            //InputActions.Player.Jump.performed += _ => JumpInput();
+            //InputActions.Player.Sprint.performed += _ => SprintInput(true);
+            //InputActions.Player.Sprint.canceled += _ => SprintInput(false);
+            //InputActions.Player.Crouch.performed += _ => StrafeInput();
             JumpAction.performed += _ => JumpInput();
             SprintAction.performed += _ => SprintInput(true);
             SprintAction.canceled += _ => SprintInput(false);
-            StrafeAction.performed += _ => StrafeInput();
+            CrouchAction.performed += _ => StrafeInput();
 
             if(personController != null)
                 personController.Init();
@@ -89,7 +101,7 @@ namespace Invector.vCharacterController
 
         public void MoveInput()
         {
-            Vector2 input = MovementAction.ReadValue<Vector2>();
+            Vector2 input = InputActions.Player.Moving.ReadValue<Vector2>();
             personController.input.x = input.x;
             personController.input.z = input.y;
         }
@@ -119,10 +131,10 @@ namespace Invector.vCharacterController
             personCamera.RotateCamera(x, y);
         }
 
-        private void SprintInput(bool started) 
+        private void SprintInput(bool started)
             => personController.Sprint(started);
 
-        private void StrafeInput() 
+        private void StrafeInput()
             => personController.Strafe();
 
         /// <summary>
@@ -134,7 +146,7 @@ namespace Invector.vCharacterController
                !personController.isJumping && !personController.stopMove;
 
         /// <summary>
-        /// Input to trigger the Jump 
+        /// InputActions to trigger the Jump 
         /// </summary>
         private void JumpInput()
         {
