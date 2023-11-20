@@ -8,10 +8,10 @@ namespace Text_Renaming.Scripts.Editor
 {
     public class RenameObjectsWindow : EditorWindow
     {
-        private string _prefix = "mixamorig:";
-        private string _change = string.Empty;
+        private string prefix = "mixamorig:";
+        private string change = string.Empty;
 
-        private readonly List<Object> _objects = new();
+        private readonly List<Object> dragObjects = new();
 
         [MenuItem("Tools/Rename Object Child")]
         public static void ShowExample()
@@ -64,12 +64,12 @@ namespace Text_Renaming.Scripts.Editor
 
         private void Body()
         {
-            _prefix =
-                EditorGUILayout.TextField(new GUIContent("Prefix", "Text which want to replace"), _prefix);
-            _change =
-                EditorGUILayout.TextField(new GUIContent("Replace", "Empty delete this prefix"), _change);
+            prefix =
+                EditorGUILayout.TextField(new GUIContent("Prefix", "Text which want to replace"), prefix);
+            change =
+                EditorGUILayout.TextField(new GUIContent("Replace", "Empty delete this prefix"), change);
 
-            if(string.IsNullOrEmpty(_prefix))
+            if(string.IsNullOrEmpty(prefix))
                 EditorGUILayout.HelpBox("Write Prefix!!!", MessageType.Error);
             else
                 DragAndDropField();
@@ -79,9 +79,9 @@ namespace Text_Renaming.Scripts.Editor
         {
             List<Transform> child = new List<Transform>();
 
-            foreach(Object o in _objects){
+            foreach(Object o in dragObjects){
                 child.AddRange(((GameObject)o).GetComponentsInChildren<Transform>()
-                                              .Where(t => t.name.Contains(_prefix)));
+                                              .Where(t => t.name.Contains(prefix)));
                 Rename<Transform>(child);
             }
         }
@@ -97,18 +97,18 @@ namespace Text_Renaming.Scripts.Editor
                         ev.Use();
                         break;
                     case EventType.DragPerform:{
-                        _objects.Clear();
+                        this.dragObjects.Clear();
 
                         Object[] objects = DragAndDrop.objectReferences;
 
                         foreach(Object draggedObj in objects)
-                            _objects.Add(draggedObj);
-                        switch(_objects[0]){
+                            this.dragObjects.Add(draggedObj);
+                        switch(this.dragObjects[0]){
                             case GameObject:
                                 RenameTransform();
                                 break;
                             case AnimationClip:
-                                Rename<AnimationClip>(_objects);
+                                Rename<AnimationClip>(this.dragObjects);
                                 break;
                         }
 
@@ -127,9 +127,9 @@ namespace Text_Renaming.Scripts.Editor
             foreach(Object o in list){
                 var obj = (TObject)o;
 
-                if(obj == null || !obj.name.Contains(_prefix))
+                if(obj == null || !obj.name.Contains(prefix))
                     continue;
-                string newName = obj.name.Replace(_prefix, _change);
+                string newName = obj.name.Replace(prefix, change);
 
                 if(obj is AnimationClip){
                     string path = AssetDatabase.GetAssetPath(obj);

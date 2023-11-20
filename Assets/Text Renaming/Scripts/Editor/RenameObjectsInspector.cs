@@ -13,12 +13,12 @@ namespace Text_Renaming.Scripts.Editor
 
         private void OnEnable()
         {
-            if (target == null)
-            {
+            if(target == null){
                 Debug.Log("Target is null");
                 return;
             }
-            script = (RenameObjects) target;
+
+            script = (RenameObjects)target;
             nameScript = serializedObject.FindProperty("m_Script");
         }
 
@@ -40,36 +40,33 @@ namespace Text_Renaming.Scripts.Editor
         private void DrawMain()
         {
             GUILayout.Label("Rename Mixamo",
-                new GUIStyle(GUI.skin.label)
-                {
-                    alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold,
-                    fontSize = 20
-                });
+                            new GUIStyle(GUI.skin.label){
+                                alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold,
+                                fontSize = 20
+                            });
 
             GUILayout.BeginVertical(GUI.skin.box);
-            script.Object = (GameObject) EditorGUILayout.ObjectField("Prefab", script.Object, typeof(GameObject), true);
+            script.Object = (GameObject)EditorGUILayout.ObjectField("Prefab", script.Object, typeof(GameObject), true);
             script.Prefix =
                 EditorGUILayout.TextField(new GUIContent("Prefix", "Text which want to replace"), script.Prefix);
             script.Change =
-                EditorGUILayout.TextField(new GUIContent("Change", "The Text you want to replace(if Empty then Remove)"),
-                    script.Change);
+                EditorGUILayout
+                    .TextField(new GUIContent("Change", "The Text you want to replace(if Empty then Remove)"),
+                               script.Change);
             bool enableRename = script.Prefix != string.Empty;
             GUIContent buttonName = new GUIContent(enableRename ? "Rename Children" : "Write Prefix");
             GUI.enabled = enableRename;
-            if (GUILayout.Button(buttonName))
-            {
+            if(GUILayout.Button(buttonName))
                 script.Rename();
-            }
 
             GUILayout.EndVertical();
 
-            if (GUI.changed)
-            {
+            if(GUI.changed){
+                const string renameScript = "Rename Mixamo Script";
                 EditorUtility.SetDirty(script);
-                Undo.RecordObject(script, "Rename Mixamo Script");
+                Undo.RecordObject(script, renameScript);
                 serializedObject.ApplyModifiedProperties();
             }
         }
-
     }
 }

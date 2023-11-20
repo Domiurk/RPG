@@ -6,38 +6,29 @@ namespace Text_Renaming.Scripts.Runtime
 {
     public class AddPrefix : MonoBehaviour
     {
+#if UNITY_EDITOR
+        public static string PrefabField = nameof(prefab);
+        public static string PrefixField = nameof(prefix);
+        public static string SuffixField = nameof(suffix);
+#endif
+
         [SerializeField] private GameObject prefab;
         [SerializeField] private string prefix;
         [SerializeField] private string suffix;
-        [SerializeField, Min(0)] private int childIndexToStart = 7;
         [SerializeField, HideInInspector] private List<Transform> bones = new();
 
         private static IEnumerable<Transform> GetTransform(GameObject obj)
         {
-            var objects = obj.GetComponentsInChildren<Transform>();
+            Transform[] objects = obj.GetComponentsInChildren<Transform>();
 
             foreach(Transform o in objects){
                 yield return o;
             }
         }
 
-        private void AddBoneToList()
-        {
-            bones.Clear();
-
-            if(prefab == null){
-                Debug.Log($"Start Renaming {name} prefab");
-                prefab = this.gameObject;
-            }
-
-            bones.AddRange(prefab.GetComponentsInChildren<Transform>());
-        }
-
         public void AddPrefixName()
         {
-            // AddBoneToList();
-
-            int count = 0;
+            const int count = 0;
 
             foreach(Transform o in GetTransform(prefab)){
                 o.name = prefix + o.name + suffix;
@@ -60,10 +51,9 @@ namespace Text_Renaming.Scripts.Runtime
         {
             if(script == null)
                 script = (AddPrefix)target;
-            prefab = serializedObject.FindProperty("_prefab");
-            prefix = serializedObject.FindProperty("_prefix");
-            suffix = serializedObject.FindProperty("_suffix");
-            childIndexToStart = serializedObject.FindProperty("_childIndexToStart");
+            prefab = serializedObject.FindProperty(AddPrefix.PrefabField);
+            prefix = serializedObject.FindProperty(AddPrefix.PrefabField);
+            suffix = serializedObject.FindProperty(AddPrefix.SuffixField);
         }
 
         public override void OnInspectorGUI()
