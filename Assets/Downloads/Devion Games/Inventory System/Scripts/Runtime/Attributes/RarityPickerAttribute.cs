@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-
-namespace DevionGames.InventorySystem{
+﻿namespace DevionGames.InventorySystem{
 	public class RarityPickerAttribute : PickerAttribute {
 
 		public RarityPickerAttribute():this(false){}

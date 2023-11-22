@@ -6,7 +6,6 @@ namespace Sirenix.OdinInspector.Demos
     using UnityEditor;
     using System.Linq;
     using Sirenix.Utilities;
-    using System.Collections.Generic;
     using Sirenix.Utilities.Editor;
 
     public class OdinMenuStyleExample : OdinMenuEditorWindow

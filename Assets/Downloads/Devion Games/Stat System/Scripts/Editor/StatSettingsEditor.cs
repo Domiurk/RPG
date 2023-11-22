@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEditor;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 
@@ -11,7 +8,13 @@ namespace DevionGames.StatSystem.Configuration
     public class StatSettingsEditor : ScriptableObjectCollectionEditor<Settings>
     {
 
-        public override string ToolbarName => "Settings";
+        public override string ToolbarName
+        {
+            get
+            {
+                return "Settings";
+            }
+        }
 
         protected override bool CanAdd => false;
 

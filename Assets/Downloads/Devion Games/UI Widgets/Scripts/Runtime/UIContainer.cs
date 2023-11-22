@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;

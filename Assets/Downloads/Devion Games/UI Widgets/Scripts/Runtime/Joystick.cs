@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 namespace DevionGames.UIWidgets{
 	public class Joystick : Selectable, IDragHandler {

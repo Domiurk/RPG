@@ -1,6 +1,4 @@
 ﻿using DevionGames.Graphs;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,7 +34,7 @@ namespace DevionGames.StatSystem
 
         [System.NonSerialized]
         protected float m_Value;
-        public float Value => this.m_Value;
+        public float Value { get => this.m_Value; }
 
         protected List<StatModifier> m_StatModifiers= new List<StatModifier>();
         protected StatsHandler m_StatsHandler;

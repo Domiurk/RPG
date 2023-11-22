@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace DevionGames.InventorySystem.Configuration
+﻿namespace DevionGames.InventorySystem.Configuration
 {
     [System.Serializable]
     public class SavingLoading : Settings

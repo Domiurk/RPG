@@ -1,9 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Reflection;
+﻿using System.Reflection;
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
 public static class WindowsRuntimeExtension {
 	#if NETFX_CORE

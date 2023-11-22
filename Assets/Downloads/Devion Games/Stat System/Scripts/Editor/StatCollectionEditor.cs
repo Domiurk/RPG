@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using System.Linq;
@@ -15,7 +14,13 @@ namespace DevionGames.StatSystem
 		[SerializeField]
 		protected string searchFilter = "All";
 
-		public override string ToolbarName => "Stats";
+		public override string ToolbarName
+		{
+			get
+			{
+				return "Stats";
+			}
+		}
 
 		public StatCollectionEditor(UnityEngine.Object target, List<Stat> items, List<string> searchFilters) : base(target, items)
 		{

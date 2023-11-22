@@ -24,21 +24,19 @@ namespace DevionGames.InventorySystem
         protected override void OnEnable()
         {
             base.OnEnable();
-           
-            for (int i = 0; i < actions.Count; i++) {
-                if (actions[i] is ItemAction)
-                {
-                    ItemAction action = actions[i] as ItemAction;
+
+            foreach(Action a in actions) {
+                if (a is ItemAction action)
                     action.item = this;
-                }
             }
-           
         }
 
         public override void Use()
         {
-            if(this.m_ActionSequence == null)
-                this.m_ActionSequence = new Sequence(InventoryManager.current.PlayerInfo.gameObject, InventoryManager.current.PlayerInfo, InventoryManager.current.PlayerInfo.gameObject.GetComponent<Blackboard>(), actions.Cast<IAction>().ToArray());
+            this.m_ActionSequence ??= new Sequence(InventoryManager.current.PlayerInfo.gameObject,
+                                                   InventoryManager.current.PlayerInfo,
+                                                   InventoryManager.current.PlayerInfo.gameObject.GetComponent<Blackboard>(),
+                                                   actions.Cast<IAction>().ToArray());
 
             if (this.m_ActionBehavior != null) {
                 UnityTools.StopCoroutine(m_ActionBehavior);

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DevionGames.UIWidgets;
+﻿using DevionGames.UIWidgets;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -9,7 +7,13 @@ namespace DevionGames.StatSystem.Configuration
     [System.Serializable]
     public class UI : Settings
     {
-        public override string Name => "UI";
+        public override string Name
+        {
+            get
+            {
+                return "UI";
+            }
+        }
 
         [InspectorLabel("Notification", "Name of Notification widget.")]
         public string notificationName = "Notification";

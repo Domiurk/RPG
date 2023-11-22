@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEditorInternal;
 
 namespace DevionGames{
 	[CustomEditor(typeof(CallbackHandler), true)]

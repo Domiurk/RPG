@@ -1,12 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEngine.Events;
-using UnityEngine.UI;
 using UnityEditor.AnimatedValues;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System;
 
 namespace DevionGames.UIWidgets
 {

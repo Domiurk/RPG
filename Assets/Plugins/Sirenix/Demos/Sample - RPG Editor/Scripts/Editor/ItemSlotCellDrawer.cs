@@ -2,7 +2,6 @@
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
     using UnityEngine;
-    using Sirenix.OdinInspector.Editor;
     using Sirenix.OdinInspector.Editor.Drawers;
     using Sirenix.Utilities.Editor;
     using Sirenix.Utilities;

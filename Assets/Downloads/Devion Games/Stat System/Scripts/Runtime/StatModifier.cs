@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace DevionGames.StatSystem
+﻿namespace DevionGames.StatSystem
 {
     public enum StatModType
     {
@@ -17,10 +12,22 @@ namespace DevionGames.StatSystem
         public object source;
 
         private float m_Value;
-        public float Value => this.m_Value;
+        public float Value
+        {
+            get
+            {
+                return this.m_Value;
+            }
+        }
 
         private StatModType m_Type;
-        public StatModType Type => this.m_Type;
+        public StatModType Type
+        {
+            get
+            {
+                return this.m_Type;
+            }
+        }
 
         public StatModifier() : this(0f, StatModType.Flat, null)
         {
