@@ -11,13 +11,7 @@ namespace DevionGames.Graphs
     {
         [SerializeField]
         private List<Port> m_Ports= new List<Port>();
-        public List<Port> Ports
-        {
-            get
-            {
-                return m_Ports;
-            }
-        }
+        public List<Port> Ports => m_Ports;
 
         public List<Port> InputPorts
         {

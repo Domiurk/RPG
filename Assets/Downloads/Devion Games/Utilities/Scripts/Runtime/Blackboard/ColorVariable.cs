@@ -11,24 +11,16 @@ namespace DevionGames
 		private Color m_Value = Color.white;
 
 		public Color Value {
-			get{ return this.m_Value; }
-			set{ this.m_Value = value; }
+			get => this.m_Value;
+			set => this.m_Value = value;
 		}
 
 		public override object RawValue {
-			get {
-				return this.m_Value;
-			}
-			set {
-				this.m_Value = (Color)value;
-			}
+			get => this.m_Value;
+			set => this.m_Value = (Color)value;
 		}
 
-		public override System.Type type {
-			get {
-				return typeof(Color);
-			}
-		}
+		public override System.Type type => typeof(Color);
 
 		public ColorVariable ()
 		{

@@ -24,7 +24,7 @@ namespace DevionGames
         private Vector2 m_SidebarScrollPosition;
         private ModuleItem selectedItem;
         private ModuleItem[] m_Items= new ModuleItem[0];
-        private static string tempPath { get { return CombinePath(Application.dataPath, "..", "Temp", "Modules"); } }
+        private static string tempPath => CombinePath(Application.dataPath, "..", "Temp", "Modules");
 
         private int m_SelectedChangeLog;
 

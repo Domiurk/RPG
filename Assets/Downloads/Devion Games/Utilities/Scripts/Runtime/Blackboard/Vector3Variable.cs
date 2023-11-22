@@ -11,24 +11,16 @@ namespace DevionGames
 		private Vector3 m_Value;
 
 		public Vector3 Value {
-			get{ return this.m_Value; }
-			set{ this.m_Value = value; }
+			get => this.m_Value;
+			set => this.m_Value = value;
 		}
 
 		public override object RawValue {
-			get {
-				return this.m_Value;
-			}
-			set {
-				this.m_Value = (Vector3)value;
-			}
+			get => this.m_Value;
+			set => this.m_Value = (Vector3)value;
 		}
 
-		public override System.Type type {
-			get {
-				return typeof(Vector3);
-			}
-		}
+		public override System.Type type => typeof(Vector3);
 
 		public Vector3Variable ()
 		{

@@ -9,13 +9,7 @@ namespace DevionGames.InventorySystem.Configuration
     [System.Serializable]
     public class UI : Settings
     {
-        public override string Name
-        {
-            get
-            {
-                return "UI";
-            }
-        }
+        public override string Name => "UI";
 
         [InspectorLabel("Context Menu","Name of ContextMenu widget.")]
         public string contextMenuName = "ContextMenu";

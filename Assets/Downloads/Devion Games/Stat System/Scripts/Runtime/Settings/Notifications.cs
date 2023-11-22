@@ -30,12 +30,6 @@ namespace DevionGames.StatSystem.Configuration
     public class Notifications : Settings
     {
 
-        public override string Name
-        {
-            get
-            {
-                return "Notification";
-            }
-        }
+        public override string Name => "Notification";
     }
 }

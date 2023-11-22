@@ -23,8 +23,8 @@ namespace DevionGames
 
 		public NamedVariableType VariableType
 		{
-			get{return this.m_VariableType;}
-			set { this.m_VariableType = value; }
+			get => this.m_VariableType;
+			set => this.m_VariableType = value;
 		}
 
 		public Type ValueType {

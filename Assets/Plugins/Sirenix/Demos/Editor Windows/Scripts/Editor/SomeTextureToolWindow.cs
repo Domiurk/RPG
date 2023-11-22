@@ -23,8 +23,8 @@ namespace Sirenix.OdinInspector.Demos
         public string OutputPath
         {
             // Use EditorPrefs to hold persisntent user-variables.
-            get { return EditorPrefs.GetString("SomeTextureToolWindow.OutputPath"); }
-            set { EditorPrefs.SetString("SomeTextureToolWindow.OutputPath", value); }
+            get => EditorPrefs.GetString("SomeTextureToolWindow.OutputPath");
+            set => EditorPrefs.SetString("SomeTextureToolWindow.OutputPath", value);
         }
 
         [EnumToggleButtons]

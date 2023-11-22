@@ -11,24 +11,16 @@ namespace DevionGames
 		private Object m_Value;
 
 		public Object Value {
-			get{ return this.m_Value; }
-			set{ this.m_Value = value; }
+			get => this.m_Value;
+			set => this.m_Value = value;
 		}
 
 		public override object RawValue {
-			get {
-				return this.m_Value;
-			}
-			set {
-				this.m_Value = (Object)value;
-			}
+			get => this.m_Value;
+			set => this.m_Value = (Object)value;
 		}
 
-		public override System.Type type {
-			get {
-				return typeof(Object);
-			}
-		}
+		public override System.Type type => typeof(Object);
 
 		public ObjectVariable ()
 		{

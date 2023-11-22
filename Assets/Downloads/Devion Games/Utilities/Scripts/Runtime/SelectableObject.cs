@@ -11,7 +11,7 @@ namespace DevionGames
 
         private Transform m_Transform;
 
-        public Vector3 position { get { return this.m_Transform != null ? this.m_Transform.position : Vector3.zero; } }
+        public Vector3 position => this.m_Transform != null ? this.m_Transform.position : Vector3.zero;
 
         public override string[] Callbacks => new string[] {"OnSelect","OnDeselect" };
 

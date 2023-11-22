@@ -19,9 +19,7 @@ namespace DevionGames.UIWidgets
 				}
 				return this.m_Trigger;
 			}
-			set {
-				this.m_Trigger = value;
-			}
+			set => this.m_Trigger = value;
 		}
 
 		private void Press ()

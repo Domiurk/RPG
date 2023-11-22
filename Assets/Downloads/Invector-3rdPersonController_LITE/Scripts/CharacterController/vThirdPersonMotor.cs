@@ -71,14 +71,8 @@ namespace Invector.vCharacterController
         internal bool isJumping;
         internal bool isStrafing
         {
-            get
-            {
-                return _isStrafing;
-            }
-            set
-            {
-                _isStrafing = value;
-            }
+            get => _isStrafing;
+            set => _isStrafing = value;
         }
         internal bool isGrounded { get; set; }
         internal bool isSprinting { get; set; }

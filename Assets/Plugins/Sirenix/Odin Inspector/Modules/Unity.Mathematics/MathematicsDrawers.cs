@@ -117,8 +117,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 100;
 
@@ -153,8 +152,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 100;
 
@@ -192,8 +190,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 100;
 
@@ -234,8 +231,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 // Slide rect
                 {
@@ -315,8 +311,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 // Slide rect
                 {
@@ -399,8 +394,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 // Slide rect
                 {
@@ -485,8 +479,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 // Slide rect
                 {
@@ -566,8 +559,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 // Slide rect
                 {
@@ -650,8 +642,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 // Slide rect
                 {
@@ -735,8 +726,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 185;
                 GUIHelper.PushLabelWidth(SirenixEditorFields.SingleLetterStructLabelWidth);
@@ -760,8 +750,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 185;
                 GUIHelper.PushLabelWidth(SirenixEditorFields.SingleLetterStructLabelWidth);
@@ -786,8 +775,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 185;
                 GUIHelper.PushLabelWidth(SirenixEditorFields.SingleLetterStructLabelWidth);
@@ -813,8 +801,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 185;
                 GUIHelper.PushLabelWidth(SirenixEditorFields.SingleLetterStructLabelWidth);
@@ -838,8 +825,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 185;
                 GUIHelper.PushLabelWidth(SirenixEditorFields.SingleLetterStructLabelWidth);
@@ -864,8 +850,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            Rect labelRect;
-            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
+            Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out Rect labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 185;
                 GUIHelper.PushLabelWidth(SirenixEditorFields.SingleLetterStructLabelWidth);

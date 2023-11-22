@@ -16,15 +16,15 @@ namespace DevionGames.InventorySystem
         private List<EquipmentBone> m_Bones= new List<EquipmentBone>();
         public List<EquipmentBone> Bones
         {
-            get { return this.m_Bones; }
-            set { this.m_Bones = value; }
+            get => this.m_Bones;
+            set => this.m_Bones = value;
         }
 
         [SerializeField]
         private List<VisibleItem> m_VisibleItems= new List<VisibleItem>();
         public List<VisibleItem> VisibleItems {
-            get { return this.m_VisibleItems; }
-            set { this.m_VisibleItems = value; }
+            get => this.m_VisibleItems;
+            set => this.m_VisibleItems = value;
         }
 
 

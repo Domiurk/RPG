@@ -8,13 +8,7 @@ namespace DevionGames.InventorySystem.Configuration
     [System.Serializable]
     public class Input : Settings
     {
-        public override string Name
-        {
-            get
-            {
-                return "Input";
-            }
-        }
+        public override string Name => "Input";
 
         [Header("Unstacking:")]
         [InspectorLabel("Event")]

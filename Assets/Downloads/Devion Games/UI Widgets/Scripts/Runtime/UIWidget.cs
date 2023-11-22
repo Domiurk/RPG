@@ -25,8 +25,8 @@ namespace DevionGames.UIWidgets
 		/// </summary>
 		/// <value>The name.</value>
 		public string Name {
-			get { return name; }
-			set { name = value; }
+			get => name;
+			set => name = value;
 		}
 
 		/// <summary>
@@ -71,9 +71,9 @@ namespace DevionGames.UIWidgets
 
 		[SerializeField]
 		protected bool m_IgnoreTimeScale = true;
-		public bool IgnoreTimeScale { get { return this.m_IgnoreTimeScale; } }
+		public bool IgnoreTimeScale => this.m_IgnoreTimeScale;
 
-        /// <summary>
+		/// <summary>
         /// The AudioClip that will be played when this widget shows.
         /// </summary>
 		[Tooltip("The AudioClip that will be played when this widget shows.")]
@@ -153,11 +153,7 @@ namespace DevionGames.UIWidgets
 		protected Scrollbar[] m_Scrollbars;
 
 		protected bool m_IsLocked = false;
-		public bool IsLocked
-		{
-			get { return this.m_IsLocked; }
-		}
-
+		public bool IsLocked => this.m_IsLocked;
 
 		private void Awake ()
 		{

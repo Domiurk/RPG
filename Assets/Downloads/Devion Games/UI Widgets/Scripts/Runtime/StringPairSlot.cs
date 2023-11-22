@@ -15,7 +15,7 @@ namespace DevionGames.UIWidgets
 
         private KeyValuePair<string, string> m_Target;
         public KeyValuePair<string, string> Target {
-            get { return this.m_Target; }
+            get => this.m_Target;
             set {
                 this.m_Target = value;
                 Repaint();

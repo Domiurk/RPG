@@ -10,31 +10,27 @@ namespace DevionGames.InventorySystem{
 
 		public Category Parent
         {
-			get { return this.m_Parent; }
-			set { this.m_Parent = value; }
+			get => this.m_Parent;
+			set => this.m_Parent = value;
         }
 
 		[SerializeField]
 		private new string name="";
 		public string Name{
-			get{return this.name;}
-			set{this.name = value;}
+			get => this.name;
+			set => this.name = value;
 		}
 
 
 		[SerializeField]
 		protected Color m_EditorColor = Color.clear;
-		public Color EditorColor {
-			get { return this.m_EditorColor; }
-		}
+		public Color EditorColor => this.m_EditorColor;
 
-        [SerializeField]
+		[SerializeField]
         protected float m_Cooldown = 1f;
-        public float Cooldown {
-            get { return this.m_Cooldown; }
-        }
+        public float Cooldown => this.m_Cooldown;
 
-		public bool IsAssignable(Category other) {
+        public bool IsAssignable(Category other) {
 			if (other == null)
 				return false;
 

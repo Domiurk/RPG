@@ -139,8 +139,7 @@ namespace DevionGames.InventorySystem
         public UnityEvent onDataSaved;
 
         protected static bool m_IsLoaded = false;
-        public static bool IsLoaded { get => m_IsLoaded; }
-
+        public static bool IsLoaded => m_IsLoaded;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.

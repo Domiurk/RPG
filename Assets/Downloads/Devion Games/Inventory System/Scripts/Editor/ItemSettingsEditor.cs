@@ -9,13 +9,7 @@ namespace DevionGames.InventorySystem.Configuration{
 	[System.Serializable]
 	public class ItemSettingsEditor : ScriptableObjectCollectionEditor<Settings>{
 
-        public override string ToolbarName
-        {
-            get
-            {
-                return "Settings";
-            }
-        }
+        public override string ToolbarName => "Settings";
 
         protected override bool CanAdd => false;
 

@@ -7,13 +7,7 @@ namespace DevionGames
 	{
 		private readonly string category;
 
-		public string Category
-		{
-			get
-			{
-				return this.category;
-			}
-		}
+		public string Category => this.category;
 
 		public CategoryAttribute(string category)
 		{

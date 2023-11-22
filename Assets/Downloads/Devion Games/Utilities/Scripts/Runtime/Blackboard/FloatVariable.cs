@@ -12,24 +12,16 @@ namespace DevionGames
 		private float m_Value;
 
 		public float Value {
-			get{ return this.m_Value; }
-			set{ this.m_Value = value; }
+			get => this.m_Value;
+			set => this.m_Value = value;
 		}
 
 		public override object RawValue {
-			get {
-				return this.m_Value;
-			}
-			set {
-				this.m_Value = System.Convert.ToSingle (value);
-			}
+			get => this.m_Value;
+			set => this.m_Value = System.Convert.ToSingle (value);
 		}
 
-		public override System.Type type {
-			get {
-				return typeof(float);
-			}
-		}
+		public override System.Type type => typeof(float);
 
 		public FloatVariable ()
 		{

@@ -36,7 +36,7 @@ namespace DevionGames
             private AudioSource m_AudioSource;
 
             public AudioSource audioSource {
-                get { return this.m_AudioSource; }
+                get => this.m_AudioSource;
                 set { this.m_AudioSource = value;
                     this.m_AudioSource.outputAudioMixerGroup = this.m_AudioMixerGroup;
                     this.m_AudioSource.spatialBlend = 1f;

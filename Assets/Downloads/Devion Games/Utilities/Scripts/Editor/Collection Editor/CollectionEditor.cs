@@ -464,15 +464,11 @@ namespace DevionGames{
 
 			private static GUIStyle m_LeftPaneDark;
 			private static GUIStyle m_LeftPaneLight;
-			public static GUIStyle leftPane {
-				get {return EditorGUIUtility.isProSkin ? m_LeftPaneDark : m_LeftPaneLight;}
-			}
+			public static GUIStyle leftPane => EditorGUIUtility.isProSkin ? m_LeftPaneDark : m_LeftPaneLight;
 
 			private static GUIStyle m_CenterPaneDark;
 			private static GUIStyle m_CenterPaneLight;
-			public static GUIStyle centerPane {
-				get { return EditorGUIUtility.isProSkin ? m_CenterPaneDark : m_CenterPaneLight; }
-			}
+			public static GUIStyle centerPane => EditorGUIUtility.isProSkin ? m_CenterPaneDark : m_CenterPaneLight;
 
 			public static GUIStyle selectButtonText;
 			public static Color normalColor;

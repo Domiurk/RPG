@@ -17,16 +17,10 @@ namespace Sirenix.OdinInspector.Demos
         [MultiLineProperty(3), ShowInInspector]
         private string Test3
         {
-            get
-            {
-                return EditorPrefs.GetString("OdinDemo.PersistentString",
-                    "This value is persistent forever, even cross Unity projects. But it's not saved together " +
-                    "with your project. That's where ScriptableObejcts and OdinEditorWindows come in handy.");
-            }
-            set
-            {
-                EditorPrefs.SetString("OdinDemo.PersistentString", value);
-            }
+            get => EditorPrefs.GetString("OdinDemo.PersistentString",
+                                         "This value is persistent forever, even cross Unity projects. But it's not saved together " +
+                                         "with your project. That's where ScriptableObejcts and OdinEditorWindows come in handy.");
+            set => EditorPrefs.SetString("OdinDemo.PersistentString", value);
         }
     }
 }

@@ -24,7 +24,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     ""name"": ""Player Input Actions"",
     ""maps"": [
         {
-            ""name"": ""Player"",
+            ""name"": ""PlayerMap"",
             ""id"": ""ed3e22c1-eed9-41bd-8ed1-af37ec20c9f2"",
             ""actions"": [
                 {
@@ -76,6 +76,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""0c799729-f9db-4ded-a8a1-bb096011f5b8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slide"",
+                    ""type"": ""Button"",
+                    ""id"": ""a030acab-84e2-44f7-b5a6-a14e7a8fd2e9"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -192,11 +201,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc77a7bb-8abd-400e-8b47-5f6661507277"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
         {
-            ""name"": ""Camera"",
+            ""name"": ""CameraMap"",
             ""id"": ""f3f379cd-b45b-4803-b043-dfb2ca732c4d"",
             ""actions"": [
                 {
@@ -204,6 +224,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""5a394086-eea1-48cf-85a6-3c963a02b58d"",
                     ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightMB"",
+                    ""type"": ""Button"",
+                    ""id"": ""7b56bff6-3033-49da-b46d-1e0532d72a5b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftMB"",
+                    ""type"": ""Button"",
+                    ""id"": ""61fcd4e5-7a2b-467d-a49d-d4a086ae04dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""Button"",
+                    ""id"": ""f551067f-1743-43e5-9057-97905a0da724"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -218,6 +265,167 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Delta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92c352f9-97c6-483b-9605-59736679c306"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightMB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d543f9e8-0472-4c87-ad7e-e891109033d6"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftMB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a4265459-e8af-41de-a833-0129ae8a2b96"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""UIMap"",
+            ""id"": ""f8b08a95-546d-4510-bb92-f44f360a913f"",
+            ""actions"": [
+                {
+                    ""name"": ""LeftMouseClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""9b1b7373-9804-4c2f-ba48-4f592e6a7315"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightMouseClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""477b3579-ae44-44c1-9ff2-748d880cee92"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MiddleMouseClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""167d9c05-67b6-4b7e-ae18-209144baabcc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""Value"",
+                    ""id"": ""11b97593-2afc-41c5-a086-922ca1346c60"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ScrollMouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""575d1745-ead6-410a-a79e-d08889a7a492"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""63c0d569-2573-4548-bd9e-5bf65afd15e5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""5d77901e-52ca-439f-a12a-675720573cbf"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftMouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""287e6c6d-fc07-4e69-aedb-fe00de40f3f6"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightMouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b4e5b283-87e8-46c6-8d27-415dd7be5bdf"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MiddleMouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""348e7d2f-a8d6-46bd-b4e2-2596a2302a95"",
+                    ""path"": ""<Pointer>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""573cd26a-f5af-4fc5-8af1-4a8571145ffb"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ScrollMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e03b70b4-23d3-4470-b7b6-b38d7cc906c0"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -243,17 +451,29 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     ]
 }");
-        // Player
-        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Moving = m_Player.FindAction("Moving", throwIfNotFound: true);
-        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
-        m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
-        m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
-        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        // Camera
-        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
-        m_Camera_Delta = m_Camera.FindAction("Delta", throwIfNotFound: true);
+        // PlayerMap
+        m_PlayerMap = asset.FindActionMap("PlayerMap", throwIfNotFound: true);
+        m_PlayerMap_Moving = m_PlayerMap.FindAction("Moving", throwIfNotFound: true);
+        m_PlayerMap_Interact = m_PlayerMap.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerMap_Inventory = m_PlayerMap.FindAction("Inventory", throwIfNotFound: true);
+        m_PlayerMap_Sprint = m_PlayerMap.FindAction("Sprint", throwIfNotFound: true);
+        m_PlayerMap_Crouch = m_PlayerMap.FindAction("Crouch", throwIfNotFound: true);
+        m_PlayerMap_Jump = m_PlayerMap.FindAction("Jump", throwIfNotFound: true);
+        m_PlayerMap_Slide = m_PlayerMap.FindAction("Slide", throwIfNotFound: true);
+        // CameraMap
+        m_CameraMap = asset.FindActionMap("CameraMap", throwIfNotFound: true);
+        m_CameraMap_Delta = m_CameraMap.FindAction("Delta", throwIfNotFound: true);
+        m_CameraMap_RightMB = m_CameraMap.FindAction("RightMB", throwIfNotFound: true);
+        m_CameraMap_LeftMB = m_CameraMap.FindAction("LeftMB", throwIfNotFound: true);
+        m_CameraMap_Point = m_CameraMap.FindAction("Point", throwIfNotFound: true);
+        // UIMap
+        m_UIMap = asset.FindActionMap("UIMap", throwIfNotFound: true);
+        m_UIMap_LeftMouseClick = m_UIMap.FindAction("LeftMouseClick", throwIfNotFound: true);
+        m_UIMap_RightMouseClick = m_UIMap.FindAction("RightMouseClick", throwIfNotFound: true);
+        m_UIMap_MiddleMouseClick = m_UIMap.FindAction("MiddleMouseClick", throwIfNotFound: true);
+        m_UIMap_Point = m_UIMap.FindAction("Point", throwIfNotFound: true);
+        m_UIMap_ScrollMouse = m_UIMap.FindAction("ScrollMouse", throwIfNotFound: true);
+        m_UIMap_Escape = m_UIMap.FindAction("Escape", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -312,34 +532,36 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Player
-    private readonly InputActionMap m_Player;
-    private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_Moving;
-    private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_Inventory;
-    private readonly InputAction m_Player_Sprint;
-    private readonly InputAction m_Player_Crouch;
-    private readonly InputAction m_Player_Jump;
-    public struct PlayerActions
+    // PlayerMap
+    private readonly InputActionMap m_PlayerMap;
+    private List<IPlayerMapActions> m_PlayerMapActionsCallbackInterfaces = new List<IPlayerMapActions>();
+    private readonly InputAction m_PlayerMap_Moving;
+    private readonly InputAction m_PlayerMap_Interact;
+    private readonly InputAction m_PlayerMap_Inventory;
+    private readonly InputAction m_PlayerMap_Sprint;
+    private readonly InputAction m_PlayerMap_Crouch;
+    private readonly InputAction m_PlayerMap_Jump;
+    private readonly InputAction m_PlayerMap_Slide;
+    public struct PlayerMapActions
     {
         private @PlayerInputActions m_Wrapper;
-        public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Moving => m_Wrapper.m_Player_Moving;
-        public InputAction @Interact => m_Wrapper.m_Player_Interact;
-        public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
-        public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
-        public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
-        public InputAction @Jump => m_Wrapper.m_Player_Jump;
-        public InputActionMap Get() { return m_Wrapper.m_Player; }
+        public PlayerMapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Moving => m_Wrapper.m_PlayerMap_Moving;
+        public InputAction @Interact => m_Wrapper.m_PlayerMap_Interact;
+        public InputAction @Inventory => m_Wrapper.m_PlayerMap_Inventory;
+        public InputAction @Sprint => m_Wrapper.m_PlayerMap_Sprint;
+        public InputAction @Crouch => m_Wrapper.m_PlayerMap_Crouch;
+        public InputAction @Jump => m_Wrapper.m_PlayerMap_Jump;
+        public InputAction @Slide => m_Wrapper.m_PlayerMap_Slide;
+        public InputActionMap Get() { return m_Wrapper.m_PlayerMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-        public void AddCallbacks(IPlayerActions instance)
+        public static implicit operator InputActionMap(PlayerMapActions set) { return set.Get(); }
+        public void AddCallbacks(IPlayerMapActions instance)
         {
-            if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_PlayerMapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PlayerMapActionsCallbackInterfaces.Add(instance);
             @Moving.started += instance.OnMoving;
             @Moving.performed += instance.OnMoving;
             @Moving.canceled += instance.OnMoving;
@@ -358,9 +580,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @Slide.started += instance.OnSlide;
+            @Slide.performed += instance.OnSlide;
+            @Slide.canceled += instance.OnSlide;
         }
 
-        private void UnregisterCallbacks(IPlayerActions instance)
+        private void UnregisterCallbacks(IPlayerMapActions instance)
         {
             @Moving.started -= instance.OnMoving;
             @Moving.performed -= instance.OnMoving;
@@ -380,69 +605,182 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @Slide.started -= instance.OnSlide;
+            @Slide.performed -= instance.OnSlide;
+            @Slide.canceled -= instance.OnSlide;
         }
 
-        public void RemoveCallbacks(IPlayerActions instance)
+        public void RemoveCallbacks(IPlayerMapActions instance)
         {
-            if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_PlayerMapActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IPlayerActions instance)
+        public void SetCallbacks(IPlayerMapActions instance)
         {
-            foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_PlayerMapActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_PlayerMapActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public PlayerActions @Player => new PlayerActions(this);
+    public PlayerMapActions @PlayerMap => new PlayerMapActions(this);
 
-    // Camera
-    private readonly InputActionMap m_Camera;
-    private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
-    private readonly InputAction m_Camera_Delta;
-    public struct CameraActions
+    // CameraMap
+    private readonly InputActionMap m_CameraMap;
+    private List<ICameraMapActions> m_CameraMapActionsCallbackInterfaces = new List<ICameraMapActions>();
+    private readonly InputAction m_CameraMap_Delta;
+    private readonly InputAction m_CameraMap_RightMB;
+    private readonly InputAction m_CameraMap_LeftMB;
+    private readonly InputAction m_CameraMap_Point;
+    public struct CameraMapActions
     {
         private @PlayerInputActions m_Wrapper;
-        public CameraActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Delta => m_Wrapper.m_Camera_Delta;
-        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public CameraMapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Delta => m_Wrapper.m_CameraMap_Delta;
+        public InputAction @RightMB => m_Wrapper.m_CameraMap_RightMB;
+        public InputAction @LeftMB => m_Wrapper.m_CameraMap_LeftMB;
+        public InputAction @Point => m_Wrapper.m_CameraMap_Point;
+        public InputActionMap Get() { return m_Wrapper.m_CameraMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
-        public void AddCallbacks(ICameraActions instance)
+        public static implicit operator InputActionMap(CameraMapActions set) { return set.Get(); }
+        public void AddCallbacks(ICameraMapActions instance)
         {
-            if (instance == null || m_Wrapper.m_CameraActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_CameraActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_CameraMapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraMapActionsCallbackInterfaces.Add(instance);
             @Delta.started += instance.OnDelta;
             @Delta.performed += instance.OnDelta;
             @Delta.canceled += instance.OnDelta;
+            @RightMB.started += instance.OnRightMB;
+            @RightMB.performed += instance.OnRightMB;
+            @RightMB.canceled += instance.OnRightMB;
+            @LeftMB.started += instance.OnLeftMB;
+            @LeftMB.performed += instance.OnLeftMB;
+            @LeftMB.canceled += instance.OnLeftMB;
+            @Point.started += instance.OnPoint;
+            @Point.performed += instance.OnPoint;
+            @Point.canceled += instance.OnPoint;
         }
 
-        private void UnregisterCallbacks(ICameraActions instance)
+        private void UnregisterCallbacks(ICameraMapActions instance)
         {
             @Delta.started -= instance.OnDelta;
             @Delta.performed -= instance.OnDelta;
             @Delta.canceled -= instance.OnDelta;
+            @RightMB.started -= instance.OnRightMB;
+            @RightMB.performed -= instance.OnRightMB;
+            @RightMB.canceled -= instance.OnRightMB;
+            @LeftMB.started -= instance.OnLeftMB;
+            @LeftMB.performed -= instance.OnLeftMB;
+            @LeftMB.canceled -= instance.OnLeftMB;
+            @Point.started -= instance.OnPoint;
+            @Point.performed -= instance.OnPoint;
+            @Point.canceled -= instance.OnPoint;
         }
 
-        public void RemoveCallbacks(ICameraActions instance)
+        public void RemoveCallbacks(ICameraMapActions instance)
         {
-            if (m_Wrapper.m_CameraActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_CameraMapActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(ICameraActions instance)
+        public void SetCallbacks(ICameraMapActions instance)
         {
-            foreach (var item in m_Wrapper.m_CameraActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_CameraMapActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_CameraActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_CameraMapActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public CameraActions @Camera => new CameraActions(this);
+    public CameraMapActions @CameraMap => new CameraMapActions(this);
+
+    // UIMap
+    private readonly InputActionMap m_UIMap;
+    private List<IUIMapActions> m_UIMapActionsCallbackInterfaces = new List<IUIMapActions>();
+    private readonly InputAction m_UIMap_LeftMouseClick;
+    private readonly InputAction m_UIMap_RightMouseClick;
+    private readonly InputAction m_UIMap_MiddleMouseClick;
+    private readonly InputAction m_UIMap_Point;
+    private readonly InputAction m_UIMap_ScrollMouse;
+    private readonly InputAction m_UIMap_Escape;
+    public struct UIMapActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public UIMapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @LeftMouseClick => m_Wrapper.m_UIMap_LeftMouseClick;
+        public InputAction @RightMouseClick => m_Wrapper.m_UIMap_RightMouseClick;
+        public InputAction @MiddleMouseClick => m_Wrapper.m_UIMap_MiddleMouseClick;
+        public InputAction @Point => m_Wrapper.m_UIMap_Point;
+        public InputAction @ScrollMouse => m_Wrapper.m_UIMap_ScrollMouse;
+        public InputAction @Escape => m_Wrapper.m_UIMap_Escape;
+        public InputActionMap Get() { return m_Wrapper.m_UIMap; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIMapActions set) { return set.Get(); }
+        public void AddCallbacks(IUIMapActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UIMapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIMapActionsCallbackInterfaces.Add(instance);
+            @LeftMouseClick.started += instance.OnLeftMouseClick;
+            @LeftMouseClick.performed += instance.OnLeftMouseClick;
+            @LeftMouseClick.canceled += instance.OnLeftMouseClick;
+            @RightMouseClick.started += instance.OnRightMouseClick;
+            @RightMouseClick.performed += instance.OnRightMouseClick;
+            @RightMouseClick.canceled += instance.OnRightMouseClick;
+            @MiddleMouseClick.started += instance.OnMiddleMouseClick;
+            @MiddleMouseClick.performed += instance.OnMiddleMouseClick;
+            @MiddleMouseClick.canceled += instance.OnMiddleMouseClick;
+            @Point.started += instance.OnPoint;
+            @Point.performed += instance.OnPoint;
+            @Point.canceled += instance.OnPoint;
+            @ScrollMouse.started += instance.OnScrollMouse;
+            @ScrollMouse.performed += instance.OnScrollMouse;
+            @ScrollMouse.canceled += instance.OnScrollMouse;
+            @Escape.started += instance.OnEscape;
+            @Escape.performed += instance.OnEscape;
+            @Escape.canceled += instance.OnEscape;
+        }
+
+        private void UnregisterCallbacks(IUIMapActions instance)
+        {
+            @LeftMouseClick.started -= instance.OnLeftMouseClick;
+            @LeftMouseClick.performed -= instance.OnLeftMouseClick;
+            @LeftMouseClick.canceled -= instance.OnLeftMouseClick;
+            @RightMouseClick.started -= instance.OnRightMouseClick;
+            @RightMouseClick.performed -= instance.OnRightMouseClick;
+            @RightMouseClick.canceled -= instance.OnRightMouseClick;
+            @MiddleMouseClick.started -= instance.OnMiddleMouseClick;
+            @MiddleMouseClick.performed -= instance.OnMiddleMouseClick;
+            @MiddleMouseClick.canceled -= instance.OnMiddleMouseClick;
+            @Point.started -= instance.OnPoint;
+            @Point.performed -= instance.OnPoint;
+            @Point.canceled -= instance.OnPoint;
+            @ScrollMouse.started -= instance.OnScrollMouse;
+            @ScrollMouse.performed -= instance.OnScrollMouse;
+            @ScrollMouse.canceled -= instance.OnScrollMouse;
+            @Escape.started -= instance.OnEscape;
+            @Escape.performed -= instance.OnEscape;
+            @Escape.canceled -= instance.OnEscape;
+        }
+
+        public void RemoveCallbacks(IUIMapActions instance)
+        {
+            if (m_Wrapper.m_UIMapActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IUIMapActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UIMapActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UIMapActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public UIMapActions @UIMap => new UIMapActions(this);
     private int m_PCWindowsSchemeIndex = -1;
     public InputControlScheme PCWindowsScheme
     {
@@ -452,7 +790,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             return asset.controlSchemes[m_PCWindowsSchemeIndex];
         }
     }
-    public interface IPlayerActions
+    public interface IPlayerMapActions
     {
         void OnMoving(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
@@ -460,9 +798,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnSlide(InputAction.CallbackContext context);
     }
-    public interface ICameraActions
+    public interface ICameraMapActions
     {
         void OnDelta(InputAction.CallbackContext context);
+        void OnRightMB(InputAction.CallbackContext context);
+        void OnLeftMB(InputAction.CallbackContext context);
+        void OnPoint(InputAction.CallbackContext context);
+    }
+    public interface IUIMapActions
+    {
+        void OnLeftMouseClick(InputAction.CallbackContext context);
+        void OnRightMouseClick(InputAction.CallbackContext context);
+        void OnMiddleMouseClick(InputAction.CallbackContext context);
+        void OnPoint(InputAction.CallbackContext context);
+        void OnScrollMouse(InputAction.CallbackContext context);
+        void OnEscape(InputAction.CallbackContext context);
     }
 }

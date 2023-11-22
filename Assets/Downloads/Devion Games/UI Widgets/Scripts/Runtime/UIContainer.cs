@@ -43,13 +43,7 @@ namespace DevionGames.UIWidgets
         /// <summary>
         /// Collection of slots this container is holding
         /// </summary>
-        public ReadOnlyCollection<UISlot<T>> Slots
-        {
-            get
-            {
-                return this.m_Slots.AsReadOnly();
-            }
-        }
+        public ReadOnlyCollection<UISlot<T>> Slots => this.m_Slots.AsReadOnly();
 
         protected List<T> m_Collection;
   

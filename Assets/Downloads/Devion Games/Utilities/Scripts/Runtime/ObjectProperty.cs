@@ -13,20 +13,15 @@ namespace DevionGames
 		private string name= string.Empty;
 
 		public string Name {
-			get{ return this.name; }
-			set{ this.name = value; }
+			get => this.name;
+			set => this.name = value;
 		}
 
 		[SerializeField]
 		private int typeIndex;
 
-		public Type SerializedType {
-			get {
-				return SupportedTypes [typeIndex];
-			}
-		}
+		public Type SerializedType => SupportedTypes [typeIndex];
 
-		
 		public string stringValue;
 		public int intValue;
 

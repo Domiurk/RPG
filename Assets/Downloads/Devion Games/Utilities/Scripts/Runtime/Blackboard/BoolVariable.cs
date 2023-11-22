@@ -11,24 +11,16 @@ namespace DevionGames
 		private bool m_Value;
 
 		public bool Value {
-			get{ return this.m_Value; }
-			set{ this.m_Value = value; }
+			get => this.m_Value;
+			set => this.m_Value = value;
 		}
 
 		public override object RawValue {
-			get {
-				return this.m_Value;
-			}
-			set {
-				this.m_Value = (bool)value;
-			}
+			get => this.m_Value;
+			set => this.m_Value = (bool)value;
 		}
 
-		public override System.Type type {
-			get {
-				return typeof(bool);
-			}
-		}
+		public override System.Type type => typeof(bool);
 
 		public BoolVariable ()
 		{

@@ -68,13 +68,7 @@ namespace DevionGames.Graphs
 
         [SerializeField]
         private List<Edge> m_Connections;
-        public List<Edge> Connections
-        {
-            get
-            {
-                return this.m_Connections;
-            }
-        }
+        public List<Edge> Connections => this.m_Connections;
 
         //Changed to public because it was using not FullName, and need to change that. Will be switched back to private
         [SerializeField]

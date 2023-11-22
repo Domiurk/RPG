@@ -7,14 +7,7 @@ namespace DevionGames.InventorySystem.Configuration
     [System.Serializable]
     public class Default : Settings
     {
-        public override string Name
-        {
-            get
-            {
-                return "Default";
-            }
-        }
-
+        public override string Name => "Default";
 
         public string playerTag = "Player";
         public float maxDropDistance = 3f;
