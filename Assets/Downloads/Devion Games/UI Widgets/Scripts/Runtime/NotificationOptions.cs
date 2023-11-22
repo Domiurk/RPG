@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
 namespace DevionGames.UIWidgets{
-	[System.Serializable]
 	/// <summary>
 	/// Message options.
 	/// </summary>
+	[System.Serializable]
 	public class NotificationOptions {
 		/// <summary>
 		/// The title to display.
@@ -13,6 +13,7 @@ namespace DevionGames.UIWidgets{
 		/// <summary>
 		/// The message to display.
 		/// </summary>
+		[TextArea(1,4)]
 		public string text = string.Empty;
 		/// <summary>
 		/// The color of the text.

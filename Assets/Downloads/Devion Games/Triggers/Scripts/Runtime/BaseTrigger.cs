@@ -8,6 +8,8 @@ namespace DevionGames
 {
     public abstract class BaseTrigger : CallbackHandler
     {
+        private const int TOLERANCE = 0;
+        
         public abstract PlayerInfo PlayerInfo { get; }
 
         //Callbacks for scene reference use.
@@ -30,13 +32,13 @@ namespace DevionGames
         //Current trigger used by the player
         public static BaseTrigger currentUsedTrigger;
 
-
         //All triggers in range
         private static List<BaseTrigger> m_TriggerInRange = new List<BaseTrigger>();
         //Dictionary of callbacks
         protected Dictionary<Type, string> m_CallbackHandlers;
 
         protected delegate void EventFunction<T>(T handler, GameObject player);
+
         protected delegate void PointerEventFunction<T>(T handler, PointerEventData eventData);
 
         protected bool m_CheckBlocking = true;
@@ -85,7 +87,8 @@ namespace DevionGames
         {
             this.RegisterCallbacks();
             this.m_TriggerEvents = GetComponentsInChildren<ITriggerEventHandler>();
-            if (PlayerInfo.gameObject == null && useDistance != -1) {
+
+            if (PlayerInfo.gameObject == null && Math.Abs(useDistance - (-1)) > TOLERANCE) {
                 useDistance = -1;
                 Debug.LogWarning("There is no Player in scene! Please set Use Distance to -1 to ignore range check in "+gameObject+".");
                
@@ -98,7 +101,7 @@ namespace DevionGames
 
             EventHandler.Register<int>(gameObject, "OnPoinerClickTrigger", OnPointerTriggerClick);
 
-            if (gameObject == PlayerInfo.gameObject || this.useDistance == -1) {
+            if (gameObject == PlayerInfo.gameObject || Math.Abs(this.useDistance - (-1)) < TOLERANCE) {
                 InRange = true;
             }
             else{
@@ -202,7 +205,7 @@ namespace DevionGames
                 return false;
             }
 
-            if (this.useDistance == -1) { return true; }
+            if (Math.Abs(this.useDistance - (-1)) < TOLERANCE) { return true; }
 
             //Return false if the player is not in range
             if (!InRange)
@@ -298,11 +301,11 @@ namespace DevionGames
             handlerGameObject.transform.SetParent(transform,false);
             handlerGameObject.layer = 2;
 
-            Collider collider = GetComponent<Collider>();
-            if (collider != null)
+            Collider triggerCollider = GetComponent<Collider>();
+            if (triggerCollider != null)
             {
-                position = collider.bounds.center;
-                position.y = (collider.bounds.center - collider.bounds.extents).y;
+                position = triggerCollider.bounds.center;
+                position.y = (triggerCollider.bounds.center - triggerCollider.bounds.extents).y;
                 position = transform.InverseTransformPoint(position);
             }
 
@@ -312,10 +315,10 @@ namespace DevionGames
             Vector3 scale = transform.lossyScale;
             sphereCollider.radius = useDistance / Mathf.Max(scale.x, scale.y, scale.z);
 
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            if (rigidbody == null) {
-                rigidbody =gameObject.AddComponent<Rigidbody>();
-                rigidbody.isKinematic = true;
+            Rigidbody rigidbodyComponent = GetComponent<Rigidbody>();
+            if (rigidbodyComponent == null) {
+                rigidbodyComponent =gameObject.AddComponent<Rigidbody>();
+                rigidbodyComponent.isKinematic = true;
             }
         }
 
@@ -377,9 +380,7 @@ namespace DevionGames
         //Execute event
         protected void ExecuteEvent<T>(EventFunction<T> func, bool includeDisabled = false) where T : ITriggerEventHandler
         {
-            for (int i = 0; i < this.m_TriggerEvents.Length; i++)
-            {
-                ITriggerEventHandler handler = this.m_TriggerEvents[i];
+            foreach(ITriggerEventHandler handler in this.m_TriggerEvents){
                 if (ShouldSendEvent<T>(handler, includeDisabled))
                 {
                     func.Invoke((T)handler, PlayerInfo.gameObject);

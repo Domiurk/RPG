@@ -19,10 +19,10 @@ namespace DevionGames.UIWidgets
             }
         }
 
-        [Header ("Behaviour")]
         /// <summary>
         /// Sets the container as dynamic. Slots are instantiated at runtime.
         /// </summary>
+        [Header ("Behaviour")]
         [SerializeField]
         protected bool m_DynamicContainer = false;
         /// <summary>
