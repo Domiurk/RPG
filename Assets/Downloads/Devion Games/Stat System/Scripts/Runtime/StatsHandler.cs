@@ -13,7 +13,10 @@ namespace DevionGames.StatSystem
         [InspectorLabel("Name")]
         [SerializeField]
         private string m_HandlerName = string.Empty;
-        public string HandlerName => this.m_HandlerName;
+        public string HandlerName
+        {
+            get { return this.m_HandlerName; }
+        }
         public bool saveable = false;
         [StatPicker]
         [SerializeField]
