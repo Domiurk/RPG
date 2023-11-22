@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.Events;
+﻿using UnityEngine.Events;
 
 namespace DevionGames.UIWidgets{
 	internal struct FloatTween : ITweenValue

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace DevionGames.InventorySystem
+﻿namespace DevionGames.InventorySystem
 {
     [System.Serializable]
     public class CurrencyConversion

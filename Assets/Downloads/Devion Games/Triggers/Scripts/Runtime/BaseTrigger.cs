@@ -8,24 +8,17 @@ namespace DevionGames
 {
     public abstract class BaseTrigger : CallbackHandler
     {
-        //Player GameObject, overrride this and set 
         public abstract PlayerInfo PlayerInfo { get; }
 
         //Callbacks for scene reference use.
-        public override string[] Callbacks
-        {
-            get
-            {
-                return new[] {
-                    "OnTriggerUsed",
-                    "OnTriggerUnUsed",
-                    "OnCameInRange",
-                    "OnWentOutOfRange",
-                };
-            }
-        }
+        public override string[] Callbacks => new[] {
+            "OnTriggerUsed",
+            "OnTriggerUnUsed",
+            "OnCameInRange",
+            "OnWentOutOfRange",
+        };
 
-        //The maximum distance for trigger useage
+        //The maximum distance for trigger usage
         public float useDistance = 1.2f;
         [EnumFlags]
         public TriggerInputType triggerType = TriggerInputType.LeftClick | TriggerInputType.Key;

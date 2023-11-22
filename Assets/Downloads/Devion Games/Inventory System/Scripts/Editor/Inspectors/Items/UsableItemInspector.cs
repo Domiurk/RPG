@@ -2,11 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEditor.AnimatedValues;
 using UnityEngine.Events;
-using System.Collections.Generic;
 
 namespace DevionGames.InventorySystem
 {

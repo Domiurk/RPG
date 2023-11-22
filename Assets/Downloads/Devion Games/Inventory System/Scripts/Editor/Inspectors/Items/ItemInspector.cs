@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.AnimatedValues;
 using System;
 using UnityEditorInternal;
-using System.Collections;
 using UnityEngine.Events;
 using System.Linq;
 using System.Reflection;

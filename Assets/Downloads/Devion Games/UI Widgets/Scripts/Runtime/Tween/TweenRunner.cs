@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DevionGames.UIWidgets{
 	internal class TweenRunner<T> where T : struct, ITweenValue

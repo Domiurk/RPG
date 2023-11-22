@@ -1,5 +1,4 @@
 ﻿using DevionGames.UIWidgets;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace DevionGames.StatSystem

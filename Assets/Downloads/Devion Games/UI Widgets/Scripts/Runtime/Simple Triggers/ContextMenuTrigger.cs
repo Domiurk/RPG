@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using DevionGames.UIWidgets;
 using ContextMenu = DevionGames.UIWidgets.ContextMenu;
 using UnityEngine.EventSystems;
