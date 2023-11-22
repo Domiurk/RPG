@@ -11,13 +11,7 @@ namespace DevionGames.StatSystem.Configuration
     public class StatSettingsEditor : ScriptableObjectCollectionEditor<Settings>
     {
 
-        public override string ToolbarName
-        {
-            get
-            {
-                return "Settings";
-            }
-        }
+        public override string ToolbarName => "Settings";
 
         protected override bool CanAdd => false;
 

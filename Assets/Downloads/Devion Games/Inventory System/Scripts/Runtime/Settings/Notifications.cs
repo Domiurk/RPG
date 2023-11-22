@@ -23,13 +23,7 @@ namespace DevionGames.InventorySystem.Configuration
     public class Notifications : Settings
     {
 
-        public override string Name
-        {
-            get
-            {
-                return "Notification";
-            }
-        }
+        public override string Name => "Notification";
         [Header("Container:")]
         public NotificationOptions containerFull = new NotificationOptions()
         {

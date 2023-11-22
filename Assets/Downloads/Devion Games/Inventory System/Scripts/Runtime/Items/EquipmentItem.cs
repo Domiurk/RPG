@@ -19,8 +19,8 @@ namespace DevionGames.InventorySystem{
 		[SerializeField]
 		private List<EquipmentRegion> m_Region= new List<EquipmentRegion>();
 		public List<EquipmentRegion> Region{
-			get{return this.m_Region;}
-			set{this.m_Region = value;}
+			get => this.m_Region;
+			set => this.m_Region = value;
 		}
 	}
 }

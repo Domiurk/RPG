@@ -15,11 +15,11 @@ namespace DevionGames
         [SerializeField]
         private bool m_Enabled = true;
         public bool enabled {
-            get { return this.m_Enabled; }
-            set { this.m_Enabled = value; }
+            get => this.m_Enabled;
+            set => this.m_Enabled = value;
         }
 
-        public bool isActiveAndEnabled { get { return enabled && gameObject.activeSelf; } }
+        public bool isActiveAndEnabled => enabled && gameObject.activeSelf;
 
         protected PlayerInfo playerInfo;
         protected GameObject gameObject;

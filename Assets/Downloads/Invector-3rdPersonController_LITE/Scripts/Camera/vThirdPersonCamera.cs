@@ -162,13 +162,12 @@ public class vThirdPersonCamera : MonoBehaviour
         currentTargetPos = targetPos;
         desired_cPos = targetPos + new Vector3(0, height, 0);
         current_cPos = currentTargetPos + new Vector3(0, currentHeight, 0);
-        RaycastHit hitInfo;
 
         ClipPlanePoints planePoints = _camera.NearClipPlanePoints(current_cPos + (camDir * (distance)), clipPlaneMargin);
         ClipPlanePoints oldPoints = _camera.NearClipPlanePoints(desired_cPos + (camDir * distance), clipPlaneMargin);
 
         //Check if Height is not blocked 
-        if (Physics.SphereCast(targetPos, checkHeightRadius, Vector3.up, out hitInfo, cullingHeight + 0.2f, cullingLayer))
+        if (Physics.SphereCast(targetPos, checkHeightRadius, Vector3.up, out RaycastHit hitInfo, cullingHeight + 0.2f, cullingLayer))
         {
             var t = hitInfo.distance - 0.2f;
             t -= height;

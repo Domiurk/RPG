@@ -22,10 +22,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
         [TableList(IsReadOnly = true, AlwaysExpanded = true), ShowInInspector]
         private readonly List<CharacterWrapper> allCharacters;
 
-        public Character this[int index]
-        {
-            get { return this.allCharacters[index].Character; }
-        }
+        public Character this[int index] => this.allCharacters[index].Character;
 
         public CharacterTable(IEnumerable<Character> characters)
         {
@@ -34,44 +31,48 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
 
         private class CharacterWrapper
         {
-            private Character character; // Character is a ScriptableObject and would render a unity object
-                                         // field if drawn in the inspector, which is not what we want.
+            // field if drawn in the inspector, which is not what we want.
 
-            public Character Character
-            {
-                get { return this.character; }
-            }
+            public Character Character { get; }
 
             public CharacterWrapper(Character character)
             {
-                this.character = character;
+                this.Character = character;
             }
 
             [TableColumnWidth(50, false)]
             [ShowInInspector, PreviewField(45, ObjectFieldAlignment.Center)]
-            public Texture Icon { get { return this.character.Icon; } set { this.character.Icon = value; EditorUtility.SetDirty(this.character); } }
+            public Texture Icon { get => this.Character.Icon;
+                set { this.Character.Icon = value; EditorUtility.SetDirty(this.Character); } }
 
             [TableColumnWidth(120)]
             [ShowInInspector]
-            public string Name { get { return this.character.Name; } set { this.character.Name = value; EditorUtility.SetDirty(this.character); } }
+            public string Name { get => this.Character.Name;
+                set { this.Character.Name = value; EditorUtility.SetDirty(this.Character); } }
 
             [ShowInInspector, ProgressBar(0, 100)]
-            public float Shooting { get { return this.character.Skills.Shooting; } set { this.character.Skills.Shooting = value; EditorUtility.SetDirty(this.character); } }
+            public float Shooting { get => this.Character.Skills.Shooting;
+                set { this.Character.Skills.Shooting = value; EditorUtility.SetDirty(this.Character); } }
 
             [ShowInInspector, ProgressBar(0, 100)]
-            public float Melee { get { return this.character.Skills.Melee; } set { this.character.Skills.Melee = value; EditorUtility.SetDirty(this.character); } }
+            public float Melee { get => this.Character.Skills.Melee;
+                set { this.Character.Skills.Melee = value; EditorUtility.SetDirty(this.Character); } }
 
             [ShowInInspector, ProgressBar(0, 100)]
-            public float Social { get { return this.character.Skills.Social; } set { this.character.Skills.Social = value; EditorUtility.SetDirty(this.character); } }
+            public float Social { get => this.Character.Skills.Social;
+                set { this.Character.Skills.Social = value; EditorUtility.SetDirty(this.Character); } }
 
             [ShowInInspector, ProgressBar(0, 100)]
-            public float Animals { get { return this.character.Skills.Animals; } set { this.character.Skills.Animals = value; EditorUtility.SetDirty(this.character); } }
+            public float Animals { get => this.Character.Skills.Animals;
+                set { this.Character.Skills.Animals = value; EditorUtility.SetDirty(this.Character); } }
 
             [ShowInInspector, ProgressBar(0, 100)]
-            public float Medicine { get { return this.character.Skills.Medicine; } set { this.character.Skills.Medicine = value; EditorUtility.SetDirty(this.character); } }
+            public float Medicine { get => this.Character.Skills.Medicine;
+                set { this.Character.Skills.Medicine = value; EditorUtility.SetDirty(this.Character); } }
 
             [ShowInInspector, ProgressBar(0, 100)]
-            public float Crafting { get { return this.character.Skills.Crafting; } set { this.character.Skills.Crafting = value; EditorUtility.SetDirty(this.character); } }
+            public float Crafting { get => this.Character.Skills.Crafting;
+                set { this.Character.Skills.Crafting = value; EditorUtility.SetDirty(this.Character); } }
         }
     }
 }

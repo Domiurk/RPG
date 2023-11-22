@@ -58,7 +58,6 @@ namespace Test.CharacterMover
         public virtual void Enter() { }
         public virtual void Update() { }
         public virtual void Exit() { }
-
         public virtual bool HandleInput() => false;
         public virtual void FixedUpdate() { }
     }

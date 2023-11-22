@@ -12,18 +12,8 @@ namespace DevionGames
         [SerializeField]
         protected List<AudioClip> m_Clips;
 
-        public AudioClip this[int index]
-        {
-            get { return this.m_Clips[index]; }
-        }
+        public AudioClip this[int index] => this.m_Clips[index];
 
-        public int Count
-        {
-            get
-            {
-                return this.m_Clips.Count;
-            }
-        }
-
+        public int Count => this.m_Clips.Count;
     }
 }

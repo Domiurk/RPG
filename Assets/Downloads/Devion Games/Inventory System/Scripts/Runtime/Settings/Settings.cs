@@ -9,7 +9,7 @@ namespace DevionGames.InventorySystem.Configuration
     {
         public virtual string Name
         {
-            get { return "Settings"; }
+            get => "Settings";
             set { }
         }
     }

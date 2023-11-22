@@ -13,11 +13,7 @@ namespace DevionGames.InventorySystem
         private bool m_UseCategoryCooldown = true;
         [SerializeField]
         private float m_Cooldown = 1f;
-        public float Cooldown {
-            get {
-                return this.m_UseCategoryCooldown ? Category.Cooldown : this.m_Cooldown;
-            }
-        }
+        public float Cooldown => this.m_UseCategoryCooldown ? Category.Cooldown : this.m_Cooldown;
 
         [SerializeReference]
         public List<Action> actions = new List<Action>();

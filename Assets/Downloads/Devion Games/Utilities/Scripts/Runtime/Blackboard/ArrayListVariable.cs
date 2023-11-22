@@ -12,8 +12,8 @@ namespace DevionGames
 
 		public ArrayList Value
 		{
-			get { return this.m_Value; }
-			set { this.m_Value = value; }
+			get => this.m_Value;
+			set => this.m_Value = value;
 		}
 
 		public override object RawValue
@@ -25,19 +25,10 @@ namespace DevionGames
 				}
 				return this.m_Value;
 			}
-			set
-			{
-				this.m_Value = (ArrayList)value;
-			}
+			set => this.m_Value = (ArrayList)value;
 		}
 
-		public override System.Type type
-		{
-			get
-			{
-				return typeof(ArrayList);
-			}
-		}
+		public override System.Type type => typeof(ArrayList);
 
 		public ArrayListVariable()
 		{

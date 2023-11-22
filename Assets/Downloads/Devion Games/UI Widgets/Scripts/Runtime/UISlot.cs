@@ -15,8 +15,8 @@ namespace DevionGames.UIWidgets
         /// </summary>
         public UIContainer<T> Container
         {
-            get { return this.m_Container; }
-            set { this.m_Container = value; }
+            get => this.m_Container;
+            set => this.m_Container = value;
         }
 
         private int m_Index = -1;
@@ -25,8 +25,8 @@ namespace DevionGames.UIWidgets
         /// </summary>
         public int Index
         {
-            get { return this.m_Index; }
-            set { this.m_Index = value; }
+            get => this.m_Index;
+            set => this.m_Index = value;
         }
 
 
@@ -36,10 +36,7 @@ namespace DevionGames.UIWidgets
         /// </summary>
         public virtual T ObservedItem
         {
-            get
-            {
-                return this.m_Item;
-            }
+            get => this.m_Item;
             set
             {
                 this.m_Item = value;
@@ -50,10 +47,7 @@ namespace DevionGames.UIWidgets
         /// <summary>
         /// Checks if the slot is empty ObservedItem == null
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return ObservedItem == null; }
-        }
+        public bool IsEmpty => ObservedItem == null;
 
         /// <summary>
         /// Repaint slot visuals with item information

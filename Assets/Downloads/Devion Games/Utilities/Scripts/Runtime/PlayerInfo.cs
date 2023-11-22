@@ -82,14 +82,6 @@ namespace DevionGames
             }
         }
 
-        public Bounds bounds
-        {
-            get
-            {
-                return UnityTools.GetBounds(gameObject);
-            }
-        }
-
-      
+        public Bounds bounds => UnityTools.GetBounds(gameObject);
     }
 }

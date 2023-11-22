@@ -90,27 +90,19 @@ namespace DevionGames.InventorySystem
 		}
 
 		public Item this [int index] {
-			get { return this.m_Items [index]; }
-			set {
+			get => this.m_Items [index];
+            set {
 				Insert (index, value);
                 if (onChange != null)
                     onChange.Invoke();
             }
 		}
 
-		public int Count {
-			get { 
-				return m_Items.Count;
-			}
-		}
+		public int Count => m_Items.Count;
 
-		public bool IsEmpty {
-			get { 
-				return m_Items.Count == 0;
-			}
-		}
+        public bool IsEmpty => m_Items.Count == 0;
 
-		public IEnumerator<Item> GetEnumerator ()
+        public IEnumerator<Item> GetEnumerator ()
 		{
 			return this.m_Items.GetEnumerator ();
 		}

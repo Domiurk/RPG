@@ -6,11 +6,7 @@ using System.Collections;
 public class Cooldown : MonoBehaviour,IPointerClickHandler {
 	public Image overlay;
 	private bool isCoolDown;
-	public bool IsCoolDown{
-		get{
-			return isCoolDown;
-		}
-	}
+	public bool IsCoolDown => isCoolDown;
 	private float coolDownDuration;
 	private float coolDownInitTime;
 	public void Update ()

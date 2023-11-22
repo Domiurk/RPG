@@ -15,13 +15,7 @@ namespace DevionGames.InventorySystem
 		[SerializeField]
 		protected string searchFilter = "All";
 
-        public override string ToolbarName
-        {
-            get
-            {
-                return "Items";
-            }
-        }
+        public override string ToolbarName => "Items";
 
         public ItemCollectionEditor (UnityEngine.Object target, List<Item> items, List<string> searchFilters) : base (target, items)
 		{

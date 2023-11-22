@@ -15,10 +15,7 @@ namespace DevionGames
 	{
 		[SerializeField]
 		protected List<T> items;
-		protected override List<T> Items
-		{
-			get{ return items; }
-		}
+		protected override List<T> Items => items;
 
 		[SerializeField]
 		protected UnityEngine.Object target;

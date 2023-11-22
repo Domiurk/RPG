@@ -29,14 +29,14 @@ namespace DevionGames
 
         private bool m_IsDownloading=false;
         public bool IsDownloading {
-            get { return this.m_IsDownloading; }
-            set { this.m_IsDownloading = value; }
+            get => this.m_IsDownloading;
+            set => this.m_IsDownloading = value;
         }
 
         private float m_DownloadProgress = 0f;
         public float DownloadProgress {
-            get { return this.m_DownloadProgress; }
-            set { this.m_DownloadProgress = value; }
+            get => this.m_DownloadProgress;
+            set => this.m_DownloadProgress = value;
         }
 
         private Texture2D m_Icon;
@@ -50,24 +50,14 @@ namespace DevionGames
             }
         }
 
-        public bool IsInstalled {
-            get { return InstalledModule != null; }
-        }
+        public bool IsInstalled => InstalledModule != null;
 
         [SerializeField]
         private ModuleItem m_InstalledModule;
-        public ModuleItem InstalledModule {
-            get {
-                return this.m_InstalledModule;
-            }
-        }
+        public ModuleItem InstalledModule => this.m_InstalledModule;
         [System.NonSerialized]
         private ModuleItem[] m_DependencyModules= new ModuleItem[0];
-        public ModuleItem[] DependencyModules {
-            get {
-                return this.m_DependencyModules;
-            }
-        }       
+        public ModuleItem[] DependencyModules => this.m_DependencyModules;
 
         public bool CanInstall {
             get {

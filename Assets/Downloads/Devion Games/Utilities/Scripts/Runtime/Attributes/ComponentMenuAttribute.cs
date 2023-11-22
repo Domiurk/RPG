@@ -9,13 +9,7 @@ namespace DevionGames
     {
         private string m_ComponentMenu;
 
-        public string componentMenu
-        {
-            get
-            {
-                return this.m_ComponentMenu;
-            }
-        }
+        public string componentMenu => this.m_ComponentMenu;
 
         public ComponentMenu(string menuName)
         {

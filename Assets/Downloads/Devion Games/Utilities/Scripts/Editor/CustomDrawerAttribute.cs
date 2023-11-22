@@ -9,22 +9,10 @@ namespace DevionGames
     public class CustomDrawerAttribute : Attribute
     {
         private Type m_Type;
-        public Type Type
-        {
-            get
-            {
-                return this.m_Type;
-            }
-        }
+        public Type Type => this.m_Type;
 
         private bool m_UseForChildren;
-        public bool UseForChildren
-        {
-            get
-            {
-                return this.m_UseForChildren;
-            }
-        }
+        public bool UseForChildren => this.m_UseForChildren;
 
         public CustomDrawerAttribute(Type type)
         {

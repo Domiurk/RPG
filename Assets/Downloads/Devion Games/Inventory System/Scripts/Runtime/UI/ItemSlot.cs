@@ -64,7 +64,7 @@ namespace DevionGames.InventorySystem
 
         private static DragObject m_DragObject;
         public static DragObject dragObject {
-            get {return m_DragObject;}
+            get => m_DragObject;
             set{
                 m_DragObject = value;
                 //Set the dragging icon

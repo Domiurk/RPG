@@ -41,9 +41,7 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public Item ObservedItem
         {
-            get{
-                return this.m_Item;
-            }
+            get => this.m_Item;
             set {
                 this.m_Item = value;
                 Repaint();
@@ -53,17 +51,15 @@ namespace DevionGames.InventorySystem
         /// <summary>
         /// Checks if the slot is empty ObservedItem == null
         /// </summary>
-        public bool IsEmpty {
-            get { return ObservedItem == null; }
-        }
+        public bool IsEmpty => ObservedItem == null;
 
         private ItemContainer m_Container;
         /// <summary>
         /// The item container that holds this slot
         /// </summary>
         public ItemContainer Container {
-            get {return this.m_Container;}
-            set { this.m_Container = value; }
+            get => this.m_Container;
+            set => this.m_Container = value;
         }
 
         private int m_Index = -1;
@@ -71,8 +67,8 @@ namespace DevionGames.InventorySystem
         /// Index of item container
         /// </summary>
         public int Index {
-            get { return this.m_Index; }
-            set { this.m_Index = value; }
+            get => this.m_Index;
+            set => this.m_Index = value;
         }
 
         public override string[] Callbacks {

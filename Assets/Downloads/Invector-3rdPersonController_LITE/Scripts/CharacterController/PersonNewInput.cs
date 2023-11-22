@@ -37,7 +37,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         private void OnEnable()
         {
-            InputActions.Player.Enable();
+            InputActions.PlayerMap.Enable();
             MovementAction.Enable();
             SprintAction.Enable();
             CrouchAction.Enable();
@@ -46,7 +46,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         private void OnDisable()
         {
-            InputActions.Player.Disable();
+            InputActions.PlayerMap.Disable();
             MovementAction.Disable();
             SprintAction.Disable();
             CrouchAction.Disable();
@@ -62,10 +62,10 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
         {
             InputActions = new PlayerInputActions();
             personController = GetComponent<vThirdPersonController>();
-            MovementAction = InputActions.Player.Moving;
-            SprintAction = InputActions.Player.Sprint;
-            CrouchAction = InputActions.Player.Crouch;
-            JumpAction = InputActions.Player.Jump;
+            MovementAction = InputActions.PlayerMap.Moving;
+            SprintAction = InputActions.PlayerMap.Sprint;
+            CrouchAction = InputActions.PlayerMap.Crouch;
+            JumpAction = InputActions.PlayerMap.Jump;
             //InputActions.Player.Jump.performed += _ => JumpInput();
             //InputActions.Player.Sprint.performed += _ => SprintInput(true);
             //InputActions.Player.Sprint.canceled += _ => SprintInput(false);
@@ -101,7 +101,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         public void MoveInput()
         {
-            Vector2 input = InputActions.Player.Moving.ReadValue<Vector2>();
+            Vector2 input = InputActions.PlayerMap.Moving.ReadValue<Vector2>();
             personController.input.x = input.x;
             personController.input.z = input.y;
         }

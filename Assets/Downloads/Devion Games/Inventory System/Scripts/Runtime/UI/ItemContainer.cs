@@ -113,8 +113,8 @@ namespace DevionGames.InventorySystem
         /// If true this container will be used as reference.
         /// </summary>
         public bool UseReferences {
-            get { return this.m_UseReferences; }
-            protected set { this.m_UseReferences = value; }
+            get => this.m_UseReferences;
+            protected set => this.m_UseReferences = value;
         }
 
         [Tooltip("Can the items be dragged into this container.")]
@@ -125,8 +125,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool CanDragIn
         {
-            get { return this.m_CanDragIn; }
-            protected set { this.m_CanDragIn = value; }
+            get => this.m_CanDragIn;
+            protected set => this.m_CanDragIn = value;
         }
 
         [Tooltip("Can the items be dragged out from this container.")]
@@ -137,8 +137,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool CanDragOut
         {
-            get { return this.m_CanDragOut; }
-            protected set { this.m_CanDragOut = value; }
+            get => this.m_CanDragOut;
+            protected set => this.m_CanDragOut = value;
         }
 
         [Tooltip("Can the items be dropped from this container to ground.")]
@@ -149,8 +149,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool CanDropItems
         {
-            get { return this.m_CanDropItems; }
-            protected set { this.m_CanDropItems = value; }
+            get => this.m_CanDropItems;
+            protected set => this.m_CanDropItems = value;
         }
 
         [Tooltip("Can the items be referenced from this container.")]
@@ -161,8 +161,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool CanReferenceItems
         {
-            get { return this.m_CanReferenceItems; }
-            protected set { this.m_CanReferenceItems = value; }
+            get => this.m_CanReferenceItems;
+            protected set => this.m_CanReferenceItems = value;
         }
 
         [Tooltip("Can the items be sold from this container.")]
@@ -173,8 +173,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool CanSellItems
         {
-            get { return this.m_CanSellItems; }
-            protected set { this.m_CanSellItems = value; }
+            get => this.m_CanSellItems;
+            protected set => this.m_CanSellItems = value;
         }
 
         [Tooltip("Can items be used from this container.")]
@@ -185,8 +185,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool CanUseItems
         {
-            get { return this.m_CanUseItems; }
-            protected set { this.m_CanUseItems = value; }
+            get => this.m_CanUseItems;
+            protected set => this.m_CanUseItems = value;
         }
 
         [Tooltip("Use context menu for item interaction.")]
@@ -197,8 +197,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool UseContextMenu
         {
-            get { return this.m_UseContextMenu; }
-            protected set { this.m_UseContextMenu = value; }
+            get => this.m_UseContextMenu;
+            protected set => this.m_UseContextMenu = value;
         }
 
         [Tooltip("Show item tooltips?")]
@@ -209,8 +209,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool ShowTooltips
         {
-            get { return this.m_ShowTooltips; }
-            protected set { this.m_ShowTooltips = value; }
+            get => this.m_ShowTooltips;
+            protected set => this.m_ShowTooltips = value;
         }
 
         [Tooltip("If true move used item. Move Conditions needs to be defined!")]
@@ -221,8 +221,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public bool MoveUsedItem
         {
-            get { return this.m_MoveUsedItem; }
-            protected set { this.m_MoveUsedItem = value; }
+            get => this.m_MoveUsedItem;
+            protected set => this.m_MoveUsedItem = value;
         }
 
         /// <summary>
@@ -236,12 +236,7 @@ namespace DevionGames.InventorySystem
         /// <summary>
         /// Collection of slots this container is holding
         /// </summary>
-        public ReadOnlyCollection<Slot> Slots
-        {
-            get {
-                return this.m_Slots.AsReadOnly();
-            }
-        }
+        public ReadOnlyCollection<Slot> Slots => this.m_Slots.AsReadOnly();
 
         protected ItemCollection m_Collection;
         /// <summary>

@@ -7,8 +7,8 @@ namespace DevionGames.InventorySystem{
 		[SerializeField]
 		private new string name="";
 		public string Name{
-			get{return this.name;}
-			set{this.name = value;}
+			get => this.name;
+			set => this.name = value;
 		}
 	}
 }

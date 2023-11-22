@@ -10,28 +10,28 @@ namespace DevionGames.UIWidgets{
 
 		private EasingEquations.EaseType m_EaseType;
 		public EasingEquations.EaseType easeType{
-			get{return this.m_EaseType;}
-			set{this.m_EaseType = value;}
+			get => this.m_EaseType;
+			set => this.m_EaseType = value;
 		}
 		private Vector3 m_StartValue;
 		public Vector3 startValue{
-			get{return this.m_StartValue;}
-			set{this.m_StartValue = value;}
+			get => this.m_StartValue;
+			set => this.m_StartValue = value;
 		}
 		private Vector3 m_TargetValue;
 		public Vector3 targetValue{
-			get{return this.m_TargetValue;}
-			set{this.m_TargetValue = value;}
+			get => this.m_TargetValue;
+			set => this.m_TargetValue = value;
 		}
 		private float m_Duration;
 		public float duration{
-			get { return this.m_Duration; }
-			set { this.m_Duration = value; }
+			get => this.m_Duration;
+			set => this.m_Duration = value;
 		}
 		private bool m_IgnoreTimeScale;
 		public bool ignoreTimeScale{
-			get { return this.m_IgnoreTimeScale; }
-			set { this.m_IgnoreTimeScale = value; }
+			get => this.m_IgnoreTimeScale;
+			set => this.m_IgnoreTimeScale = value;
 		}
 
 		public bool ValidTarget()

@@ -10,9 +10,7 @@ namespace DevionGames.UIWidgets{
 		[SerializeField]
 		protected float m_Current;
 		public float current{
-			get{
-				return this.m_Current;
-			}
+			get => this.m_Current;
 			set{
                 if (this.m_Current != value)
                 {

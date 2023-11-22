@@ -53,10 +53,7 @@ namespace DevionGames
         private bool m_InRange;
         public bool InRange
         {
-            get
-            {
-                return this.m_InRange;
-            }
+            get => this.m_InRange;
             protected set
             {
                 if (this.m_InRange != value)
@@ -75,7 +72,7 @@ namespace DevionGames
         private bool m_InUse;
         public bool InUse
         {
-            get { return this.m_InUse; }
+            get => this.m_InUse;
             set
             {
                 if (this.m_InUse != value)

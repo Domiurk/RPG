@@ -12,14 +12,7 @@ namespace DevionGames
     {
         private static ObjectPickerWindow.Styles m_Styles;
         private string m_SearchString = string.Empty;
-        private bool isSearching
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(m_SearchString);
-            }
-        }
-
+        private bool isSearching => !string.IsNullOrEmpty(m_SearchString);
 
         private Vector2 m_ScrollPosition;
         private Type m_Type;

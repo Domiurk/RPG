@@ -33,7 +33,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
         [SerializeField]
         [ValueDropdown("CustomAddStatsButton", IsUniqueList = true, DrawDropdownForListElements = false,
                           DropdownTitle = "Modify Stats")]
-        [ListDrawerSettings(DraggableItems = false, Expanded = true)]
+        [ListDrawerSettings(DraggableItems = false, ShowFoldout = true)]
         private List<StatValue> stats = new();
 
         public StatValue this[int index]
@@ -46,19 +46,11 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
 
         public float this[StatType type]
         {
-            get{
-                for(int i = 0; i < this.stats.Count; i++){
-                    if(this.stats[i].Type == type){
-                        return this.stats[i].Value;
-                    }
-                }
-
-                return 0;
-            }
+            get{ return stats.Where(statValue => statValue.Type == type).Select(statValue => statValue.Value).FirstOrDefault(); }
             set{
                 for(int i = 0; i < this.stats.Count; i++){
                     if(this.stats[i].Type == type){
-                        var val = this.stats[i];
+                        StatValue val = this.stats[i];
                         val.Value = value;
                         this.stats[i] = val;
                         return;

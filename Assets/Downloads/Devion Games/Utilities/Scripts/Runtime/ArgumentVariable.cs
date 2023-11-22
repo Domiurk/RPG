@@ -28,14 +28,11 @@ namespace DevionGames
         private ArgumentType m_ArgumentType = ArgumentType.None;
 
         public ArgumentType ArgumentType {
-            get { return this.m_ArgumentType; }
-            set { this.m_ArgumentType = value; }
+            get => this.m_ArgumentType;
+            set => this.m_ArgumentType = value;
         }
 
-        public bool IsNone {
-            get { return this.m_ArgumentType == ArgumentType.None; }
-        }
-
+        public bool IsNone => this.m_ArgumentType == ArgumentType.None;
 
         public object GetValue() {
             switch (this.m_ArgumentType) {

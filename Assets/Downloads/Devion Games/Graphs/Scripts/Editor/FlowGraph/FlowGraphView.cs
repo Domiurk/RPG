@@ -34,12 +34,7 @@ namespace DevionGames.Graphs
             this.m_Target = target;
         }
 
-        protected override FlowNode[] inspectedNodes {
-            get {
-                return this.m_Graph.nodes.Cast<FlowNode>().ToArray();
-            
-            }
-        }
+        protected override FlowNode[] inspectedNodes => this.m_Graph.nodes.Cast<FlowNode>().ToArray();
 
         protected override void DrawNodeConnections(FlowNode[] nodes, Vector2 offset)
         {

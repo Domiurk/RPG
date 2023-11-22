@@ -14,7 +14,7 @@ namespace DevionGames.InventorySystem
 
         protected float m_CurrentValue = 0f;
         public float CurrentValue {
-            get { return this.m_CurrentValue; }
+            get => this.m_CurrentValue;
             set {
                 if (this.m_CurrentValue != value)
                 {
@@ -29,8 +29,8 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         protected SkillModifier m_GainModifier;
         public SkillModifier GainModifier {
-            get { return this.m_GainModifier; }
-            set { this.m_GainModifier = value; }
+            get => this.m_GainModifier;
+            set => this.m_GainModifier = value;
         }
 
         public bool CheckSkill() {

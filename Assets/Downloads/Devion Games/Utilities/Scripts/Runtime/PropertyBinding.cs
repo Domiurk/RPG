@@ -66,25 +66,15 @@ namespace DevionGames{
 		public class PropertyRef{
 			[SerializeField]
 			private Component m_Component= null;
-			public Component component{
-				get{
-					return this.m_Component;
-				}
-			}
-			
+			public Component component => this.m_Component;
+
 			private FieldInfo m_Field;
 			private PropertyInfo m_Property;
 			
 			[SerializeField]
 			private string m_PropertyPath=string.Empty;
-			public string propertyPath
-			{
-				get
-				{
-					return this.m_PropertyPath;
-				}
-			}
-			
+			public string propertyPath => this.m_PropertyPath;
+
 			public object GetValue ()
 			{
 				if (this.m_Field == null && this.m_Property == null) {

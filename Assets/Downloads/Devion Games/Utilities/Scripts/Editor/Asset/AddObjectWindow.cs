@@ -12,12 +12,7 @@ namespace DevionGames
 
         private static AddObjectWindow.Styles m_Styles;
         private string m_SearchString = string.Empty;
-        private bool isSearching{
-            get{
-                return !string.IsNullOrEmpty(m_SearchString);
-            }
-        }
-
+        private bool isSearching => !string.IsNullOrEmpty(m_SearchString);
 
         private Vector2 m_ScrollPosition;
         private Type m_Type;
@@ -353,26 +348,14 @@ namespace DevionGames
 
             private string m_Path;
 
-            public string path
-            {
-                get
-                {
-                    return this.m_Path;
-                }
-            }
+            public string path => this.m_Path;
 
             private GUIContent m_Label;
 
             public GUIContent label
             {
-                get
-                {
-                    return this.m_Label;
-                }
-                set
-                {
-                    this.m_Label = value;
-                }
+                get => this.m_Label;
+                set => this.m_Label = value;
             }
 
             public Element(string label, string path)
@@ -394,10 +377,7 @@ namespace DevionGames
                     }
                     return m_children;
                 }
-                set
-                {
-                    this.m_children = value;
-                }
+                set => this.m_children = value;
             }
 
             public bool Contains(Element item)

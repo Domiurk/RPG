@@ -104,7 +104,7 @@ namespace Sirenix.OdinInspector.Demos
                 }
             }
 
-            public override string SmartName { get { return this.instance.Name; } }
+            public override string SmartName => this.instance.Name;
         }
 
         private class SomeCustomClass
