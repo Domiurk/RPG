@@ -99,7 +99,7 @@ namespace DevionGames
                 triggerType = TriggerInputType.LeftClick;
             }
 
-            EventHandler.Register<int>(gameObject, "OnPoinerClickTrigger", OnPointerTriggerClick);
+            EventHandler.Register<int>(gameObject, "OnPointerClickTrigger", OnPointerTriggerClick);
 
             if (gameObject == PlayerInfo.gameObject || Math.Abs(this.useDistance - (-1)) < TOLERANCE) {
                 InRange = true;

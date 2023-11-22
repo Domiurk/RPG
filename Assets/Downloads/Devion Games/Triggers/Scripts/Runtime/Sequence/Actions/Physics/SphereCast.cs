@@ -34,8 +34,8 @@ namespace DevionGames
         {
             Vector3 startPosition = this.m_TargetTransform.position;
             Vector3 direction = PhysicsUtility.GetDirection(this.m_TargetTransform, this.m_Direction);
-            RaycastHit hit;
-            if (Physics.SphereCast(startPosition+Vector3.up*0.2f, this.m_Radius,direction,out hit,this.m_MaxDistance, this.m_LayerMask, this.m_QueryTriggerInteraction) && this.m_HitSuccessLayer.Contains(hit.collider.gameObject.layer )){
+
+            if (Physics.SphereCast(startPosition+Vector3.up*0.2f, this.m_Radius,direction,out RaycastHit hit,this.m_MaxDistance, this.m_LayerMask, this.m_QueryTriggerInteraction) && this.m_HitSuccessLayer.Contains(hit.collider.gameObject.layer )){
 
                 Debug.Log(hit.collider.name);
                 return ActionStatus.Success;

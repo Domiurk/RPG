@@ -80,8 +80,6 @@ namespace DevionGames
             Cursor.lockState = m_ActivePreset.CursorMode;
             Cursor.visible = m_ActivePreset.CursorMode != CursorLockMode.Locked;
             EventHandler.Register<bool>(Target.gameObject, "OnSetControllerActive", OnSetControllerActive);
-            EventHandler.Register(Target.gameObject, "OnEndUse", OnEndUse);
-            EventHandler.Register(Target.gameObject, "TriggerAnimationEvent", TriggerAnimationEvent);
         }
 
         private void OnEnable()
@@ -109,16 +107,6 @@ namespace DevionGames
             m_CharacterControllerActive = active;
         }
 
-        public void TriggerAnimationEvent()
-        {
-            print("muchas gracias!!!");
-        }
-        
-        public void OnEndUse()
-        {
-            print("Buy buy");
-        }  
-        
         private void LateUpdate()
         {
             UpdateInput();
@@ -191,6 +179,7 @@ namespace DevionGames
                         m_ActivePreset = preset;
                         ApplyCrosshair(m_ActivePreset.Crosshair);
                     }
+
                     break;
                 }
             }
@@ -202,7 +191,7 @@ namespace DevionGames
 
             m_ConsumeTurn = m_ActivePreset.TurnButton == null || m_ConsumeTurn;
 
-            if(!m_ConsumeTurn && 
+            if(!m_ConsumeTurn &&
                (m_ActivePreset.TurnButton != null || m_ActivePreset.TurnButton.action.WasReleasedThisFrame())){
                 Vector2 mouse = m_Mouse.delta.ReadValue() * m_ActivePreset.TurnSpeed;
 

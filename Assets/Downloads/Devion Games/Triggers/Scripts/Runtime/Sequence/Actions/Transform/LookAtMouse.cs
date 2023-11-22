@@ -25,8 +25,8 @@ namespace DevionGames
             this.m_Transform = GetTarget(this.m_Target).transform;
             this.m_LastRotation = this.m_Transform.rotation;
             this.m_DesiredRotation = m_LastRotation;
-            RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, this.m_MaxDistance))
+
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, this.m_MaxDistance))
             {
 
                 Vector3 targetPosition = hit.point;

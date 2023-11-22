@@ -31,8 +31,8 @@ namespace DevionGames
                 actionTemplate = Instantiate(actionTemplate);
             this.m_ActionBehavior = new Sequence(gameObject, PlayerInfo, GetComponent<Blackboard>(),
                                                  actionTemplate != null
-                                                     ? actionTemplate.actions.ToArray()
-                                                     : actions.ToArray());
+                                                     ? actionTemplate.actions.Cast<IAction>().ToArray()
+                                                     : actions.Cast<IAction>().ToArray());
         }
 
         //Called once per frame
