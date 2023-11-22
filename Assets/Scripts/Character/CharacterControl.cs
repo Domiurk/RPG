@@ -8,6 +8,8 @@ namespace Character
 {
     public class CharacterControl : MonoBehaviour, ICharacterControl
     {
+        [SerializeField] private Vector3 position;
+        
         [field: SerializeField] public CharacterControlData CharacterControlData { get; private set; }
         private InputActionReference moveAction;
         private InputActionReference jumpAction;
@@ -24,9 +26,10 @@ namespace Character
                                                               moveAction)));
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            stateMachine.StateUpdate();
+            controller.Move(position);
+            // stateMachine.StateUpdate();
         }
 
         public void Moving(Vector3 direction)

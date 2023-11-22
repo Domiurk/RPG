@@ -12,12 +12,13 @@ namespace DevionGames.InventorySystem
         {
             get
             {
-                List<string> callbacks = new List<string>(base.Callbacks);
-                callbacks.Add("OnCraftStart");
-                callbacks.Add("OnFailedCraftStart");
-                callbacks.Add("OnCraftItem");
-                callbacks.Add("OnFailedToCraftItem");
-                callbacks.Add("OnCraftStop");
+                List<string> callbacks = new List<string>(base.Callbacks){
+                    "OnCraftStart",
+                    "OnFailedCraftStart",
+                    "OnCraftItem",
+                    "OnFailedToCraftItem",
+                    "OnCraftStop"
+                };
                 return callbacks.ToArray();
             }
         }

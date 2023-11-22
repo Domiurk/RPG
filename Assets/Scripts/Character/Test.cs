@@ -31,7 +31,7 @@ namespace Test.CharacterMover
         {
             if(!states.TryGetValue(stateName.ToLower(), out State newState))
                 return false;
-            
+
             CurrentState?.Exit();
             CurrentState = newState;
             CurrentState.Enter();
@@ -47,7 +47,7 @@ namespace Test.CharacterMover
     public abstract class State
     {
         public string Name { get; }
-        protected StateMachine StateMachine { get; private set; }
+        protected StateMachine StateMachine { get; }
 
         protected State(string name, StateMachine stateMachine)
         {
@@ -65,8 +65,6 @@ namespace Test.CharacterMover
 
     internal class PlayerIdleState : State
     {
-        [field: SerializeField] public float Velocity { get; private set; }
-
         public PlayerIdleState(string name, StateMachine stateMachine) : base(name, stateMachine) { }
     }
 
@@ -97,7 +95,8 @@ namespace Test.CharacterMover
 
         public override void FixedUpdate()
         {
-            StateMachine.CharacterControl.Moving(new Vector3(ReadMoving.x * speed, 0, ReadMoving.y * speed));
+            Vector3 moving = new Vector3(ReadMoving.x * speed, 0, ReadMoving.y * speed);
+            StateMachine.CharacterControl.Moving(moving);
         }
 
         public override void Exit()

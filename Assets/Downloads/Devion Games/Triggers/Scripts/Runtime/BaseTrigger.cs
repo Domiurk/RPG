@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace DevionGames
 {
-    [UnityEngine.Scripting.APIUpdating.MovedFromAttribute(true, null, "Assembly-CSharp")]
     public abstract class BaseTrigger : CallbackHandler
     {
         //Player GameObject, overrride this and set 
@@ -31,7 +30,7 @@ namespace DevionGames
         [EnumFlags]
         public TriggerInputType triggerType = TriggerInputType.LeftClick | TriggerInputType.Key;
         //If in range and trigger input type includes key, the key to use the trigger.
-        public KeyCode key = KeyCode.F;
+        public InputActionReference key;
 
         //Custom Trigger callbacks
         protected ITriggerEventHandler[] m_TriggerEvents;
@@ -48,7 +47,7 @@ namespace DevionGames
         protected delegate void PointerEventFunction<T>(T handler, PointerEventData eventData);
 
         protected bool m_CheckBlocking = true;
-        protected bool m_Started = false;
+        protected bool m_Started;
 
         //Is the player in range, set by OnTriggerEnter/OnTriggerExit or if trigger is attached to player in Start?
         private bool m_InRange;
@@ -120,6 +119,7 @@ namespace DevionGames
         }
 
         protected virtual void OnDisable() {
+            key.action.Disable();
             if (Time.frameCount > 0){
                 this.InRange = false;
             }
@@ -127,7 +127,7 @@ namespace DevionGames
 
         protected virtual void OnEnable()
         {
-           
+            key.action.Enable();
             if (Time.frameCount > 0 && this.m_Started && PlayerInfo.transform != null)
                 InRange = Vector3.Distance(transform.position, PlayerInfo.transform.position) <= this.useDistance;
         }
@@ -138,7 +138,7 @@ namespace DevionGames
             if (!InRange) { return; }
 
             //Check for key down and if trigger input type supports key.
-            if (Input.GetKeyDown(key) && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange && IsBestTrigger()){
+            if (key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange && IsBestTrigger()){
                 Use();
             }
         }
@@ -395,8 +395,8 @@ namespace DevionGames
                     func.Invoke((T)handler, PlayerInfo.gameObject);
                 }
             }
-            string eventID = string.Empty;
-            if (this.m_CallbackHandlers.TryGetValue(typeof(T), out eventID))
+
+            if (this.m_CallbackHandlers.TryGetValue(typeof(T), out string eventID))
             {
                 CallbackEventData triggerEventData = new CallbackEventData();
                 triggerEventData.AddData("Trigger", this);
@@ -417,8 +417,7 @@ namespace DevionGames
                 }
             }
 
-            string eventID = string.Empty;
-            if (this.m_CallbackHandlers.TryGetValue(typeof(T), out eventID))
+            if (this.m_CallbackHandlers.TryGetValue(typeof(T), out string eventID))
             {
                 CallbackEventData triggerEventData = new CallbackEventData();
                 triggerEventData.AddData("Trigger", this);
@@ -452,7 +451,7 @@ namespace DevionGames
 
         }
 
-        [System.Flags]
+        [Flags]
         public enum TriggerInputType
         {
             LeftClick = 1,

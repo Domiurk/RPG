@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace DevionGames
 {
-    [UnityEngine.Scripting.APIUpdating.MovedFromAttribute(true, null, "Assembly-CSharp")]
     public class BehaviorTrigger : BaseTrigger
     {
         public ActionTemplate actionTemplate;
@@ -23,14 +21,7 @@ namespace DevionGames
 
         private PlayerInfo m_PlayerInfo;
 
-        public override PlayerInfo PlayerInfo {
-            get { 
-                if (this.m_PlayerInfo == null) {
-                    this.m_PlayerInfo = new PlayerInfo("Player");
-                }
-                return this.m_PlayerInfo;
-            }
-        }
+        public override PlayerInfo PlayerInfo => this.m_PlayerInfo ??= new PlayerInfo("Player");
 
         protected override void Start()
         {
@@ -49,7 +40,7 @@ namespace DevionGames
             if (!InRange) { return; }
 
             //Check for key down and if trigger input type supports key.
-            if (Input.GetKeyDown(key) && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange && IsBestTrigger())
+            if (key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange && IsBestTrigger())
             {
                 Use();
             }
