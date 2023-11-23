@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace DevionGames.InventorySystem
 {
+    [System.Serializable]
     [Icon("Item")]
     [ComponentMenu("Inventory System/Check Skill")]
     public class CheckSkill : Action, ICondition

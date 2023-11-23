@@ -5,6 +5,7 @@ using UnityEngine.UI;
 namespace DevionGames.InventorySystem
 {
     [UnityEngine.Scripting.APIUpdating.MovedFromAttribute(true, null, "Assembly-CSharp")]
+    [System.Serializable]
     [Icon(typeof(GraphicRaycaster))]
     [ComponentMenu("Physics/Raycast Notify")]
     public class RaycastNotify : Raycast

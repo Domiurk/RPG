@@ -42,7 +42,7 @@ namespace DevionGames
                 return;
 
             //Check for key down and if trigger input type supports key.
-            if(key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange &&
+            if(key != null && key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange &&
                IsBestTrigger())
                 Use();
 

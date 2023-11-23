@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DevionGames.InventorySystem
 {
     public class SwapItems : MonoBehaviour
     {
-        public ItemSlot first;
-        public ItemSlot second;
+        [SerializeField] private ItemSlot first;
+        [SerializeField] private ItemSlot second;
+        [SerializeField] private InputActionReference SwapReference;
 
-        private void Update()
+        private void Start()
         {
-            if (Input.GetKeyDown(KeyCode.R)) {
-                first.Container.SwapItems(first, second);
-            }
+            SwapReference.action.started +=
+                _ => { first.Container.SwapItems(first, second); };
         }
     }
 }

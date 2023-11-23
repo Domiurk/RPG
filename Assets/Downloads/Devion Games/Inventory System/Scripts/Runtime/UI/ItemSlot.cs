@@ -3,17 +3,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DevionGames.UIWidgets;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace DevionGames.InventorySystem
 {
     public class ItemSlot : Slot, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerDownHandler,
                             IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        ///<summary>
         /// Key to use item.
         /// </summary>
         [SerializeField]
-        protected InputActionReference m_UseKey;
+        protected InputAction m_UseKey;
         /// <summary>
         /// Key text to display the use key
         /// </summary>
@@ -54,7 +57,7 @@ namespace DevionGames.InventorySystem
         {
             get{
                 UpdateCooldown();
-                return this.m_IsCooldown;
+                return m_IsCooldown;
             }
         }
         protected float cooldownDuration;
@@ -79,18 +82,21 @@ namespace DevionGames.InventorySystem
         }
         protected Coroutine m_DelayTooltipCoroutine;
         protected ScrollRect m_ParentScrollRect;
+        protected Keyboard m_Keyboard;
         protected bool m_IsMouseKey;
+        
 
         protected override void Start()
         {
             base.Start();
-            if(this.m_CooldownOverlay != null)
-                this.m_CooldownOverlay.raycastTarget = false;
+            if(m_CooldownOverlay != null)
+                m_CooldownOverlay.raycastTarget = false;
 
-            this.m_ParentScrollRect = GetComponentInParent<ScrollRect>();
+            m_ParentScrollRect = GetComponentInParent<ScrollRect>();
+            m_Keyboard = Keyboard.current;
 
-            if(this.m_Key != null){
-                this.m_Key.text = UnityTools.KeyToCaption(this.m_UseKey);
+            if(m_Key != null && m_UseKey != null){
+                m_Key.text = UnityTools.KeyToCaption(m_UseKey);
             }
 
             string[] mouseKey ={
@@ -99,7 +105,7 @@ namespace DevionGames.InventorySystem
                 "<Mouse>/rightButton"
             };
 
-            this.m_IsMouseKey = UnityTools.ContainBindings(m_UseKey, mouseKey);
+            m_IsMouseKey = m_UseKey != null && UnityTools.ContainBindings(m_UseKey, mouseKey);
         }
 
         /// <summary>
@@ -107,8 +113,8 @@ namespace DevionGames.InventorySystem
         /// </summary>
         protected virtual void Update()
         {
-            if(m_UseKey.action.triggered && !UnityTools.IsPointerOverUI()){
-                if(!(this.m_IsMouseKey && TriggerRaycaster.IsPointerOverTrigger()))
+            if(m_UseKey.triggered && !UnityTools.IsPointerOverUI()){
+                if(!(m_IsMouseKey && TriggerRaycaster.IsPointerOverTrigger()))
                     Use();
             }
 
@@ -121,29 +127,29 @@ namespace DevionGames.InventorySystem
         {
             base.Repaint();
 
-            if(this.m_Description != null){
-                this.m_Description.text = (ObservedItem != null ? ObservedItem.Description : string.Empty);
+            if(m_Description != null){
+                m_Description.text = (ObservedItem != null ? ObservedItem.Description : string.Empty);
             }
 
-            if(this.m_Ingredients != null){
-                this.m_Ingredients.RemoveItems();
+            if(m_Ingredients != null){
+                m_Ingredients.RemoveItems();
 
                 if(!IsEmpty){
                     for(int i = 0; i < ObservedItem.ingredients.Count; i++){
                         Item ingredient = Instantiate(ObservedItem.ingredients[i].item);
                         ingredient.Stack = ObservedItem.ingredients[i].amount;
-                        this.m_Ingredients.StackOrAdd(ingredient);
+                        m_Ingredients.StackOrAdd(ingredient);
                     }
                 }
             }
 
-            if(this.m_BuyPrice != null){
-                this.m_BuyPrice.RemoveItems();
+            if(m_BuyPrice != null){
+                m_BuyPrice.RemoveItems();
 
                 if(!IsEmpty){
                     Currency price = Instantiate(ObservedItem.BuyCurrency);
                     price.Stack = Mathf.RoundToInt(ObservedItem.BuyPrice);
-                    this.m_BuyPrice.StackOrAdd(price);
+                    m_BuyPrice.StackOrAdd(price);
                     //Debug.Log(" Price Update for "+ObservedItem.Name+" "+price.Name+" "+price.Stack);
                 }
             }
@@ -188,12 +194,12 @@ namespace DevionGames.InventorySystem
 
         private void ShowTooltip()
         {
-            if(Container.ShowTooltips && this.isActiveAndEnabled && dragObject == null && ObservedItem != null){
-                if(this.m_DelayTooltipCoroutine != null){
-                    StopCoroutine(this.m_DelayTooltipCoroutine);
+            if(Container.ShowTooltips && isActiveAndEnabled && dragObject == null && ObservedItem != null){
+                if(m_DelayTooltipCoroutine != null){
+                    StopCoroutine(m_DelayTooltipCoroutine);
                 }
 
-                this.m_DelayTooltipCoroutine = StartCoroutine(DelayTooltip(0.3f));
+                m_DelayTooltipCoroutine = StartCoroutine(DelayTooltip(0.3f));
             }
         }
 
@@ -208,8 +214,8 @@ namespace DevionGames.InventorySystem
                 }
             }
 
-            if(this.m_DelayTooltipCoroutine != null){
-                StopCoroutine(this.m_DelayTooltipCoroutine);
+            if(m_DelayTooltipCoroutine != null){
+                StopCoroutine(m_DelayTooltipCoroutine);
             }
         }
 
@@ -224,18 +230,19 @@ namespace DevionGames.InventorySystem
 
                 bool isUnstacking = stack != null && stack.item != null;
 
-                if(!isUnstacking &&
-                   InventoryManager.Input.unstackEvent.HasFlag<Configuration.Input.UnstackInput>(Configuration.Input
-                       .UnstackInput.OnClick) && Input.GetKey(InventoryManager.Input.unstackKeyCode) &&
-                   ObservedItem.Stack > 1){
-                    Unstack();
-                    return;
-                }
-
-                //Check if we are currently unstacking the item
-                if(isUnstacking && Container.StackOrAdd(this, stack.item)){
-                    stack.item = null;
-                    UICursor.Clear();
+                switch(isUnstacking){
+                    case false when
+                        InventoryManager.Input.unstackEvent.HasFlag<Configuration.Input.UnstackInput>(Configuration
+                            .Input
+                            .UnstackInput.OnClick) && m_Keyboard[InventoryManager.Input.unstackKeyCode].isPressed &&
+                        ObservedItem.Stack > 1:
+                        Unstack();
+                        return;
+                    //Check if we are currently unstacking the item
+                    case true when Container.StackOrAdd(this, stack.item):
+                        stack.item = null;
+                        UICursor.Clear();
+                        break;
                 }
 
                 if(isUnstacking){
@@ -253,7 +260,7 @@ namespace DevionGames.InventorySystem
 
                         menu.Clear();
 
-                        if(Trigger.currentUsedTrigger != null && Trigger.currentUsedTrigger is VendorTrigger &&
+                        if(BaseTrigger.currentUsedTrigger != null && BaseTrigger.currentUsedTrigger is VendorTrigger &&
                            Container.CanSellItems){
                             menu.AddMenuItem("Sell", Use);
                         }
@@ -284,33 +291,36 @@ namespace DevionGames.InventorySystem
                 return;
             }
 
+            Key unstackedKey = InventoryManager.Input.unstackKeyCode;
+            KeyControl unstackControl = m_Keyboard[unstackedKey];
+
             //Check if we can start dragging
             if(ObservedItem != null && !IsCooldown && Container.CanDragOut){
                 //If key for unstacking items is pressed and if the stack is greater then 1, show the unstack ui.
                 if(InventoryManager.Input.unstackEvent.HasFlag<Configuration.Input.UnstackInput>(Configuration.Input
-                       .UnstackInput.OnDrag) && Input.GetKey(InventoryManager.Input.unstackKeyCode) &&
+                       .UnstackInput.OnDrag) && unstackedKey != Key.None && unstackControl.isPressed &&
                    ObservedItem.Stack > 1){
                     Unstack();
                 }
                 else{
                     //Set the dragging slot
                     // draggedSlot = this;
-                    if(base.m_Ícon == null || !base.m_Ícon.raycastTarget ||
-                       eventData.pointerCurrentRaycast.gameObject == base.m_Ícon.gameObject)
+                    if(m_Ícon == null || !m_Ícon.raycastTarget ||
+                       eventData.pointerCurrentRaycast.gameObject == m_Ícon.gameObject)
                         dragObject = new DragObject(this);
                 }
             }
 
-            if(this.m_ParentScrollRect != null && dragObject == null){
-                this.m_ParentScrollRect.OnBeginDrag(eventData);
+            if(m_ParentScrollRect != null && dragObject == null){
+                m_ParentScrollRect.OnBeginDrag(eventData);
             }
         }
 
         //When draging is occuring this will be called every time the cursor is moved.
         public virtual void OnDrag(PointerEventData eventData)
         {
-            if(this.m_ParentScrollRect != null){
-                this.m_ParentScrollRect.OnDrag(eventData);
+            if(m_ParentScrollRect != null){
+                m_ParentScrollRect.OnDrag(eventData);
             }
         }
 
@@ -320,7 +330,7 @@ namespace DevionGames.InventorySystem
             RaycastHit hit;
 
             if(!UnityTools.IsPointerOverUI() &&
-               Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)){
+               Physics.Raycast(Camera.main!.ScreenPointToRay(Input.mousePosition), out hit)){
                 if(Container.CanDropItems){
                     DropItem();
                 }
@@ -331,8 +341,8 @@ namespace DevionGames.InventorySystem
 
             dragObject = null;
 
-            if(this.m_ParentScrollRect != null){
-                this.m_ParentScrollRect.OnEndDrag(eventData);
+            if(m_ParentScrollRect != null){
+                m_ParentScrollRect.OnEndDrag(eventData);
             }
 
             //Repaint the slot
@@ -431,7 +441,7 @@ namespace DevionGames.InventorySystem
             if(!m_IsCooldown && cooldown > 0f){
                 cooldownDuration = cooldown;
                 cooldownInitTime = Time.time;
-                this.m_IsCooldown = true;
+                m_IsCooldown = true;
             }
         }
 
@@ -440,24 +450,24 @@ namespace DevionGames.InventorySystem
         /// </summary>
         private void UpdateCooldown()
         {
-            if(this.m_IsCooldown && this.m_CooldownOverlay != null){
+            if(m_IsCooldown && m_CooldownOverlay != null){
                 if(Time.time - cooldownInitTime < cooldownDuration){
-                    if(this.m_Cooldown != null){
-                        this.m_Cooldown.text = (cooldownDuration - (Time.time - cooldownInitTime)).ToString("f1");
+                    if(m_Cooldown != null){
+                        m_Cooldown.text = (cooldownDuration - (Time.time - cooldownInitTime)).ToString("f1");
                     }
 
-                    this.m_CooldownOverlay.fillAmount =
+                    m_CooldownOverlay.fillAmount =
                         Mathf.Clamp01(1f - ((Time.time - cooldownInitTime) / cooldownDuration));
                 }
                 else{
-                    if(this.m_Cooldown != null)
-                        this.m_Cooldown.text = string.Empty;
+                    if(m_Cooldown != null)
+                        m_Cooldown.text = string.Empty;
 
-                    this.m_CooldownOverlay.fillAmount = 0f;
+                    m_CooldownOverlay.fillAmount = 0f;
                 }
             }
 
-            this.m_IsCooldown = (cooldownDuration - (Time.time - cooldownInitTime)) > 0f;
+            m_IsCooldown = (cooldownDuration - (Time.time - cooldownInitTime)) > 0f;
         }
 
         /// <summary>
@@ -475,8 +485,8 @@ namespace DevionGames.InventorySystem
             //Check if the item can be used.
             if(CanUse()){
                 //Check if there is an override item behavior on trigger.
-                if((Trigger.currentUsedTrigger as Trigger) != null &&
-                   (Trigger.currentUsedTrigger as Trigger).OverrideUse(this, ObservedItem)){
+                if((BaseTrigger.currentUsedTrigger as Trigger) != null &&
+                   (BaseTrigger.currentUsedTrigger as Trigger).OverrideUse(this, ObservedItem)){
                     return;
                 }
 
@@ -518,8 +528,8 @@ namespace DevionGames.InventorySystem
             public DragObject(Slot slot)
             {
                 this.slot = slot;
-                this.container = slot.Container;
-                this.item = slot.ObservedItem;
+                container = slot.Container;
+                item = slot.ObservedItem;
             }
         }
     }

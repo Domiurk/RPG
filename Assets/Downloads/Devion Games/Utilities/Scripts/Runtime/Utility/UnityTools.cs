@@ -630,11 +630,9 @@ namespace DevionGames
             Handler.StopAllCoroutines();
         }
 
-        public static bool ContainBindings(InputActionReference actionReference, params string[] binds)
+        public static bool ContainBindings(InputAction action, params string[] binds)
         {
-            return binds.Any(bind => actionReference.action.bindings.Any(inputBinding
-                                                                             => inputBinding.effectivePath
-                                                                                 .Contains(bind)));
+            return binds.Any(bind => action.bindings.Any(inputBinding => inputBinding.effectivePath.Contains(bind)));
         }
     }
 }

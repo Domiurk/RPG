@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace DevionGames.InventorySystem
 {
@@ -9,20 +10,22 @@ namespace DevionGames.InventorySystem
 		public LayerMask mask;
 		public float maxHeightDiffrence = 1.0f;
 		public float maxDistance = 10;
-		public KeyCode rotate = KeyCode.E;
+		public Key rotate = Key.E;
 
 		public UnityEvent onPlace;
 		private BoxCollider m_BoxCollider;
 		private Transform m_Player;
 		private bool m_CanPlaceChanged;
 		private int m_Layer;
-
+		private Keyboard keyboard;
+		private Camera cameraMain;
 
 		private void Start()
 		{
-			
 			this.m_BoxCollider = GetComponent<BoxCollider>();
 
+			keyboard = Keyboard.current;
+			cameraMain = Camera.main;
 			this.m_Player = InventoryManager.current.PlayerInfo.transform;
 			this.m_Layer = gameObject.layer;
 			gameObject.layer = 2;
@@ -31,13 +34,13 @@ namespace DevionGames.InventorySystem
 
 		private void Update()
 		{
-			if (Input.GetKey(rotate))
+			if (keyboard[rotate].isPressed)
 			{
 				transform.Rotate(Vector3.up);
 			}
 			RaycastHit hit;
 			Vector3 pos = transform.position;
-			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, mask))
+			if (Physics.Raycast(cameraMain.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, mask))
 			{
 				pos = hit.point;
 			}
