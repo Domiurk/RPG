@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace DevionGames
 {
@@ -6,18 +8,18 @@ namespace DevionGames
     {
         public void QuitApplication() {
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+            EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
         }
 
         public void LoadScene(string scene) {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(scene);
+            SceneManager.LoadScene(scene);
         }
 
         public void Instantiate(GameObject gameObject) {
-            GameObject.Instantiate(gameObject, transform.position, Quaternion.identity);
+            Instantiate(gameObject, transform.position, Quaternion.identity);
         }
     }
 }

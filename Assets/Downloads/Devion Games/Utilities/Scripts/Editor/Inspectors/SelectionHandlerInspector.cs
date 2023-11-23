@@ -25,74 +25,74 @@ namespace DevionGames
         {
             base.OnEnable();
          
-            this.m_SelectionType = serializedObject.FindProperty("selectionType");
-            this.m_SelectionDistance = serializedObject.FindProperty("m_SelectionDistance");
-            this.m_SelectionKey = serializedObject.FindProperty("m_SelectionKey");
-            this.m_RaycastOffset = serializedObject.FindProperty("m_RaycastOffset");
-            this.m_LayerMask = serializedObject.FindProperty("m_LayerMask");
-            if (this.m_RaycastOffsetOptions == null)
+            m_SelectionType = serializedObject.FindProperty("selectionType");
+            m_SelectionDistance = serializedObject.FindProperty("m_SelectionDistance");
+            m_SelectionKey = serializedObject.FindProperty("m_SelectionKey");
+            m_RaycastOffset = serializedObject.FindProperty("m_RaycastOffset");
+            m_LayerMask = serializedObject.FindProperty("m_LayerMask");
+            if (m_RaycastOffsetOptions == null)
             {
-                this.m_RaycastOffsetOptions = new AnimBool((target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Raycast));
-                this.m_RaycastOffsetOptions.valueChanged.AddListener(Repaint);
+                m_RaycastOffsetOptions = new AnimBool((target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Raycast));
+                m_RaycastOffsetOptions.valueChanged.AddListener(Repaint);
             }
 
-            if (this.m_SelectionKeyOptions == null)
+            if (m_SelectionKeyOptions == null)
             {
-                this.m_SelectionKeyOptions = new AnimBool((target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Key));
-                this.m_SelectionKeyOptions.valueChanged.AddListener(Repaint);
+                m_SelectionKeyOptions = new AnimBool((target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Key));
+                m_SelectionKeyOptions.valueChanged.AddListener(Repaint);
             }
 
-            this.m_DeselectionType = serializedObject.FindProperty("deselectionType");
-            this.m_DeselectionKey = serializedObject.FindProperty("m_DeselectionKey");
-            this.m_DeselectionDistance = serializedObject.FindProperty("m_DeselectionDistance");
-            if (this.m_DeselectionKeyOptions == null)
+            m_DeselectionType = serializedObject.FindProperty("deselectionType");
+            m_DeselectionKey = serializedObject.FindProperty("m_DeselectionKey");
+            m_DeselectionDistance = serializedObject.FindProperty("m_DeselectionDistance");
+            if (m_DeselectionKeyOptions == null)
             {
-                this.m_DeselectionKeyOptions = new AnimBool((target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Key));
-                this.m_DeselectionKeyOptions.valueChanged.AddListener(Repaint);
+                m_DeselectionKeyOptions = new AnimBool((target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Key));
+                m_DeselectionKeyOptions.valueChanged.AddListener(Repaint);
             }
-            if (this.m_DeselectionDistanceOptions == null)
+            if (m_DeselectionDistanceOptions == null)
             {
-                this.m_DeselectionDistanceOptions = new AnimBool((target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Distance));
-                this.m_DeselectionDistanceOptions.valueChanged.AddListener(Repaint);
+                m_DeselectionDistanceOptions = new AnimBool((target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Distance));
+                m_DeselectionDistanceOptions.valueChanged.AddListener(Repaint);
             }
         }
 
         private void DrawInspector()
         {
-            EditorGUILayout.PropertyField(this.m_SelectionType);
+            EditorGUILayout.PropertyField(m_SelectionType);
             EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(this.m_LayerMask);
-            EditorGUILayout.PropertyField(this.m_SelectionDistance);
+            EditorGUILayout.PropertyField(m_LayerMask);
+            EditorGUILayout.PropertyField(m_SelectionDistance);
 
-            this.m_SelectionKeyOptions.target = (target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Key);
-            if (EditorGUILayout.BeginFadeGroup(this.m_SelectionKeyOptions.faded))
+            m_SelectionKeyOptions.target = (target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Key);
+            if (EditorGUILayout.BeginFadeGroup(m_SelectionKeyOptions.faded))
             {
-                EditorGUILayout.PropertyField(this.m_SelectionKey);
+                EditorGUILayout.PropertyField(m_SelectionKey);
             }
             EditorGUILayout.EndFadeGroup();
 
-            this.m_RaycastOffsetOptions.target = (target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Raycast);
-            if (EditorGUILayout.BeginFadeGroup(this.m_RaycastOffsetOptions.faded))
+            m_RaycastOffsetOptions.target = (target as SelectionHandler).selectionType.HasFlag<SelectionHandler.SelectionInputType>(SelectionHandler.SelectionInputType.Raycast);
+            if (EditorGUILayout.BeginFadeGroup(m_RaycastOffsetOptions.faded))
             {
-                EditorGUILayout.PropertyField(this.m_RaycastOffset);
+                EditorGUILayout.PropertyField(m_RaycastOffset);
             }
             EditorGUILayout.EndFadeGroup();
             EditorGUI.indentLevel -= 1;
 
 
-            EditorGUILayout.PropertyField(this.m_DeselectionType);
+            EditorGUILayout.PropertyField(m_DeselectionType);
             EditorGUI.indentLevel += 1;
-            this.m_DeselectionKeyOptions.target = (target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Key);
-            if (EditorGUILayout.BeginFadeGroup(this.m_DeselectionKeyOptions.faded))
+            m_DeselectionKeyOptions.target = (target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Key);
+            if (EditorGUILayout.BeginFadeGroup(m_DeselectionKeyOptions.faded))
             {
-                EditorGUILayout.PropertyField(this.m_DeselectionKey);
+                EditorGUILayout.PropertyField(m_DeselectionKey);
             }
             EditorGUILayout.EndFadeGroup();
 
-            this.m_DeselectionDistanceOptions.target = (target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Distance);
-            if (EditorGUILayout.BeginFadeGroup(this.m_DeselectionDistanceOptions.faded))
+            m_DeselectionDistanceOptions.target = (target as SelectionHandler).deselectionType.HasFlag<SelectionHandler.DeselectionInputType>(SelectionHandler.DeselectionInputType.Distance);
+            if (EditorGUILayout.BeginFadeGroup(m_DeselectionDistanceOptions.faded))
             {
-                EditorGUILayout.PropertyField(this.m_DeselectionDistance);
+                EditorGUILayout.PropertyField(m_DeselectionDistance);
             }
             EditorGUILayout.EndFadeGroup();
             EditorGUI.indentLevel -= 1;

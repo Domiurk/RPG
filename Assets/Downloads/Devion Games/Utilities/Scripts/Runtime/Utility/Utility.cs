@@ -8,206 +8,193 @@ namespace DevionGames
 {
     public static class Utility
     {
-		private static Assembly[] m_AssembliesLookup;
-		private static Dictionary<string, Type> m_TypeLookup;
-		private static Dictionary<Type, FieldInfo[]> m_SerializedFieldInfoLookup;
-		private static readonly Dictionary<Type, MethodInfo[]> m_MethodInfoLookup;
-		private readonly static Dictionary<MemberInfo, object[]> m_MemberAttributeLookup;
-	
-		static Utility() {
-			Utility.m_AssembliesLookup = GetLoadedAssemblies();
-			Utility.m_TypeLookup = new Dictionary<string, Type>();
-			Utility.m_SerializedFieldInfoLookup = new Dictionary<Type, FieldInfo[]>();
-			Utility.m_MethodInfoLookup = new Dictionary<Type, MethodInfo[]>();
-			Utility.m_MemberAttributeLookup = new Dictionary<MemberInfo, object[]>();
-		}
+        private static readonly Assembly[] m_AssembliesLookup;
+        private static readonly Dictionary<string, Type> m_TypeLookup;
+        private static readonly Dictionary<Type, FieldInfo[]> m_SerializedFieldInfoLookup;
+        private static readonly Dictionary<Type, MethodInfo[]> m_MethodInfoLookup;
+        private static readonly Dictionary<MemberInfo, object[]> m_MemberAttributeLookup;
 
-		/// <summary>
-		/// Gets the Type with the specified name, performing a case-sensitive search.
-		/// </summary>
-		/// <param name="typeName"></param>
-		/// <returns>The type with the specified name, if found; otherwise, null.</returns>
-		public static Type GetType(string typeName)
-		{
-			if (string.IsNullOrEmpty(typeName)) { Debug.LogWarning("Type name should not be null or empty!"); return null; }
-			Type type;
-			if (m_TypeLookup.TryGetValue(typeName, out type))
-			{
-				return type;
-			}
-			type = Type.GetType(typeName);
-			if (type == null)
-			{
-				int num = 0;
-				while (num < m_AssembliesLookup.Length)
-				{
-					type = Type.GetType(string.Concat(typeName, ",", m_AssembliesLookup[num].FullName));
-					if (type == null)
-					{
-						num++;
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
+        static Utility()
+        {
+            m_AssembliesLookup = GetLoadedAssemblies();
+            m_TypeLookup = new Dictionary<string, Type>();
+            m_SerializedFieldInfoLookup = new Dictionary<Type, FieldInfo[]>();
+            m_MethodInfoLookup = new Dictionary<Type, MethodInfo[]>();
+            m_MemberAttributeLookup = new Dictionary<MemberInfo, object[]>();
+        }
 
-			if (type == null)
-			{
-				foreach (Assembly a in m_AssembliesLookup)
-				{
-					Type[] assemblyTypes = a.GetTypes();
-					for (int j = 0; j < assemblyTypes.Length; j++)
-					{
-						if (assemblyTypes[j].Name == typeName)
-						{
-							type = assemblyTypes[j];
-							break;
-						}
-					}
-				}
-			}
+        /// <summary>
+        /// Gets the Type with the specified name, performing a case-sensitive search.
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns>The type with the specified name, if found; otherwise, null.</returns>
+        public static Type GetType(string typeName)
+        {
+            if(string.IsNullOrEmpty(typeName)){
+                Debug.LogWarning("Type name should not be null or empty!");
+                return null;
+            }
 
-			if (type != null)
-			{
-				m_TypeLookup.Add(typeName, type);
-			}
+            if(m_TypeLookup.TryGetValue(typeName, out Type type)){
+                return type;
+            }
 
-			return type;
-		}
+            type = Type.GetType(typeName);
 
-		public static Type GetElementType(Type type)
-		{
-			Type[] interfaces = type.GetInterfaces();
+            if(type == null){
+                int num = 0;
 
-			return (from i in interfaces
-					where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)
-					select i.GetGenericArguments()[0]).FirstOrDefault();
-		}
+                while(num < m_AssembliesLookup.Length){
+                    type = Type.GetType(string.Concat(typeName, ",", m_AssembliesLookup[num].FullName));
 
-		public static MethodInfo[] GetAllMethods(this Type type)
-		{
-			MethodInfo[] methods = new MethodInfo[0];
-			if (type != null && !Utility.m_MethodInfoLookup.TryGetValue(type, out methods))
-			{
-				methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Concat(GetAllMethods(type.GetBaseType())).ToArray();
-				Utility.m_MethodInfoLookup.Add(type, methods);
-			}
+                    if(type == null){
+                        num++;
+                    }
+                    else{
+                        break;
+                    }
+                }
+            }
 
-			return methods;
-		}
+            if(type == null){
+                foreach(Assembly a in m_AssembliesLookup){
+                    Type[] assemblyTypes = a.GetTypes();
 
-		public static FieldInfo GetSerializedField(this Type type, string name)
-		{
-			return type.GetAllSerializedFields().Where(x => x.Name == name).FirstOrDefault();
-		}
+                    foreach(Type assemblyType in assemblyTypes){
+                        if(assemblyType.Name == typeName){
+                            type = assemblyType;
+                            break;
+                        }
+                    }
+                }
+            }
 
-		public static FieldInfo[] GetAllSerializedFields(this Type type)
-		{
-			if (type == null)
-			{
-				return new FieldInfo[0];
-			}
-			FieldInfo[] fields = GetSerializedFields(type).Concat(GetAllSerializedFields(type.BaseType)).ToArray();
-			fields = fields.OrderBy(x => x.DeclaringType.BaseTypesAndSelf().Count()).ToArray();
-			return fields;
-		}
+            if(type != null){
+                m_TypeLookup.Add(typeName, type);
+            }
 
-		public static FieldInfo[] GetSerializedFields(this Type type)
-		{
-			FieldInfo[] fields;
-			if (!Utility.m_SerializedFieldInfoLookup.TryGetValue(type, out fields))
-			{
-				fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(x => x.IsPublic && !x.HasAttribute(typeof(NonSerializedAttribute)) || x.HasAttribute(typeof(SerializeField)) || x.HasAttribute(typeof(SerializeReference))).ToArray();
-				fields = fields.OrderBy(x => x.DeclaringType.BaseTypesAndSelf().Count()).ToArray();
-				Utility.m_SerializedFieldInfoLookup.Add(type, fields);
-			}
-			return fields;
-		}
+            return type;
+        }
 
-		public static IEnumerable<Type> BaseTypesAndSelf(this Type type)
-		{
-			while (type != null)
-			{
-				yield return type;
-				type = type.BaseType;
-			}
-		}
+        public static Type GetElementType(Type type)
+        {
+            Type[] interfaces = type.GetInterfaces();
 
-		public static IEnumerable<Type> BaseTypes(this Type type)
-		{
-			while (type != null)
-			{
-				type = type.BaseType;
-				yield return type;
+            return (from i in interfaces
+                    where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+                    select i.GetGenericArguments()[0]).FirstOrDefault();
+        }
 
-			}
-		}
+        public static MethodInfo[] GetAllMethods(this Type type)
+        {
+            MethodInfo[] methods = Array.Empty<MethodInfo>();
 
-		public static object[] GetCustomAttributes(MemberInfo memberInfo, bool inherit)
-		{
-			object[] customAttributes;
-			if (!Utility.m_MemberAttributeLookup.TryGetValue(memberInfo, out customAttributes))
-			{
-				customAttributes = memberInfo.GetCustomAttributes(inherit);
-				Utility.m_MemberAttributeLookup.Add(memberInfo, customAttributes);
-			}
-			return customAttributes;
-		}
+            if(type != null && !m_MethodInfoLookup.TryGetValue(type, out methods)){
+                methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                              .Concat(GetAllMethods(type.GetBaseType()))
+                              .ToArray();
+                m_MethodInfoLookup.Add(type, methods);
+            }
 
-		public static T[] GetCustomAttributes<T>(this MemberInfo memberInfo)
-		{
-			object[] objArray = Utility.GetCustomAttributes(memberInfo, true);
-			List<T> list = new List<T>();
-			for (int i = 0; i < (int)objArray.Length; i++)
-			{
-				if (objArray[i].GetType() == typeof(T) || objArray[i].GetType().IsSubclassOf(typeof(T)))
-				{
-					list.Add((T)objArray[i]);
-				}
-			}
-			return list.ToArray();
-		}
+            return methods;
+        }
 
-		public static T GetCustomAttribute<T>(this MemberInfo memberInfo)
-		{
-			object[] objArray =Utility.GetCustomAttributes(memberInfo, true);
-			for (int i = 0; i < (int)objArray.Length; i++)
-			{
-				if (objArray[i].GetType() == typeof(T) || objArray[i].GetType().IsSubclassOf(typeof(T)))
-				{
-					return (T)objArray[i];
-				}
-			}
-			return default(T);
-		}
+        public static FieldInfo GetSerializedField(this Type type, string name)
+        {
+            return type.GetAllSerializedFields().FirstOrDefault(x => x.Name == name);
+        }
 
-		public static bool HasAttribute<T>(this MemberInfo memberInfo)
-		{
-			return memberInfo.HasAttribute(typeof(T));
-		}
+        public static FieldInfo[] GetAllSerializedFields(this Type type)
+        {
+            if(type == null){
+                return Array.Empty<FieldInfo>();
+            }
 
-		public static bool HasAttribute(this MemberInfo memberInfo, Type attributeType)
-		{
-			object[] objArray = Utility.GetCustomAttributes(memberInfo, true);
-			for (int i = 0; i < (int)objArray.Length; i++)
-			{
-				if (objArray[i].GetType() == attributeType || objArray[i].GetType().IsSubclassOf(attributeType))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
+            FieldInfo[] fields = GetSerializedFields(type).Concat(GetAllSerializedFields(type.BaseType)).ToArray();
+            fields = fields.OrderBy(x => x.DeclaringType.BaseTypesAndSelf().Count()).ToArray();
+            return fields;
+        }
 
-		public static bool Contains(this LayerMask mask, int layer)
-		{
-			return mask == (mask | (1 << layer));
-		}
+        public static FieldInfo[] GetSerializedFields(this Type type)
+        {
+            if(!m_SerializedFieldInfoLookup.TryGetValue(type, out FieldInfo[] fields)){
+                fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                             .Where(x => x.IsPublic && !x.HasAttribute(typeof(NonSerializedAttribute)) ||
+                                         x.HasAttribute(typeof(SerializeField)) ||
+                                         x.HasAttribute(typeof(SerializeReference)))
+                             .ToArray();
+                fields = fields.OrderBy(x => x.DeclaringType.BaseTypesAndSelf().Count()).ToArray();
+                m_SerializedFieldInfoLookup.Add(type, fields);
+            }
 
-		private static Assembly[] GetLoadedAssemblies()
-		{
+            return fields;
+        }
+
+        public static IEnumerable<Type> BaseTypesAndSelf(this Type type)
+        {
+            while(type != null){
+                yield return type;
+                type = type.BaseType;
+            }
+        }
+
+        public static IEnumerable<Type> BaseTypes(this Type type)
+        {
+            while(type != null){
+                type = type.BaseType;
+                yield return type;
+            }
+        }
+
+        public static object[] GetCustomAttributes(MemberInfo memberInfo, bool inherit)
+        {
+            if(!m_MemberAttributeLookup.TryGetValue(memberInfo, out object[] customAttributes)){
+                customAttributes = memberInfo.GetCustomAttributes(inherit);
+                m_MemberAttributeLookup.Add(memberInfo, customAttributes);
+            }
+
+            return customAttributes;
+        }
+
+        public static T[] GetCustomAttributes<T>(this MemberInfo memberInfo)
+        {
+            object[] objArray = GetCustomAttributes(memberInfo, true);
+            return objArray.Where(t => t.GetType() == typeof(T) || t.GetType().IsSubclassOf(typeof(T)))
+                           .Cast<T>()
+                           .ToArray();
+        }
+
+        public static T GetCustomAttribute<T>(this MemberInfo memberInfo)
+        {
+            object[] objArray = GetCustomAttributes(memberInfo, true);
+
+            foreach(object objElement in objArray){
+                if(objElement.GetType() == typeof(T) || objElement.GetType().IsSubclassOf(typeof(T))){
+                    return (T)objElement;
+                }
+            }
+
+            return default(T);
+        }
+
+        public static bool HasAttribute<T>(this MemberInfo memberInfo)
+        {
+            return memberInfo.HasAttribute(typeof(T));
+        }
+
+        public static bool HasAttribute(this MemberInfo memberInfo, Type attributeType)
+        {
+            object[] objArray = GetCustomAttributes(memberInfo, true);
+            return objArray.Any(t => t.GetType() == attributeType || t.GetType().IsSubclassOf(attributeType));
+        }
+
+        public static bool Contains(this LayerMask mask, int layer)
+        {
+            return mask == (mask | (1 << layer));
+        }
+
+        private static Assembly[] GetLoadedAssemblies()
+        {
 #if NETFX_CORE
 			var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
 			
@@ -236,10 +223,8 @@ namespace DevionGames
 			
 			return loadedAssemblies.ToArray();
 #else
-			return AppDomain.CurrentDomain.GetAssemblies();
+            return AppDomain.CurrentDomain.GetAssemblies();
 #endif
-		}
-
-		
-	}
+        }
+    }
 }

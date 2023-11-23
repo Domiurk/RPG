@@ -2,28 +2,25 @@
 
 namespace DevionGames
 {
-    public class SelectableObject : CallbackHandler, ISelectable
+    public sealed class SelectableObject : CallbackHandler, ISelectable
     {
         public static SelectableObject current;
 
         private Transform m_Transform;
 
-        public Vector3 position => this.m_Transform != null ? this.m_Transform.position : Vector3.zero;
+        public Vector3 position => m_Transform != null ? m_Transform.position : Vector3.zero;
 
-        public override string[] Callbacks => new string[] {"OnSelect","OnDeselect" };
+        public override string[] Callbacks => new[]{ "OnSelect", "OnDeselect" };
 
-        protected virtual void Awake()
+        private void Awake()
         {
-            this.m_Transform = transform;    
+            m_Transform = transform;
         }
-
-        protected virtual void Start() { }
 
         public void OnSelect()
         {
             current = this;
             Execute("OnSelect", new CallbackEventData());
-          
         }
 
         public void OnDeselect()
@@ -34,9 +31,8 @@ namespace DevionGames
 
         private void OnDestroy()
         {
-            if (current == this)
+            if(current == this)
                 OnDeselect();
         }
-
     }
 }

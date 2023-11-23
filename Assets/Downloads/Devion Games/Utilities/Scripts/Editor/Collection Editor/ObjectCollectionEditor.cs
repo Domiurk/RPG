@@ -13,9 +13,9 @@ namespace DevionGames
         protected SerializedObject m_SerializedObject;
         protected SerializedProperty m_SerializedProperty;
 
-        public override string ToolbarName => this.m_ToolbarName;
+        public override string ToolbarName => m_ToolbarName;
 
-        protected override List<T> Items => this.m_SerializedProperty.GetValue() as List<T>;
+        protected override List<T> Items => m_SerializedProperty.GetValue() as List<T>;
 
 
         public ObjectCollectionEditor(SerializedObject serializedObject, SerializedProperty serializedProperty) : this(ObjectNames.NicifyVariableName(typeof(T).Name+"s"), serializedObject, serializedProperty)
@@ -23,11 +23,11 @@ namespace DevionGames
         }
 
         public ObjectCollectionEditor(string toolbar, SerializedObject serializedObject, SerializedProperty serializedProperty) {
-            this.m_SerializedObject = serializedObject;
-            this.m_SerializedProperty = serializedProperty;
-            this.m_TargetInstanceID = serializedObject.targetObject.GetInstanceID();
-            this.m_SerializedPropertyPath = serializedProperty.propertyPath;
-            this.m_ToolbarName = toolbar;
+            m_SerializedObject = serializedObject;
+            m_SerializedProperty = serializedProperty;
+            m_TargetInstanceID = serializedObject.targetObject.GetInstanceID();
+            m_SerializedPropertyPath = serializedProperty.propertyPath;
+            m_ToolbarName = toolbar;
         }
 
         public override void OnEnable()
@@ -47,9 +47,9 @@ namespace DevionGames
         protected override void DrawItem(T item)
         {
             int index = Items.IndexOf(item);
-            this.m_SerializedObject.Update();
+            m_SerializedObject.Update();
 
-            SerializedProperty element = this.m_SerializedProperty.GetArrayElementAtIndex(index);
+            SerializedProperty element = m_SerializedProperty.GetArrayElementAtIndex(index);
             object value = element.GetValue();
 
             EditorGUI.BeginDisabledGroup(true);
@@ -65,33 +65,33 @@ namespace DevionGames
                 EditorGUI.EndDisabledGroup();
             }
 
-            this.m_SerializedObject.ApplyModifiedProperties();
+            m_SerializedObject.ApplyModifiedProperties();
         }
 
         protected override void Create()
         {
             T value = (T)System.Activator.CreateInstance(typeof(T));
-            this.m_SerializedObject.Update();
-            this.m_SerializedProperty.arraySize++;
-            this.m_SerializedProperty.GetArrayElementAtIndex(this.m_SerializedProperty.arraySize - 1).managedReferenceValue = value;
-            this.m_SerializedObject.ApplyModifiedProperties();
+            m_SerializedObject.Update();
+            m_SerializedProperty.arraySize++;
+            m_SerializedProperty.GetArrayElementAtIndex(m_SerializedProperty.arraySize - 1).managedReferenceValue = value;
+            m_SerializedObject.ApplyModifiedProperties();
         }
 
         protected override void Remove(T item)
         {
-            this.m_SerializedObject.Update();
+            m_SerializedObject.Update();
             int index = Items.IndexOf(item);
-            this.m_SerializedProperty.DeleteArrayElementAtIndex(index);
-            this.m_SerializedObject.ApplyModifiedProperties();
+            m_SerializedProperty.DeleteArrayElementAtIndex(index);
+            m_SerializedObject.ApplyModifiedProperties();
         }
 
         protected override void Duplicate(T item)
         {
             T duplicate = (T)EditorTools.Duplicate(item);
-            this.m_SerializedObject.Update();
-            this.m_SerializedProperty.arraySize++;
-            this.m_SerializedProperty.GetArrayElementAtIndex(this.m_SerializedProperty.arraySize - 1).managedReferenceValue = duplicate;
-            this.m_SerializedObject.ApplyModifiedProperties();
+            m_SerializedObject.Update();
+            m_SerializedProperty.arraySize++;
+            m_SerializedProperty.GetArrayElementAtIndex(m_SerializedProperty.arraySize - 1).managedReferenceValue = duplicate;
+            m_SerializedObject.ApplyModifiedProperties();
         }
 
         protected override string GetSidebarLabel(T item)
@@ -106,14 +106,14 @@ namespace DevionGames
 
         private void OnPlayModeStateChanged(PlayModeStateChange playModeStateChange)
         {
-            this.m_SerializedObject = new SerializedObject(EditorUtility.InstanceIDToObject(this.m_TargetInstanceID));
-            this.m_SerializedProperty = this.m_SerializedObject.FindProperty(this.m_SerializedPropertyPath);
+            m_SerializedObject = new SerializedObject(EditorUtility.InstanceIDToObject(m_TargetInstanceID));
+            m_SerializedProperty = m_SerializedObject.FindProperty(m_SerializedPropertyPath);
         }
 
         private void OnAfterAssemblyReload()
         {
-            this.m_SerializedObject = new SerializedObject(EditorUtility.InstanceIDToObject(this.m_TargetInstanceID));
-            this.m_SerializedProperty = this.m_SerializedObject.FindProperty(this.m_SerializedPropertyPath);
+            m_SerializedObject = new SerializedObject(EditorUtility.InstanceIDToObject(m_TargetInstanceID));
+            m_SerializedProperty = m_SerializedObject.FindProperty(m_SerializedPropertyPath);
         }
 
     }

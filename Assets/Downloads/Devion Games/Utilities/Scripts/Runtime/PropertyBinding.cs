@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
 using System.Reflection;
-using System;
+using UnityEngine;
 
 namespace DevionGames
 {
     public class PropertyBinding : MonoBehaviour
     {
         [SerializeField]
-        private PropertyRef m_Source = null;
+        private PropertyRef m_Source;
         [SerializeField]
-        private PropertyRef m_Target = null;
+        private PropertyRef m_Target;
         [SerializeField]
         private Execution m_Execution = Execution.Update;
         [SerializeField]
@@ -70,30 +70,30 @@ namespace DevionGames
             Interval
         }
 
-        [System.Serializable]
+        [Serializable]
         public class PropertyRef
         {
-            [SerializeField] private Component m_Component = null;
-            public Component component => this.m_Component;
+            [SerializeField] private Component m_Component;
+            public Component component => m_Component;
 
             private FieldInfo m_Field;
             private PropertyInfo m_Property;
 
             [SerializeField] private string m_PropertyPath = string.Empty;
-            public string propertyPath => this.m_PropertyPath;
+            public string propertyPath => m_PropertyPath;
 
             public object GetValue()
             {
-                if(this.m_Field == null && this.m_Property == null){
+                if(m_Field == null && m_Property == null){
                     CacheProperty();
                 }
 
-                if(this.m_Property != null){
-                    if(this.m_Property.CanRead)
-                        return this.m_Property.GetValue(this.m_Component, null);
+                if(m_Property != null){
+                    if(m_Property.CanRead)
+                        return m_Property.GetValue(m_Component, null);
                 }
-                else if(this.m_Field != null){
-                    return this.m_Field.GetValue(this.m_Component);
+                else if(m_Field != null){
+                    return m_Field.GetValue(m_Component);
                 }
 
                 return null;
@@ -101,16 +101,17 @@ namespace DevionGames
 
             public bool SetValue(object value)
             {
-                if(this.m_Field == null && this.m_Property == null && !CacheProperty()){
+                if(m_Field == null && m_Property == null && !CacheProperty()){
                     return false;
                 }
 
-                if(this.m_Field != null){
-                    this.m_Field.SetValue(this.m_Component, value);
+                if(m_Field != null){
+                    m_Field.SetValue(m_Component, value);
                     return true;
                 }
-                else if(m_Property != null && m_Property.CanWrite){
-                    this.m_Property.SetValue(this.m_Component, value, null);
+
+                if(m_Property != null && m_Property.CanWrite){
+                    m_Property.SetValue(m_Component, value, null);
                     return true;
                 }
 
@@ -119,22 +120,22 @@ namespace DevionGames
 
             private bool CacheProperty()
             {
-                if(this.m_Component != null && !string.IsNullOrEmpty(this.m_PropertyPath)){
-                    Type type = this.m_Component.GetType();
+                if(m_Component != null && !string.IsNullOrEmpty(m_PropertyPath)){
+                    Type type = m_Component.GetType();
 #if NETFX_CORE
 					this.m_Field = type.GetRuntimeField(this.m_PropertyPath);
 					this.m_Property = type.GetRuntimeProperty(this.m_PropertyPath);
 #else
-                    this.m_Field = type.GetField(this.m_PropertyPath);
-                    this.m_Property = type.GetProperty(this.m_PropertyPath);
+                    m_Field = type.GetField(m_PropertyPath);
+                    m_Property = type.GetProperty(m_PropertyPath);
 #endif
                 }
                 else{
-                    this.m_Field = null;
-                    this.m_Property = null;
+                    m_Field = null;
+                    m_Property = null;
                 }
 
-                return (this.m_Field != null || this.m_Property != null);
+                return (m_Field != null || m_Property != null);
             }
         }
     }

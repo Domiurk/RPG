@@ -3,13 +3,14 @@ using UnityEditor;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Object = UnityEngine.Object;
 
 namespace DevionGames
 {
 	/// <summary>
 	/// A collection class for ScriptableObjects.
 	/// </summary>
-	[System.Serializable]
+	[Serializable]
 	public class ScriptableObjectCollectionEditor<T> : CollectionEditor<T> where T: ScriptableObject, INameable
 	{
 		[SerializeField]
@@ -22,7 +23,7 @@ namespace DevionGames
 		protected Editor editor;
 
 		protected bool m_UseInspectorDefaultMargins = false;
-        protected override bool UseInspectorDefaultMargins  => this.m_UseInspectorDefaultMargins;
+        protected override bool UseInspectorDefaultMargins  => m_UseInspectorDefaultMargins;
 
 		public ScriptableObjectCollectionEditor(UnityEngine.Object target, List<T> items, bool useInspectorDefaultMargins = true):this(string.Empty, target, items, useInspectorDefaultMargins)
 		{
@@ -32,7 +33,7 @@ namespace DevionGames
 		{
 			this.target = target;
 			this.items = items;
-			this.m_UseInspectorDefaultMargins = useInspectorDefaultMargins;
+			m_UseInspectorDefaultMargins = useInspectorDefaultMargins;
         }
 
 		protected override bool MatchesSearch(T item, string search)
@@ -74,20 +75,20 @@ namespace DevionGames
 		protected override void Remove (T item)
 		{
 			if (EditorUtility.DisplayDialog ("Delete Item", "Are you sure you want to delete " + item.Name + "?", "Yes", "No")) {
-				GameObject.DestroyImmediate (item, true);
+				Object.DestroyImmediate (item, true);
 				AssetDatabase.SaveAssets ();
 				AssetDatabase.Refresh ();
 				Items.Remove (item);
-				base.m_SelectedItemIndex = -1;
+				m_SelectedItemIndex = -1;
 				if (editor != null)
-					ScriptableObject.DestroyImmediate(editor);
+					Object.DestroyImmediate(editor);
 				EditorUtility.SetDirty (target);
 			}
 		}
 
         protected override void Duplicate(T item)
         {
-			T duplicate = (T)ScriptableObject.Instantiate(item);
+			T duplicate = Object.Instantiate(item);
 			duplicate.hideFlags = HideFlags.HideInHierarchy;
 			AssetDatabase.AddObjectToAsset(duplicate, target);
 			AssetDatabase.SaveAssets();
@@ -101,7 +102,7 @@ namespace DevionGames
         {
             base.Select(item);
 			if (editor != null)
-				ScriptableObject.DestroyImmediate(editor);
+				Object.DestroyImmediate(editor);
 
 			editor = Editor.CreateEditor(item);
 		}
@@ -116,7 +117,7 @@ namespace DevionGames
         public override void OnDestroy()
         {
 			if(editor != null)
-				ScriptableObject.DestroyImmediate(editor);
+				Object.DestroyImmediate(editor);
         }
 
         protected override string GetSidebarLabel (T item)

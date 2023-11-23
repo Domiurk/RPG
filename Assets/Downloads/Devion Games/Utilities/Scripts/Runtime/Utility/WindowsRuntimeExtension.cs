@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using System;
+﻿using System;
+using System.Reflection;
 
 public static class WindowsRuntimeExtension {
 	#if NETFX_CORE
@@ -190,17 +190,17 @@ public static class WindowsRuntimeExtension {
 
 	private static bool ParametersMatch(ParameterInfo[] parameters, Type[] args)
 	{
-		if ((Int32)parameters.Length != (Int32)args.Length)
+		if (parameters.Length != args.Length)
 		{
 			return false;
 		}
 		bool flag = true;
 		Int32 num = 0;
-		while (num < (Int32)parameters.Length)
+		while (num < parameters.Length)
 		{
 			Type parameterType = parameters[num].ParameterType;
 			Type type = args[num];
-			if ((System.Object)parameterType == (System.Object)type)
+			if (parameterType == (Object)type)
 			{
 				num++;
 			}

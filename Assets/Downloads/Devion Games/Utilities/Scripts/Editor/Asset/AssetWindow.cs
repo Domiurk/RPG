@@ -19,14 +19,14 @@ namespace DevionGames
         protected Type m_ElementType;
         protected Type elementType {
             get {
-                if (this.m_ElementType == null) {
-                    this.m_ElementType = Utility.GetType(this.m_ElementTypeName);
+                if (m_ElementType == null) {
+                    m_ElementType = Utility.GetType(m_ElementTypeName);
                 }
-                return this.m_ElementType;
+                return m_ElementType;
             }
             set {
-                this.m_ElementType = value;
-                this.m_ElementTypeName = this.m_ElementType.Name;
+                m_ElementType = value;
+                m_ElementTypeName = m_ElementType.Name;
             }
         }
         protected UnityEngine.Object m_Target;
@@ -39,7 +39,7 @@ namespace DevionGames
         public static void ShowWindow(string title, SerializedProperty elements)
         {
             AssetWindow[] objArray = Resources.FindObjectsOfTypeAll<AssetWindow>();
-            AssetWindow window = (objArray.Length <= 0 ? ScriptableObject.CreateInstance<AssetWindow>() : objArray[0]);
+            AssetWindow window = (objArray.Length <= 0 ? CreateInstance<AssetWindow>() : objArray[0]);
             window.hideFlags = HideFlags.HideAndDontSave;
             window.minSize = new Vector2(260f, 200f);
             window.titleContent = new GUIContent(title);
@@ -96,12 +96,12 @@ namespace DevionGames
         protected virtual void OnGUI()
         {
             DoApplyToPrefab();
-            this.m_ScrollPosition = EditorGUILayout.BeginScrollView(this.m_ScrollPosition);
+            m_ScrollPosition = EditorGUILayout.BeginScrollView(m_ScrollPosition);
             GUILayout.Space(1f);
-            for (int i = 0; i < this.m_Targets.Length; i++)
+            for (int i = 0; i < m_Targets.Length; i++)
             {
-                UnityEngine.Object target = this.m_Targets[i];
-                Editor editor = this.m_Editors[i];
+                UnityEngine.Object target = m_Targets[i];
+                Editor editor = m_Editors[i];
 
                 if (EditorTools.Titlebar(target, GetContextMenu(target)))
                 {
@@ -120,19 +120,19 @@ namespace DevionGames
 
 
         protected virtual void DoApplyToPrefab() {
-            if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()))
+            if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()))
             {
                 GUILayout.BeginHorizontal();
 
-                GUILayout.Label("Prefab Overrides: " + PrefabUtility.GetObjectOverrides((this.m_Target as Component).gameObject).Count);
+                GUILayout.Label("Prefab Overrides: " + PrefabUtility.GetObjectOverrides((m_Target as Component).gameObject).Count);
 
                 GUILayout.FlexibleSpace();
 
-                if (!this.m_ApplyToPrefab)
+                if (!m_ApplyToPrefab)
                 {
                     if (GUILayout.Button("Apply to prefab"))
                     {
-                        PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                        PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                     }
                 }
                 GUILayout.EndHorizontal();
@@ -152,13 +152,13 @@ namespace DevionGames
         }
 
         protected virtual void RemoveTarget(int index) {
-            DestroyImmediate(this.m_Editors[index]);
-            this.m_Editors.RemoveAt(index);
-            DestroyImmediate(this.m_Targets[index]);
-            ArrayUtility.RemoveAt(ref this.m_Targets, index);
+            DestroyImmediate(m_Editors[index]);
+            m_Editors.RemoveAt(index);
+            DestroyImmediate(m_Targets[index]);
+            ArrayUtility.RemoveAt(ref m_Targets, index);
 
-            SerializedObject serializedObject = new SerializedObject(this.m_Target);
-            SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+            SerializedObject serializedObject = new SerializedObject(m_Target);
+            SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
             serializedObject.Update();
             elements.GetArrayElementAtIndex(index).objectReferenceValue = null;
             elements.DeleteArrayElementAtIndex(index);
@@ -176,25 +176,25 @@ namespace DevionGames
                     {
                         if (currentEvent.keyCode == KeyCode.C)
                         {
-                            AssetWindow.m_CopyComponents = this.m_Targets.Where(x => typeof(Component).IsAssignableFrom(x.GetType())).Select(y => y as Component).ToArray();
+                            m_CopyComponents = m_Targets.Where(x => typeof(Component).IsAssignableFrom(x.GetType())).Select(y => y as Component).ToArray();
                         }
-                        else if (currentEvent.keyCode == KeyCode.V && AssetWindow.m_CopyComponents != null && AssetWindow.m_CopyComponents.Length > 0)
+                        else if (currentEvent.keyCode == KeyCode.V && m_CopyComponents != null && m_CopyComponents.Length > 0)
                         {
-                            for (int i = 0; i < this.m_Targets.Length; i++)
+                            for (int i = 0; i < m_Targets.Length; i++)
                             {
                                 int index = i;
                                 RemoveTarget(index);
                             }
-                            for (int i = 0; i < AssetWindow.m_CopyComponents.Length; i++)
+                            for (int i = 0; i < m_CopyComponents.Length; i++)
                             {
-                                Component copy = AssetWindow.m_CopyComponents[i];
+                                Component copy = m_CopyComponents[i];
                                 AddAsset(copy.GetType());
                                 UnityEditorInternal.ComponentUtility.CopyComponent(copy);
-                                UnityEditorInternal.ComponentUtility.PasteComponentValues((Component)this.m_Targets[i]);
+                                UnityEditorInternal.ComponentUtility.PasteComponentValues((Component)m_Targets[i]);
                             }
-                            if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                            if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                             {
-                                PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                                PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                             }
                         }
                     }
@@ -204,28 +204,28 @@ namespace DevionGames
         }
 
         protected virtual void AddAsset(Type type) {
-            SerializedObject serializedObject = new SerializedObject(this.m_Target);
-            SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+            SerializedObject serializedObject = new SerializedObject(m_Target);
+            SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
            
             UnityEngine.Object element = null;
-            if (this.m_Target is Component)
+            if (m_Target is Component)
             {
-                element = (this.m_Target as Component).gameObject.AddComponent(type);
+                element = (m_Target as Component).gameObject.AddComponent(type);
             }
 
             element.hideFlags = HideFlags.HideInInspector;
-            ArrayUtility.Add<UnityEngine.Object>(ref this.m_Targets, element);
+            ArrayUtility.Add<UnityEngine.Object>(ref m_Targets, element);
             Editor editor = Editor.CreateEditor(element);
-            this.m_Editors.Add(editor);
+            m_Editors.Add(editor);
             serializedObject.Update();
             elements.arraySize++;
             elements.GetArrayElementAtIndex(elements.arraySize - 1).objectReferenceValue = element;
             serializedObject.ApplyModifiedProperties();
 
-            this.m_ScrollPosition.y = float.MaxValue;
-            if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+            m_ScrollPosition.y = float.MaxValue;
+            if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
             {
-                PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
             }
             Focus();
         }
@@ -344,40 +344,40 @@ namespace DevionGames
 
         protected virtual GenericMenu GetContextMenu(UnityEngine.Object target) {
             GenericMenu menu = new GenericMenu();
-            int index = Array.IndexOf(this.m_Targets,target);
+            int index = Array.IndexOf(m_Targets,target);
             menu.AddItem(new GUIContent("Reset"), false, delegate {
                 Type type = target.GetType();
                 DestroyImmediate(target);
-                this.m_Targets[index] = (this.m_Target as Component).gameObject.AddComponent(type);
-                DestroyImmediate(this.m_Editors[index]);
-                this.m_Editors[index] = Editor.CreateEditor(this.m_Targets[index]);
-                SerializedObject serializedObject = new SerializedObject(this.m_Target);
-                SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+                m_Targets[index] = (m_Target as Component).gameObject.AddComponent(type);
+                DestroyImmediate(m_Editors[index]);
+                m_Editors[index] = Editor.CreateEditor(m_Targets[index]);
+                SerializedObject serializedObject = new SerializedObject(m_Target);
+                SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
                 serializedObject.Update();
-                elements.GetArrayElementAtIndex(index).objectReferenceValue = this.m_Targets[index];
+                elements.GetArrayElementAtIndex(index).objectReferenceValue = m_Targets[index];
                 serializedObject.ApplyModifiedProperties();
-                if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                 {
-                    PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                    PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                 }
 
             });
             menu.AddSeparator(string.Empty);
             menu.AddItem(new GUIContent("Remove"), false, delegate {
-                DestroyImmediate(this.m_Editors[index]);
-                this.m_Editors.RemoveAt(index);
+                DestroyImmediate(m_Editors[index]);
+                m_Editors.RemoveAt(index);
                 DestroyImmediate(target);
-                ArrayUtility.RemoveAt(ref this.m_Targets, index);
+                ArrayUtility.RemoveAt(ref m_Targets, index);
 
-                SerializedObject serializedObject = new SerializedObject(this.m_Target);
-                SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+                SerializedObject serializedObject = new SerializedObject(m_Target);
+                SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
                 serializedObject.Update();
                 elements.GetArrayElementAtIndex(index).objectReferenceValue = null;
                 elements.DeleteArrayElementAtIndex(index); 
                 serializedObject.ApplyModifiedProperties();
-                if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                 {
-                    PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                    PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                 }
             });
 
@@ -390,9 +390,9 @@ namespace DevionGames
                 menu.AddItem(new GUIContent("Paste"), false, delegate {
                     UnityEditorInternal.ComponentUtility.CopyComponent(m_CopyComponent);
                     UnityEditorInternal.ComponentUtility.PasteComponentValues((Component)target);
-                    if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                    if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                     {
-                        PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                        PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                     }
                 });
             }
@@ -405,20 +405,20 @@ namespace DevionGames
             {
                 menu.AddItem(new GUIContent("Move Up"), false, delegate
                 {
-                    ArrayUtility.RemoveAt(ref this.m_Targets, index);
-                    ArrayUtility.Insert(ref this.m_Targets, index - 1, target);
-                    Editor editor = this.m_Editors[index];
-                    this.m_Editors.RemoveAt(index);
-                    this.m_Editors.Insert(index-1,editor);
+                    ArrayUtility.RemoveAt(ref m_Targets, index);
+                    ArrayUtility.Insert(ref m_Targets, index - 1, target);
+                    Editor editor = m_Editors[index];
+                    m_Editors.RemoveAt(index);
+                    m_Editors.Insert(index-1,editor);
 
-                    SerializedObject serializedObject = new SerializedObject(this.m_Target);
-                    SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+                    SerializedObject serializedObject = new SerializedObject(m_Target);
+                    SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
                     serializedObject.Update();
                     elements.MoveArrayElement(index,index-1);
                     serializedObject.ApplyModifiedProperties();
-                    if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                    if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                     {
-                        PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                        PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                     }
                 });
             }
@@ -426,24 +426,24 @@ namespace DevionGames
             {
                 menu.AddDisabledItem(new GUIContent("Move Up"));
             }
-            if (index < this.m_Targets.Length - 1)
+            if (index < m_Targets.Length - 1)
             {
                 menu.AddItem(new GUIContent("Move Down"), false, delegate
                 {
-                    ArrayUtility.RemoveAt(ref this.m_Targets, index);
-                    ArrayUtility.Insert(ref this.m_Targets, index + 1, target);
-                    Editor editor = this.m_Editors[index];
-                    this.m_Editors.RemoveAt(index);
-                    this.m_Editors.Insert(index + 1, editor);
+                    ArrayUtility.RemoveAt(ref m_Targets, index);
+                    ArrayUtility.Insert(ref m_Targets, index + 1, target);
+                    Editor editor = m_Editors[index];
+                    m_Editors.RemoveAt(index);
+                    m_Editors.Insert(index + 1, editor);
 
-                    SerializedObject serializedObject = new SerializedObject(this.m_Target);
-                    SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+                    SerializedObject serializedObject = new SerializedObject(m_Target);
+                    SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
                     serializedObject.Update();
                     elements.MoveArrayElement(index, index + 1);
                     serializedObject.ApplyModifiedProperties();
-                    if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                    if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                     {
-                        PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                        PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                     }
                 });
             }
@@ -457,43 +457,43 @@ namespace DevionGames
         protected void FixMissingAssets() {
 
             //Component added manually
-            if (typeof(Component).IsAssignableFrom(this.m_Target.GetType()))
+            if (typeof(Component).IsAssignableFrom(m_Target.GetType()))
             {
-                Component[] components = (this.m_Target as Component).GetComponents(elementType);
-                components = components.Where(x => !this.m_Targets.Contains(x)).ToArray();
+                Component[] components = (m_Target as Component).GetComponents(elementType);
+                components = components.Where(x => !m_Targets.Contains(x)).ToArray();
                 for (int i = 0; i < components.Length; i++)
                 {
-                    ArrayUtility.Add<UnityEngine.Object>(ref this.m_Targets, components[i]);
+                    ArrayUtility.Add<UnityEngine.Object>(ref m_Targets, components[i]);
                     Editor editor = Editor.CreateEditor(components[i]);
-                    this.m_Editors.Add(editor);
-                    SerializedObject serializedObject = new SerializedObject(this.m_Target);
-                    SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+                    m_Editors.Add(editor);
+                    SerializedObject serializedObject = new SerializedObject(m_Target);
+                    SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
                     serializedObject.Update();
                     elements.arraySize++;
                     elements.GetArrayElementAtIndex(elements.arraySize - 1).objectReferenceValue = components[i];
                     serializedObject.ApplyModifiedProperties();
-                    if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                    if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                     {
-                        PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                        PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                     }
                 }
             }
             //Component removed manually
-            for (int i = 0; i < this.m_Targets.Length; i++) {
-                if (this.m_Targets[i] == null) {
-                    DestroyImmediate(this.m_Editors[i]);
-                    this.m_Editors.RemoveAt(i);
-                    ArrayUtility.RemoveAt(ref this.m_Targets, i);
+            for (int i = 0; i < m_Targets.Length; i++) {
+                if (m_Targets[i] == null) {
+                    DestroyImmediate(m_Editors[i]);
+                    m_Editors.RemoveAt(i);
+                    ArrayUtility.RemoveAt(ref m_Targets, i);
 
-                    SerializedObject serializedObject = new SerializedObject(this.m_Target);
-                    SerializedProperty elements = serializedObject.FindProperty(this.m_ElementPropertyPath);
+                    SerializedObject serializedObject = new SerializedObject(m_Target);
+                    SerializedProperty elements = serializedObject.FindProperty(m_ElementPropertyPath);
                     serializedObject.Update();
                     elements.GetArrayElementAtIndex(i).objectReferenceValue = null;
                     elements.DeleteArrayElementAtIndex(i);
                     serializedObject.ApplyModifiedProperties();
-                    if (this.m_HasPrefab && typeof(Component).IsAssignableFrom(this.m_Target.GetType()) && this.m_ApplyToPrefab)
+                    if (m_HasPrefab && typeof(Component).IsAssignableFrom(m_Target.GetType()) && m_ApplyToPrefab)
                     {
-                        PrefabUtility.ApplyPrefabInstance((this.m_Target as Component).gameObject, InteractionMode.AutomatedAction);
+                        PrefabUtility.ApplyPrefabInstance((m_Target as Component).gameObject, InteractionMode.AutomatedAction);
                     }
                 }
             }
@@ -507,9 +507,9 @@ namespace DevionGames
 
         protected virtual void OnDestroy()
         {
-            for (int i = this.m_Editors.Count - 1; i >= 0; i--)
+            for (int i = m_Editors.Count - 1; i >= 0; i--)
             {
-                DestroyImmediate(this.m_Editors[i]);
+                DestroyImmediate(m_Editors[i]);
             }
         }
 

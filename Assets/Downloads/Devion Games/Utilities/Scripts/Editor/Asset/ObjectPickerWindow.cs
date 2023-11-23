@@ -8,7 +8,7 @@ namespace DevionGames
 {
     public class ObjectPickerWindow : EditorWindow
     {
-        private static ObjectPickerWindow.Styles m_Styles;
+        private static Styles m_Styles;
         private string m_SearchString = string.Empty;
         private bool isSearching => !string.IsNullOrEmpty(m_SearchString);
 
@@ -18,19 +18,19 @@ namespace DevionGames
         private UnityEngine.Object m_Root;
         private Dictionary<UnityEngine.Object, List<UnityEngine.Object>> m_SelectableObjects;
         public delegate void SelectCallbackDelegate(UnityEngine.Object obj);
-        public ObjectPickerWindow.SelectCallbackDelegate onSelectCallback;
+        public SelectCallbackDelegate onSelectCallback;
         public delegate void CreateCallbackDelegate();
-        public ObjectPickerWindow.CreateCallbackDelegate onCreateCallback;
+        public CreateCallbackDelegate onCreateCallback;
         private bool m_AcceptNull;
 
-        public static void ShowWindow<T>(Rect buttonRect, ObjectPickerWindow.SelectCallbackDelegate selectCallback, ObjectPickerWindow.CreateCallbackDelegate createCallback, bool acceptNull=false)
+        public static void ShowWindow<T>(Rect buttonRect, SelectCallbackDelegate selectCallback, CreateCallbackDelegate createCallback, bool acceptNull=false)
         {
             ShowWindow(buttonRect, typeof(T), selectCallback, createCallback,acceptNull);
         }
 
-        public static void ShowWindow(Rect buttonRect, Type type, ObjectPickerWindow.SelectCallbackDelegate selectCallback, ObjectPickerWindow.CreateCallbackDelegate createCallback, bool acceptNull=false)
+        public static void ShowWindow(Rect buttonRect, Type type, SelectCallbackDelegate selectCallback, CreateCallbackDelegate createCallback, bool acceptNull=false)
         {
-            ObjectPickerWindow window = ScriptableObject.CreateInstance<ObjectPickerWindow>();
+            ObjectPickerWindow window = CreateInstance<ObjectPickerWindow>();
             buttonRect = GUIToScreenRect(buttonRect);
             window.m_Type = type;
             window.BuildSelectableObjects(type);
@@ -40,9 +40,9 @@ namespace DevionGames
             window.ShowAsDropDown(buttonRect, new Vector2(buttonRect.width, 200f));
         }
 
-        public static void ShowWindow(Rect buttonRect,Type type, Dictionary<UnityEngine.Object,List<UnityEngine.Object>> selectableObjects, ObjectPickerWindow.SelectCallbackDelegate selectCallback, ObjectPickerWindow.CreateCallbackDelegate createCallback, bool acceptNull=false)
+        public static void ShowWindow(Rect buttonRect,Type type, Dictionary<UnityEngine.Object,List<UnityEngine.Object>> selectableObjects, SelectCallbackDelegate selectCallback, CreateCallbackDelegate createCallback, bool acceptNull=false)
         {
-            ObjectPickerWindow window = ScriptableObject.CreateInstance<ObjectPickerWindow>();
+            ObjectPickerWindow window = CreateInstance<ObjectPickerWindow>();
             buttonRect = GUIToScreenRect(buttonRect);
             window.m_SelectableObjects = selectableObjects;
             window.m_Type = type;
@@ -60,49 +60,49 @@ namespace DevionGames
 
         private void OnGUI()
         {
-            if (ObjectPickerWindow.m_Styles == null)
+            if (m_Styles == null)
             {
-                ObjectPickerWindow.m_Styles = new ObjectPickerWindow.Styles();
+                m_Styles = new Styles();
             }
             GUILayout.Space(5f);
-            this.m_SearchString = SearchField(m_SearchString);
+            m_SearchString = SearchField(m_SearchString);
             Header();
 
             DrawSelectableObjects();
 
             if (Event.current.type == EventType.Repaint)
             {
-                ObjectPickerWindow.m_Styles.background.Draw(new Rect(0, 0, position.width, position.height), false, false, false, false);
+                m_Styles.background.Draw(new Rect(0, 0, position.width, position.height), false, false, false, false);
             }
         }
 
         private void Header()
         {
-            GUIContent content = new GUIContent(this.m_Root==null?"Select " +ObjectNames.NicifyVariableName(this.m_Type.Name):this.m_Root.name);
-            Rect headerRect = GUILayoutUtility.GetRect(content, ObjectPickerWindow.m_Styles.header);
-            if (GUI.Button(headerRect, content, ObjectPickerWindow.m_Styles.header))
+            GUIContent content = new GUIContent(m_Root==null?"Select " +ObjectNames.NicifyVariableName(m_Type.Name):m_Root.name);
+            Rect headerRect = GUILayoutUtility.GetRect(content, m_Styles.header);
+            if (GUI.Button(headerRect, content, m_Styles.header))
             {
-                this.m_Root = null;
+                m_Root = null;
             }
         }
 
         private void DrawSelectableObjects()
          {
-            List<UnityEngine.Object> selectableObjects = this.m_Root == null ? this.m_SelectableObjects.Keys.ToList() : this.m_SelectableObjects[this.m_Root];
+            List<UnityEngine.Object> selectableObjects = m_Root == null ? m_SelectableObjects.Keys.ToList() : m_SelectableObjects[m_Root];
 
-             this.m_ScrollPosition = EditorGUILayout.BeginScrollView(this.m_ScrollPosition);
+             m_ScrollPosition = EditorGUILayout.BeginScrollView(m_ScrollPosition);
              foreach (UnityEngine.Object obj in selectableObjects)
              {
                  if (!SearchMatch(obj))
                      continue;
 
                  Color backgroundColor = GUI.backgroundColor;
-                 Color textColor = ObjectPickerWindow.m_Styles.elementButton.normal.textColor;
-                 int padding = ObjectPickerWindow.m_Styles.elementButton.padding.left;
+                 Color textColor = m_Styles.elementButton.normal.textColor;
+                 int padding = m_Styles.elementButton.padding.left;
                  GUIContent label = new GUIContent(obj.name);
-                 Rect rect = GUILayoutUtility.GetRect(label, ObjectPickerWindow.m_Styles.elementButton, GUILayout.Height(20f));
+                 Rect rect = GUILayoutUtility.GetRect(label, m_Styles.elementButton, GUILayout.Height(20f));
                  GUI.backgroundColor = (rect.Contains(Event.current.mousePosition) ? GUI.backgroundColor : new Color(0, 0, 0, 0.0f));
-                 ObjectPickerWindow.m_Styles.elementButton.normal.textColor = (rect.Contains(Event.current.mousePosition) ? Color.white : textColor);
+                 m_Styles.elementButton.normal.textColor = (rect.Contains(Event.current.mousePosition) ? Color.white : textColor);
 
                 Texture2D icon = EditorGUIUtility.LoadRequired("d_ScriptableObject Icon") as Texture2D;
                 IconAttribute iconAttribute = obj.GetType().GetCustomAttribute<IconAttribute>();
@@ -118,27 +118,27 @@ namespace DevionGames
                     }
                 }
 
-                ObjectPickerWindow.m_Styles.elementButton.padding.left = (icon != null ? 22 : padding);
+                m_Styles.elementButton.padding.left = (icon != null ? 22 : padding);
 
 
-                 if (GUI.Button(rect, label, ObjectPickerWindow.m_Styles.elementButton))
+                 if (GUI.Button(rect, label, m_Styles.elementButton))
                  {
-                    if (this.m_Root != null && this.m_SelectableObjects[this.m_Root].Count > 0)
+                    if (m_Root != null && m_SelectableObjects[m_Root].Count > 0)
                     {
                         onSelectCallback?.Invoke(obj);
                         Close();
                     }
-                    this.m_Root = obj;
-                    if (!this.m_SelectChildren)
+                    m_Root = obj;
+                    if (!m_SelectChildren)
                     {
-                        onSelectCallback?.Invoke(this.m_Root);
+                        onSelectCallback?.Invoke(m_Root);
                         Close();
                     }
 
                 }
                  GUI.backgroundColor = backgroundColor;
-                 ObjectPickerWindow.m_Styles.elementButton.normal.textColor = textColor;
-                 ObjectPickerWindow.m_Styles.elementButton.padding.left = padding;
+                 m_Styles.elementButton.normal.textColor = textColor;
+                 m_Styles.elementButton.padding.left = padding;
 
                  if (icon != null)
                  {
@@ -146,15 +146,15 @@ namespace DevionGames
                  }
              }
 
-            if (this.m_Root == null)
+            if (m_Root == null)
             {
-                if (this.m_AcceptNull)
+                if (m_AcceptNull)
                 {
                     GUIContent nullContent = new GUIContent("Null");
-                    Rect rect2 = GUILayoutUtility.GetRect(nullContent, ObjectPickerWindow.m_Styles.elementButton, GUILayout.Height(20f));
+                    Rect rect2 = GUILayoutUtility.GetRect(nullContent, m_Styles.elementButton, GUILayout.Height(20f));
                     GUI.backgroundColor = (rect2.Contains(Event.current.mousePosition) ? GUI.backgroundColor : new Color(0, 0, 0, 0.0f));
 
-                    if (GUI.Button(rect2, nullContent, ObjectPickerWindow.m_Styles.elementButton))
+                    if (GUI.Button(rect2, nullContent, m_Styles.elementButton))
                     {
                         onSelectCallback?.Invoke(null);
                         Close();
@@ -162,11 +162,11 @@ namespace DevionGames
                     GUI.Label(new Rect(rect2.x, rect2.y, 20f, 20f), EditorGUIUtility.LoadRequired("d_ScriptableObject On Icon") as Texture2D);
                 }
 
-                GUIContent createContent = new GUIContent("Create New " + this.m_Type.Name);
-                Rect rect1 = GUILayoutUtility.GetRect(createContent, ObjectPickerWindow.m_Styles.elementButton, GUILayout.Height(20f));
+                GUIContent createContent = new GUIContent("Create New " + m_Type.Name);
+                Rect rect1 = GUILayoutUtility.GetRect(createContent, m_Styles.elementButton, GUILayout.Height(20f));
                 GUI.backgroundColor = (rect1.Contains(Event.current.mousePosition) ? GUI.backgroundColor : new Color(0, 0, 0, 0.0f));
 
-                if (GUI.Button(rect1, createContent, ObjectPickerWindow.m_Styles.elementButton))
+                if (GUI.Button(rect1, createContent, m_Styles.elementButton))
                 {
                     onCreateCallback?.Invoke();
                     Close();
@@ -179,19 +179,19 @@ namespace DevionGames
         }
 
         private void BuildSelectableObjects(Type type) {
-            this.m_SelectableObjects = new Dictionary<UnityEngine.Object, List<UnityEngine.Object>>();
+            m_SelectableObjects = new Dictionary<UnityEngine.Object, List<UnityEngine.Object>>();
 
             string[] guids = AssetDatabase.FindAssets("t:"+type.Name);
             for(int i = 0; i < guids.Length; i++) { 
                 string path = AssetDatabase.GUIDToAssetPath(guids[i]);
                 UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath(path,type);
-                this.m_SelectableObjects.Add(obj, new List<UnityEngine.Object>());
+                m_SelectableObjects.Add(obj, new List<UnityEngine.Object>());
             }
         }
 
         private bool SearchMatch(UnityEngine.Object element)
         {
-            if (isSearching && (element == null || !element.name.ToLower().Contains(this.m_SearchString.ToLower())))
+            if (isSearching && (element == null || !element.name.ToLower().Contains(m_SearchString.ToLower())))
             {
                 return false;
             }
@@ -254,12 +254,12 @@ namespace DevionGames
             public Styles()
             {
 
-                this.header.stretchWidth = true;
-                this.header.margin = new RectOffset(1, 1, 0, 4);
+                header.stretchWidth = true;
+                header.margin = new RectOffset(1, 1, 0, 4);
 
-                this.elementButton.alignment = TextAnchor.MiddleLeft;
-                this.elementButton.padding.left = 22;
-                this.elementButton.margin = new RectOffset(1, 1, 0, 0);
+                elementButton.alignment = TextAnchor.MiddleLeft;
+                elementButton.padding.left = 22;
+                elementButton.margin = new RectOffset(1, 1, 0, 0);
                 elementButton.normal.textColor = EditorGUIUtility.isProSkin ? new Color(0.788f, 0.788f, 0.788f, 1f) : new Color(0.047f, 0.047f, 0.047f, 1f);
             }
         }

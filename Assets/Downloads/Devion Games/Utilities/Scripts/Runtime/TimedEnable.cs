@@ -8,7 +8,7 @@ namespace DevionGames
         [SerializeField]
         private float m_Delay = 1f;
         [SerializeField]
-        private Behaviour m_Combonent=null;
+        private Behaviour m_Component;
         [SerializeField]
         private bool m_Enable = true;
 
@@ -18,9 +18,9 @@ namespace DevionGames
         }
 
         private IEnumerator WaitAndSetEnabled() {
-            yield return new WaitForSeconds(this.m_Delay);
-            if (this.m_Combonent != null)
-                this.m_Combonent.enabled = this.m_Enable;
+            yield return new WaitForSeconds(m_Delay);
+            if (m_Component != null)
+                m_Component.enabled = m_Enable;
 
             enabled = false;
         }

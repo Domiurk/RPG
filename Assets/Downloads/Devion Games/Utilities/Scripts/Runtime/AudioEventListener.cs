@@ -1,44 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
-using System.Linq;
 
 namespace DevionGames
 {
     public class AudioEventListener : MonoBehaviour
     {
-
-        [SerializeField]
-        private List<AudioGroup> m_AudioGroups = new List<AudioGroup>();
+        [SerializeField] private List<AudioGroup> m_AudioGroups = new List<AudioGroup>();
 
         private void Awake()
         {
-            for (int i = 0; i < this.m_AudioGroups.Count; i++) {
-                AudioGroup group = this.m_AudioGroups[i];
+            foreach(AudioGroup group in m_AudioGroups){
                 group.audioSource = gameObject.AddComponent<AudioSource>();
             }
         }
 
         private void PlayAudio(AnimationEvent evt) {
-            AudioGroup group = this.m_AudioGroups.First(x => x.name == evt.stringParameter);
+            AudioGroup group = m_AudioGroups.First(x => x.name == evt.stringParameter);
             group.PlayOneShot(evt.objectReferenceParameter as AudioClip, evt.floatParameter);
         }
 
 
 
-        [System.Serializable]
+        [Serializable]
         public class AudioGroup {
             public string name = "SFX";
             [SerializeField]
-            private AudioMixerGroup m_AudioMixerGroup=null;
+            private AudioMixerGroup m_AudioMixerGroup;
 
             private AudioSource m_AudioSource;
 
             public AudioSource audioSource {
-                get => this.m_AudioSource;
-                set { this.m_AudioSource = value;
-                    this.m_AudioSource.outputAudioMixerGroup = this.m_AudioMixerGroup;
-                    this.m_AudioSource.spatialBlend = 1f;
+                get => m_AudioSource;
+                set { m_AudioSource = value;
+                    m_AudioSource.outputAudioMixerGroup = m_AudioMixerGroup;
+                    m_AudioSource.spatialBlend = 1f;
                 }
             }
 

@@ -26,6 +26,7 @@
 * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -77,7 +78,7 @@ namespace DevionGames
                 TRUE,
                 FALSE,
                 NULL,
-            };
+            }
 
             StringReader json;
 
@@ -191,19 +192,23 @@ namespace DevionGames
                         {
                             return ToVector3(value);
                         }
-                        else if (value.Contains("v2("))
+
+                        if (value.Contains("v2("))
                         {
                             return ToVector2(value);
                         }
-                        else if (value.Contains("c("))
+
+                        if (value.Contains("c("))
                         {
                             return ToColor(value);
                         }
-                        else if (value.Contains("v4("))
+
+                        if (value.Contains("v4("))
                         {
                             return ToVector4(value);
                         }
-                        else if (value.Contains("q("))
+
+                        if (value.Contains("q("))
                         {
                             return ToQuaternion(value);
                         }
@@ -306,13 +311,11 @@ namespace DevionGames
                 string number = NextWord;
                 if (number.IndexOf('.') == -1)
                 {
-                    int parsedInt;
-                    Int32.TryParse(number, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out parsedInt);
+                    Int32.TryParse(number, NumberStyles.Any, CultureInfo.InvariantCulture, out int parsedInt);
                     return parsedInt;
                 }
 
-                float parsedDouble;
-                Single.TryParse(number, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out parsedDouble);
+                Single.TryParse(number, NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedDouble);
                 return parsedDouble;
             }
 
@@ -321,10 +324,10 @@ namespace DevionGames
             {
                 string[] subs = quaternion.Split('(')[1].Split(')')[0].Split(',');
                 return new Quaternion(
-                    System.Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[2], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[3], CultureInfo.InvariantCulture)
+                    Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[2], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[3], CultureInfo.InvariantCulture)
                 );
             }
 
@@ -333,10 +336,10 @@ namespace DevionGames
             {
                 string[] subs = vector.Split('(')[1].Split(')')[0].Split(',');
                 return new Vector4(
-                    System.Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[2], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[3], CultureInfo.InvariantCulture)
+                    Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[2], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[3], CultureInfo.InvariantCulture)
                 );
             }
 
@@ -344,9 +347,9 @@ namespace DevionGames
             {
                 string[] subs = vector.Split('(')[1].Split(')')[0].Split(',');
                 return new Vector3(
-                    System.Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[2], CultureInfo.InvariantCulture)
+                    Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[2], CultureInfo.InvariantCulture)
                 );
             }
 
@@ -354,8 +357,8 @@ namespace DevionGames
             {
                 string[] subs = vector.Split('(')[1].Split(')')[0].Split(',');
                 return new Vector2(
-                    System.Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[1], CultureInfo.InvariantCulture)
+                    Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[1], CultureInfo.InvariantCulture)
                 );
             }
 
@@ -363,10 +366,10 @@ namespace DevionGames
             {
                 string[] subs = color.Split('(')[1].Split(')')[0].Split(',');
                 return new Color(
-                    System.Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[2], CultureInfo.InvariantCulture),
-                    System.Convert.ToSingle(subs[3], CultureInfo.InvariantCulture)
+                    Convert.ToSingle(subs[0], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[1], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[2], CultureInfo.InvariantCulture),
+                    Convert.ToSingle(subs[3], CultureInfo.InvariantCulture)
                 );
             }
 
@@ -451,17 +454,12 @@ namespace DevionGames
                             return TOKEN.NUMBER;
                     }
 
-                    switch (NextWord)
-                    {
-                        case "false":
-                            return TOKEN.FALSE;
-                        case "true":
-                            return TOKEN.TRUE;
-                        case "null":
-                            return TOKEN.NULL;
-                    }
-
-                    return TOKEN.NONE;
+                    return NextWord switch{
+                        "false" => TOKEN.FALSE,
+                        "true" => TOKEN.TRUE,
+                        "null" => TOKEN.NULL,
+                        _ => TOKEN.NONE
+                    };
                 }
             }
         }
@@ -478,7 +476,7 @@ namespace DevionGames
 
         sealed class Serializer
         {
-            StringBuilder builder;
+            readonly StringBuilder builder;
 
             Serializer()
             {
@@ -508,9 +506,9 @@ namespace DevionGames
                 {
                     SerializeString(asStr);
                 }
-                else if (value is bool)
+                else if (value is bool b)
                 {
-                    builder.Append((bool)value ? "true" : "false");
+                    builder.Append(b ? "true" : "false");
                 }
                 else if ((asList = value as IList) != null)
                 {
@@ -520,9 +518,9 @@ namespace DevionGames
                 {
                     SerializeObject(asDict, indentationLevel);
                 }
-                else if (value is char)
+                else if (value is char c)
                 {
-                    SerializeString(new string((char)value, 1));
+                    SerializeString(new string(c, 1));
                 }
                 else
                 {
@@ -647,50 +645,37 @@ namespace DevionGames
                 // NOTE: decimals lose precision during serialization.
                 // They always have, I'm just letting you know.
                 // Previously floats and doubles lost precision too.
-                if (value is float)
+                if (value is float f)
                 {
-                    builder.Append(((float)value).ToString("R", System.Globalization.CultureInfo.InvariantCulture));
+                    builder.Append(f.ToString("R", CultureInfo.InvariantCulture));
                 }
-                else if (value is int
-                         || value is uint
-                         || value is long
-                         || value is sbyte
-                         || value is byte
-                         || value is short
-                         || value is ushort
-                         || value is ulong)
+                else if (value is int or uint or long or sbyte or byte or short or ushort or ulong)
                 {
                     builder.Append(value);
                 }
-                else if (value is double
-                         || value is decimal)
+                else if (value is double or decimal)
                 {
-                    builder.Append(Convert.ToDouble(value).ToString("R", System.Globalization.CultureInfo.InvariantCulture));
+                    builder.Append(Convert.ToDouble(value).ToString("R", CultureInfo.InvariantCulture));
                 }
-                else if (value is Vector2)
+                else if (value is Vector2 vector2)
                 {
-                    var vectorValue = (Vector2)value;
-                    builder.Append(("\"v2(" + vectorValue.x.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + vectorValue.y.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + ")\""));
+                    builder.Append(("\"v2(" + vector2.x.ToString("R", CultureInfo.InvariantCulture) + "," + vector2.y.ToString("R", CultureInfo.InvariantCulture) + ")\""));
                 }
-                else if (value is Vector3)
+                else if (value is Vector3 vector3)
                 {
-                    var vectorValue = (Vector3)value;
-                    builder.Append("\"v3(" + vectorValue.x.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + vectorValue.y.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + vectorValue.z.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + ")\"");
+                    builder.Append("\"v3(" + vector3.x.ToString("R", CultureInfo.InvariantCulture) + "," + vector3.y.ToString("R", CultureInfo.InvariantCulture) + "," + vector3.z.ToString("R", CultureInfo.InvariantCulture) + ")\"");
                 }
-                else if (value is Vector4)
+                else if (value is Vector4 vectorValue)
                 {
-                    var vectorValue = (Vector4)value;
-                    builder.Append(("\"v4(" + vectorValue.x.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + vectorValue.y.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + vectorValue.z.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + vectorValue.w.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + ")\""));
+                    builder.Append(("\"v4(" + vectorValue.x.ToString("R", CultureInfo.InvariantCulture) + "," + vectorValue.y.ToString("R", CultureInfo.InvariantCulture) + "," + vectorValue.z.ToString("R", CultureInfo.InvariantCulture) + "," + vectorValue.w.ToString("R", CultureInfo.InvariantCulture) + ")\""));
                 }
-                else if (value is Quaternion)
+                else if (value is Quaternion quaternionValue)
                 {
-                    var quaternionValue = (Quaternion)value;
-                    builder.Append(("\"q(" + quaternionValue.x.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + quaternionValue.y.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + quaternionValue.z.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + quaternionValue.w.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + ")\""));
+                    builder.Append(("\"q(" + quaternionValue.x.ToString("R", CultureInfo.InvariantCulture) + "," + quaternionValue.y.ToString("R", CultureInfo.InvariantCulture) + "," + quaternionValue.z.ToString("R", CultureInfo.InvariantCulture) + "," + quaternionValue.w.ToString("R", CultureInfo.InvariantCulture) + ")\""));
                 }
-                else if (value is Color)
+                else if (value is Color colorValue)
                 {
-                    var colorValue = (Color)value;
-                    builder.Append("\"c(" + colorValue.r.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + colorValue.g.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + colorValue.b.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "," + colorValue.a.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + ")\"");
+                    builder.Append("\"c(" + colorValue.r.ToString("R", CultureInfo.InvariantCulture) + "," + colorValue.g.ToString("R", CultureInfo.InvariantCulture) + "," + colorValue.b.ToString("R", CultureInfo.InvariantCulture) + "," + colorValue.a.ToString("R", CultureInfo.InvariantCulture) + ")\"");
                 }
                 else
                 {

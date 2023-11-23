@@ -2,8 +2,5 @@
 
 namespace DevionGames
 {
-    public class EnumFlagsAttribute : PropertyAttribute
-    {
-        
-    }
+    public class EnumFlagsAttribute : PropertyAttribute { }
 }

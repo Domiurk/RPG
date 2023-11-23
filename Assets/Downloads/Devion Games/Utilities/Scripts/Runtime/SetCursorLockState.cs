@@ -1,31 +1,29 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DevionGames
 {
     public class SetCursorLockState : CallbackHandler
     {
-        public KeyCode key = KeyCode.LeftControl;
+        public Key key = Key.LeftCtrl;
 
-        public override string[] Callbacks {
-            get { return new string[] {"OnCursorLocked","OnCursorUnlocked" }; }
+        public override string[] Callbacks
+        {
+            get{ return new[]{ "OnCursorLocked", "OnCursorUnlocked" }; }
         }
 
         private void Update()
         {
             CursorLockMode currentMode = Cursor.lockState;
 
-            if (Input.GetKey(key))
-            {
-                if (currentMode != CursorLockMode.None)
-                {
+            if(Keyboard.current[key].isPressed){
+                if(currentMode != CursorLockMode.None){
                     Cursor.lockState = CursorLockMode.None;
                     Execute("OnCursorUnlocked", new CallbackEventData());
                 }
             }
-            else
-            {
-                if (currentMode != CursorLockMode.Locked)
-                {
+            else{
+                if(currentMode != CursorLockMode.Locked){
                     Cursor.lockState = CursorLockMode.Locked;
                     Execute("OnCursorLocked", new CallbackEventData());
                 }

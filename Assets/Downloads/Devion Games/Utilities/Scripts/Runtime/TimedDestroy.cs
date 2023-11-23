@@ -9,12 +9,12 @@ namespace DevionGames
         [SerializeField]
         private float m_Delay = 1f;
         [SerializeField]
-        private UnityEvent m_OnDestroy = null;
+        private UnityEvent m_OnDestroy;
 
         private IEnumerator Start()
         {
-            yield return new WaitForSeconds(this.m_Delay);
-            this.m_OnDestroy?.Invoke();
+            yield return new WaitForSeconds(m_Delay);
+            m_OnDestroy?.Invoke();
             Destroy(gameObject);
         }
     }
