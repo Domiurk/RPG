@@ -31,8 +31,8 @@ namespace DevionGames
                 actionTemplate = Instantiate(actionTemplate);
             this.m_ActionBehavior = new Sequence(gameObject, PlayerInfo, GetComponent<Blackboard>(),
                                                  actionTemplate != null
-                                                     ? actionTemplate.actions.ToArray()
-                                                     : actions.ToArray());
+                                                     ? actionTemplate.actions.Cast<IAction>().ToArray()
+                                                     : actions.Cast<IAction>().ToArray());
         }
 
         //Called once per frame
@@ -42,7 +42,7 @@ namespace DevionGames
                 return;
 
             //Check for key down and if trigger input type supports key.
-            if(key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange &&
+            if(key != null && key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange &&
                IsBestTrigger())
                 Use();
 

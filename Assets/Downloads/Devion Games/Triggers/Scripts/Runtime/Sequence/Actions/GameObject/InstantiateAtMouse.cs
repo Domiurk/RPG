@@ -21,8 +21,7 @@ namespace DevionGames
                 return ActionStatus.Failure;
             }
 
-            RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100))
             {
                 GameObject go = GameObject.Instantiate(m_Original, hit.point, Quaternion.identity);
                 if (m_IgnorePlayerCollision)

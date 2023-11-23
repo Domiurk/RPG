@@ -38,8 +38,8 @@ namespace DevionGames
         protected virtual bool DoRaycast() {
             Vector3 startPosition = this.m_TargetTransform.position + this.m_TargetTransform.InverseTransformDirection(this.m_Offset);
             Vector3 direction = PhysicsUtility.GetDirection(this.m_TargetTransform, this.m_Direction);
-            RaycastHit hit;
-            if (Physics.Raycast(startPosition, direction, out hit, this.m_MaxDistance, this.m_LayerMask, this.m_QueryTriggerInteraction) && this.m_HitLayer.Contains(hit.collider.gameObject.layer))
+
+            if (Physics.Raycast(startPosition, direction, out RaycastHit hit, this.m_MaxDistance, this.m_LayerMask, this.m_QueryTriggerInteraction) && this.m_HitLayer.Contains(hit.collider.gameObject.layer))
             {
                 return true;
             }

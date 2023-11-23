@@ -21,7 +21,7 @@ namespace DevionGames.UIWidgets
         protected override void OnEnable ()
 		{
             base.OnEnable();
-            this.canvasGroup = (target as UIWidget).GetComponent<CanvasGroup>();
+            this.canvasGroup = ((UIWidget)target).GetComponent<CanvasGroup>();
 
             this.m_ShowAndHideCursor = serializedObject.FindProperty("m_ShowAndHideCursor");
             this.m_CloseOnMove = serializedObject.FindProperty("m_CloseOnMove");

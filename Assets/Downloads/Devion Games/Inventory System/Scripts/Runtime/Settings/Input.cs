@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DevionGames.InventorySystem.Configuration
 {
@@ -13,7 +14,7 @@ namespace DevionGames.InventorySystem.Configuration
         [EnumFlags]
         public UnstackInput unstackEvent = UnstackInput.OnClick | UnstackInput.OnDrag;
         [InspectorLabel("Key Code")]
-        public KeyCode unstackKeyCode = KeyCode.LeftShift;
+        public Key unstackKeyCode = Key.LeftShift;
 
         [Flags]
         public enum UnstackInput {
