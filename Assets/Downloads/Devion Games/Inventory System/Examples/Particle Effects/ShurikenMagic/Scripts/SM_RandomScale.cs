@@ -7,7 +7,7 @@ public class SM_RandomScale : MonoBehaviour {
 
 	private void Start ()
 	{
-		var actualRandom=Random.Range(minScale, maxScale);
+		float actualRandom=Random.Range(minScale, maxScale);
 		transform.localScale=new Vector3(actualRandom, actualRandom, actualRandom);
 		
 	}

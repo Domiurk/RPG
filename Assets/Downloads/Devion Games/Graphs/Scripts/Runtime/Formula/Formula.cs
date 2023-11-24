@@ -11,13 +11,13 @@ namespace DevionGames.Graphs
 
         public Graph GetGraph()
         {
-            return this.m_Graph;
+            return m_Graph;
         }
 
         public static implicit operator float(Formula formula)
         {
             FormulaOutput output = formula.GetGraph().nodes.Find(x => x.GetType() == typeof(FormulaOutput)) as FormulaOutput;
-            return output.GetInputValue<float>("result", output.result);
+            return output.GetInputValue("result", output.result);
         }
     }
 }

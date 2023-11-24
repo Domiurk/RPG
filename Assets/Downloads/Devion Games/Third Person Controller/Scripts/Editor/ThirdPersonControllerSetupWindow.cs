@@ -19,7 +19,7 @@ namespace DevionGames
         public static void ShowWindow()
         {
             ThirdPersonControllerSetupWindow window =
-                EditorWindow.GetWindow<ThirdPersonControllerSetupWindow>("Character Setup");
+                GetWindow<ThirdPersonControllerSetupWindow>("Character Setup");
             Vector2 size = new Vector2(300f, 100f);
             window.m_FolderPath = "Assets/Devion Games";
             window.minSize = size;

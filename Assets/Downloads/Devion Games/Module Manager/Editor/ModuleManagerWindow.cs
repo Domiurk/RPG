@@ -17,8 +17,8 @@ namespace DevionGames
         private const float LIST_MAX_WIDTH = 600f;
         private const float LIST_RESIZE_WIDTH = 10f;
 
-        private static string m_ModuleTxtPath = "https://deviongames.com/modules/modules.txt";
-        private Rect m_SidebarRect = new Rect(0, 30, 280, 1000);
+        private static readonly string m_ModuleTxtPath = "https://deviongames.com/modules/modules.txt";
+        private Rect m_SidebarRect = new(0, 30, 280, 1000);
         private Vector2 m_ScrollPosition;
         private string m_SearchString = "Search...";
         private Vector2 m_SidebarScrollPosition;
@@ -31,7 +31,7 @@ namespace DevionGames
         [MenuItem("Tools/Devion Games/Module Manager", false, -1000)]
         public static void ShowWindow()
         {
-            ModuleManagerWindow window = EditorWindow.GetWindow<ModuleManagerWindow>(false, "Module Manager");
+            ModuleManagerWindow window = GetWindow<ModuleManagerWindow>(false, "Module Manager");
             window.minSize = new Vector2(500f, 300f);
             StartBackgroundTask(RequestModules(delegate(ModuleItem[] items) { window.m_Items = items; }));
         }
@@ -176,7 +176,7 @@ namespace DevionGames
 
 
         private void Select(ModuleItem item) {
-            this.m_SelectedChangeLog = 0;
+            m_SelectedChangeLog = 0;
         }
 
         private void DrawItem(ModuleItem item) {
@@ -184,7 +184,6 @@ namespace DevionGames
             GUILayout.BeginHorizontal();
             GUILayout.Space(10f);
             GUILayout.BeginVertical();
-           // GUILayout.Space(9f);
             GUILayout.Label(item.Icon, GUILayout.Width(46), GUILayout.Height(46));
             GUILayout.EndVertical();
             GUILayout.Label(item.name, Styles.thumbnailText);
@@ -251,13 +250,13 @@ namespace DevionGames
                 if (versions.Length > 0)
                 {
 
-                    this.m_SelectedChangeLog = EditorGUILayout.Popup("Version", this.m_SelectedChangeLog, versions);
+                    m_SelectedChangeLog = EditorGUILayout.Popup("Version", m_SelectedChangeLog, versions);
    
-                    if (this.m_SelectedChangeLog > -1)
+                    if (m_SelectedChangeLog > -1)
                     {
-                        for (int i = 0; i < item.changelogs[this.m_SelectedChangeLog].changes.Length; i++)
+                        for (int i = 0; i < item.changelogs[m_SelectedChangeLog].changes.Length; i++)
                         {
-                            EditorGUILayout.LabelField("- "+ item.changelogs[this.m_SelectedChangeLog].changes[i], EditorStyles.wordWrappedLabel);
+                            EditorGUILayout.LabelField("- "+ item.changelogs[m_SelectedChangeLog].changes[i], EditorStyles.wordWrappedLabel);
                         }
 
                     }
@@ -385,19 +384,6 @@ namespace DevionGames
             StartBackgroundTask(RequestModules(delegate (ModuleItem[] items) { m_Items = items; Repaint(); }));
         }
 
-        /*private IEnumerator RequestModules()
-        {
-            using (UnityWebRequest w = UnityWebRequest.Get(m_ModuleTxtPath))
-            {
-                yield return w.SendWebRequest();
-                while (!w.isDone) { yield return null;}
-                items = JsonHelper.FromJson<ModuleItem>(w.downloadHandler.text);
-                for (int i = 0; i < items.Length; i++) {
-                    items[i].Initialize();
-                }
-            }
-        }*/
-
         private bool MatchesSearch(ModuleItem item, string search) {
             search = search.ToLower();
             return search.Equals("search...") ||
@@ -452,7 +438,7 @@ namespace DevionGames
 
             string combinedPath = "";
 
-            foreach (var path in paths)
+            foreach (string path in paths)
             {
                 if (path != null)
                 {
@@ -462,21 +448,6 @@ namespace DevionGames
 
             return combinedPath;
         }
-
-       /* private static string SearchField(string search, params GUILayoutOption[] options)
-        {
-            GUILayout.BeginHorizontal();
-            string before = search;
-            string after = EditorGUILayout.TextField("", before, "SearchTextField", options);
-
-            if (GUILayout.Button("", "SearchCancelButton", GUILayout.Width(18f)))
-            {
-                after = "Search...";
-                GUIUtility.keyboardControl = 0;
-            }
-            GUILayout.EndHorizontal();
-            return after;
-        }*/
 
         private static string SearchField(string search, params GUILayoutOption[] options)
         {
@@ -508,7 +479,6 @@ namespace DevionGames
                 style.hover.textColor = Color.gray;
             }
             string after = EditorGUI.TextField(rect, "", before, style);
-           // EditorGUI.FocusTextInControl("SearchTextFieldFocus");
 
             GUI.Button(buttonRect, GUIContent.none, (after != "" && after != "Search...") ? "ToolbarSeachCancelButton" : "ToolbarSeachCancelButtonEmpty");
             EditorGUILayout.EndHorizontal();
@@ -518,15 +488,15 @@ namespace DevionGames
         private static class Styles
         {
             public static GUIStyle minusButton;
-            public static GUIStyle selectButton;
-            public static GUIStyle background;
+            public static readonly GUIStyle selectButton;
+            public static readonly GUIStyle background;
             public static GUIStyle seperator;
-            public static GUIStyle thumbnail;
-            public static GUIStyle thumbnailText;
-            public static GUIStyle largeLabel;
-            public static GUIStyle largeFoldout;
-            public static GUIStyle richTextLabel;
-            public static GUIStyle selectButtonText;
+            public static readonly GUIStyle thumbnail;
+            public static readonly GUIStyle thumbnailText;
+            public static readonly GUIStyle largeLabel;
+            public static readonly GUIStyle largeFoldout;
+            public static readonly GUIStyle richTextLabel;
+            public static readonly GUIStyle selectButtonText;
 
             static Styles()
             {

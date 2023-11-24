@@ -23,11 +23,11 @@ public class AutoDestruct : MonoBehaviour
 					#if UNITY_3_5
 						this.gameObject.SetActiveRecursively(false);
 					#else
-						this.gameObject.SetActive(false);
+						gameObject.SetActive(false);
 					#endif
 				}
 				else
-					GameObject.Destroy(this.gameObject);
+					Destroy(gameObject);
 				break;
 			}
 		}

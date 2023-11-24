@@ -28,14 +28,14 @@ namespace DevionGames.StatSystem
 
         public void OnEnable()
         {
-            this.m_Database = AssetDatabase.LoadAssetAtPath<StatDatabase>(EditorPrefs.GetString("StatDatabasePath"));
-            if (this.m_Database == null)
+            m_Database = AssetDatabase.LoadAssetAtPath<StatDatabase>(EditorPrefs.GetString("StatDatabasePath"));
+            if (m_Database == null)
             {
                 string[] guids = AssetDatabase.FindAssets("t:StatDatabase");
                 if (guids.Length > 0)
                 {
                     string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                    this.m_Database = AssetDatabase.LoadAssetAtPath<StatDatabase>(path);
+                    m_Database = AssetDatabase.LoadAssetAtPath<StatDatabase>(path);
                 }
             }
             toolbarIndex = EditorPrefs.GetInt("StatToolbarIndex");
@@ -45,9 +45,9 @@ namespace DevionGames.StatSystem
 
         public void OnDisable()
         {
-            if (this.m_Database != null)
+            if (m_Database != null)
             {
-                EditorPrefs.SetString("StatDatabasePath", AssetDatabase.GetAssetPath(this.m_Database));
+                EditorPrefs.SetString("StatDatabasePath", AssetDatabase.GetAssetPath(m_Database));
             }
             EditorPrefs.SetInt("StatToolbarIndex", toolbarIndex);
             if (m_ChildEditors != null)
@@ -89,7 +89,7 @@ namespace DevionGames.StatSystem
 
             SelectDatabaseButton();
 
-            if (this.m_ChildEditors != null)
+            if (m_ChildEditors != null)
                 toolbarIndex = GUILayout.Toolbar(toolbarIndex, toolbarNames, GUILayout.MinWidth(200));
 
             GUILayout.FlexibleSpace();
@@ -99,20 +99,20 @@ namespace DevionGames.StatSystem
         private void SelectDatabaseButton()
         {
             GUIStyle buttonStyle = EditorStyles.objectField;
-            GUIContent buttonContent = new GUIContent(this.m_Database != null ? this.m_Database.name : "Null");
+            GUIContent buttonContent = new GUIContent(m_Database != null ? m_Database.name : "Null");
             Rect buttonRect = GUILayoutUtility.GetRect(180f, 18f);
             if (GUI.Button(buttonRect, buttonContent, buttonStyle))
             {
                 ObjectPickerWindow.ShowWindow(buttonRect, typeof(StatDatabase),
-                    (UnityEngine.Object obj) => {
-                        this.m_Database = obj as StatDatabase;
+                    (Object obj) => {
+                        m_Database = obj as StatDatabase;
                         ResetChildEditors();
                     },
                     () => {
                         StatDatabase db = EditorTools.CreateAsset<StatDatabase>(true);
                         if (db != null)
                         {
-                            this.m_Database = db;
+                            m_Database = db;
                             ResetChildEditors();
                         }
                     });
@@ -122,16 +122,17 @@ namespace DevionGames.StatSystem
         private void ResetChildEditors()
         {
 
-            if (this.m_Database != null)
+            if (m_Database != null)
             {
-                this.m_ChildEditors = new List<ICollectionEditor>();
-                this.m_ChildEditors.Add(new StatCollectionEditor(this.m_Database, this.m_Database.items, new List<string>()));
-                this.m_ChildEditors.Add(new ScriptableObjectCollectionEditor<StatEffect>("Effects",this.m_Database, this.m_Database.effects,false));
-                this.m_ChildEditors.Add(new Configuration.StatSettingsEditor(this.m_Database, this.m_Database.settings));
+                m_ChildEditors = new List<ICollectionEditor>{
+                    new StatCollectionEditor(m_Database, m_Database.items, new List<string>()),
+                    new ScriptableObjectCollectionEditor<StatEffect>("Effects", m_Database, m_Database.effects, false),
+                    new Configuration.StatSettingsEditor(m_Database, m_Database.settings)
+                };
 
-                for (int i = 0; i < this.m_ChildEditors.Count; i++)
+                for (int i = 0; i < m_ChildEditors.Count; i++)
                 {
-                    this.m_ChildEditors[i].OnEnable();
+                    m_ChildEditors[i].OnEnable();
                 }
             }
         }

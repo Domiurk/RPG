@@ -15,7 +15,7 @@ namespace DevionGames.InventorySystem.Restrictions
 
             List<DevionGames.InventorySystem.EquipmentRegion> requiredRegions = new List<DevionGames.InventorySystem.EquipmentRegion>(equipmentItem.Region);
 
-            Restrictions.EquipmentRegion[] restrictions = GetComponents<Restrictions.EquipmentRegion>();
+            EquipmentRegion[] restrictions = GetComponents<EquipmentRegion>();
             for (int i = requiredRegions.Count - 1; i >= 0; i--)
             {
                 if (restrictions.Select(x => x.region.Name).Contains(requiredRegions[i].Name))

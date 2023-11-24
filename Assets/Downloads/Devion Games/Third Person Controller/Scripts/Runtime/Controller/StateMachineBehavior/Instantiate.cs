@@ -11,11 +11,9 @@ public class Instantiate : StateMachineBehaviour
 
     private bool restart = true;
 
-
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        var x = stateInfo.normalizedTime - Math.Truncate(stateInfo.normalizedTime);
+        double x = stateInfo.normalizedTime - Math.Truncate(stateInfo.normalizedTime);
         if (x < normalizedTime)
         {
             restart = true;

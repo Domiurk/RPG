@@ -29,7 +29,7 @@ namespace DevionGames.Graphs
     public enum PortDirection { Input = 0 , Output = 1 }
     public enum PortCapacity {Single = 0, Multiple = 1}
 
-    [System.Serializable]
+    [Serializable]
     public class Edge {
 
         public string nodeId;
@@ -41,19 +41,19 @@ namespace DevionGames.Graphs
     }
 
 
-    [System.Serializable]
+    [Serializable]
     public class Port
     {
-        [System.NonSerialized]
+        [NonSerialized]
         public FlowNode node;
 
         private Type m_FieldType;
         public Type fieldType {
             get { 
-                if (this.m_FieldType == null) {
-                    this.m_FieldType = Utility.GetType(this.m_FieldTypeName);
+                if (m_FieldType == null) {
+                    m_FieldType = Utility.GetType(m_FieldTypeName);
                 }
-                return this.m_FieldType;
+                return m_FieldType;
             }
         }
 
@@ -66,9 +66,8 @@ namespace DevionGames.Graphs
 
         [SerializeField]
         private List<Edge> m_Connections;
-        public List<Edge> Connections => this.m_Connections;
+        public List<Edge> Connections => m_Connections;
 
-        //Changed to public because it was using not FullName, and need to change that. Will be switched back to private
         [SerializeField]
         public string m_FieldTypeName;
 
@@ -83,7 +82,7 @@ namespace DevionGames.Graphs
             this.fieldName = fieldName;
             this.capacity = capacity;
             this.direction = direction;
-            this.m_FieldTypeName = fieldType.FullName;
+            m_FieldTypeName = fieldType.FullName;
         }
 
         public virtual T GetValue<T>(T defaultValue = default)
@@ -130,7 +129,7 @@ namespace DevionGames.Graphs
             {
                 if (Connections.Count > 0)
                 {
-                    for (var i = 0; i < Connections.Count; i++)
+                    for (int i = 0; i < Connections.Count; i++)
                     {
                         yield return Connections[i].port.GetValue<T>();
                     }
@@ -138,7 +137,7 @@ namespace DevionGames.Graphs
             }
 
             var values = node.OnRequestValue(this) as IEnumerable<T>;
-            foreach (var value in values)
+            foreach (T value in values)
             {
                 yield return value;
             }
@@ -161,18 +160,18 @@ namespace DevionGames.Graphs
 
         public void Disconnect(Port port)
         {
-            this.m_Connections.RemoveAll(x => x.nodeId == port.node.id && x.fieldName == port.fieldName);
+            m_Connections.RemoveAll(x => x.nodeId == port.node.id && x.fieldName == port.fieldName);
             port.Connections.RemoveAll(x =>x.nodeId == node.id && x.fieldName == fieldName);
         }
 
         public void DisconnectAll()
         {
-            for (var i = 0; i < this.m_Connections.Count; i++)
+            for (int i = 0; i < m_Connections.Count; i++)
             {
-                var port = this.m_Connections[i].port;
+                Port port = m_Connections[i].port;
                 port.m_Connections.RemoveAll(x => x.nodeId == node.id && x.fieldName == fieldName);
             }
-            this.m_Connections.Clear();
+            m_Connections.Clear();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace DevionGames.StatSystem
         [SerializeField]
         protected ConditionType m_Condition;
         [SerializeField]
-        protected float m_Value = 0f;
+        protected float m_Value;
         [SerializeField]
         protected Actions m_Actions;
 
@@ -20,9 +20,9 @@ namespace DevionGames.StatSystem
         protected Sequence m_Sequence;
 
         public virtual void Initialize(StatsHandler handler, Stat stat) {
-            this.m_Handler = handler;
-            this.m_Stat = stat;
-            switch (this.m_ValueType)
+            m_Handler = handler;
+            m_Stat = stat;
+            switch (m_ValueType)
             {
                 case ValueType.Value:
                     stat.onValueChange += OnValueChange;
@@ -34,32 +34,30 @@ namespace DevionGames.StatSystem
                     }
                     break;
             }
-            this.m_Sequence = new Sequence(handler.gameObject, new PlayerInfo("Player"),handler.GetComponent<Blackboard>(), this.m_Actions.actions.ToArray());
-            this.m_Handler.onUpdate += Update;
+            m_Sequence = new Sequence(handler.gameObject, new PlayerInfo("Player"),handler.GetComponent<Blackboard>(), m_Actions.actions.ToArray());
+            m_Handler.onUpdate += Update;
         }
 
         private void Update() {
-            if (this.m_Sequence != null)
+            if (m_Sequence != null)
             {
-                this.m_Sequence.Tick();
+                m_Sequence.Tick();
             }
         }
 
         private void OnValueChange()
         {
-            if (TriggerCallback(this.m_Stat.Value))
+            if (TriggerCallback(m_Stat.Value))
             {
-               // Debug.Log("OnValueChange");
-                this.m_Sequence.Start();
+                m_Sequence.Start();
             }
         }
 
         private void OnCurrentValueChange()
         {
-            if (TriggerCallback((this.m_Stat as Attribute).CurrentValue))
+            if (TriggerCallback((m_Stat as Attribute).CurrentValue))
             {
-               // Debug.Log("OnCurrentValueChange");
-                this.m_Sequence.Start();
+                m_Sequence.Start();
             }
         }
 
@@ -67,18 +65,13 @@ namespace DevionGames.StatSystem
 
         private bool TriggerCallback(float value)
         {
-            switch (this.m_Condition)
-            {
-                case ConditionType.Greater:
-                    return value > this.m_Value;
-                case ConditionType.GreaterOrEqual:
-                    return value >= this.m_Value;
-                case ConditionType.Less:
-                    return value < this.m_Value;
-                case ConditionType.LessOrEqual:
-                    return value <= this.m_Value;
-            }
-            return false;
+            return m_Condition switch{
+                ConditionType.Greater => value > m_Value,
+                ConditionType.GreaterOrEqual => value >= m_Value,
+                ConditionType.Less => value < m_Value,
+                ConditionType.LessOrEqual => value <= m_Value,
+                _ => false
+            };
         }
 
     }

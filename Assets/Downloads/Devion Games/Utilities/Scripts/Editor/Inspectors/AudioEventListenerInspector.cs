@@ -104,7 +104,7 @@ namespace DevionGames
             float verticalOffset = (defaultHeight - EditorGUIUtility.singleLineHeight) * 0.5f;
 
             m_AudioGroupList.elementHeight = (defaultHeight + verticalOffset) * 2;
-            m_AudioGroupList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_AudioGroupList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;
@@ -119,7 +119,7 @@ namespace DevionGames
                 EditorGUI.PropertyField(rect, element.FindPropertyRelative("m_AudioMixerGroup"), true);
 
             };
-            m_AudioGroupList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            m_AudioGroupList.drawElementBackgroundCallback = (Rect rect, int _, bool isActive, bool isFocused) => {
 
                 if (Event.current.type == EventType.Repaint)
                 {

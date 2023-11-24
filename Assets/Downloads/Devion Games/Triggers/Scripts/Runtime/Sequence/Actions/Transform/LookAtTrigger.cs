@@ -7,16 +7,15 @@ namespace DevionGames
     [ComponentMenu("Transform/Look At Trigger")]
     public class LookAtTrigger : Action
     {
-        [SerializeField]
-        private float m_Speed = 15f;
+        [SerializeField] private readonly float m_Speed = 15f;
 
         private Quaternion m_LastRotation;
         private Quaternion m_DesiredRotation;
 
         public override void OnStart()
         {
-            this.m_LastRotation = playerInfo.transform.rotation;
-            this.m_DesiredRotation = m_LastRotation;
+            m_LastRotation = playerInfo.transform.rotation;
+            m_DesiredRotation = m_LastRotation;
         }
 
         public override ActionStatus OnUpdate()
@@ -26,14 +25,16 @@ namespace DevionGames
             targetPosition.y = gameObjectPosition.y;
 
             Vector3 dir = targetPosition - gameObjectPosition;
-            if (dir.sqrMagnitude > 0f)
-            {
+
+            if(dir.sqrMagnitude > 0f){
                 m_DesiredRotation = Quaternion.LookRotation(dir);
             }
-         
-            m_LastRotation = Quaternion.Slerp(m_LastRotation, m_DesiredRotation, this.m_Speed * Time.deltaTime);
+
+            m_LastRotation = Quaternion.Slerp(m_LastRotation, m_DesiredRotation, m_Speed * Time.deltaTime);
             playerInfo.transform.rotation = m_LastRotation;
-            return Quaternion.Angle(m_LastRotation, m_DesiredRotation) > 5? ActionStatus.Running: ActionStatus.Success;
+            return Quaternion.Angle(m_LastRotation, m_DesiredRotation) > 5
+                       ? ActionStatus.Running
+                       : ActionStatus.Success;
         }
     }
 }

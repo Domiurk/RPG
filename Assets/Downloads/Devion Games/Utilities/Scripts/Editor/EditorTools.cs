@@ -6,6 +6,7 @@ using System.Reflection;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor.SceneManagement;
 
 namespace DevionGames
 {
@@ -14,10 +15,10 @@ namespace DevionGames
     /// </summary>
     public static class EditorTools
     {
-        private static Dictionary<Type, CustomDrawer> m_Drawers;
+        private static readonly Dictionary<Type, CustomDrawer> m_Drawers;
         private static Dictionary<Type, DrawerKeySet> m_DrawerTypeForType;
-        private static Dictionary<Type, MonoScript> m_TypeMonoScriptLookup;
-        private static Dictionary<Type, bool> m_CustomPropertyDrawerLookup;
+        private static readonly Dictionary<Type, MonoScript> m_TypeMonoScriptLookup;
+        private static readonly Dictionary<Type, bool> m_CustomPropertyDrawerLookup;
 
         static EditorTools()
         {
@@ -112,7 +113,6 @@ namespace DevionGames
                 style.hover.textColor = Color.gray;
             }
 
-            //  string after = EditorGUI.TextField(rect, "", before, style);
             Rect rect1 = GUILayoutUtility.GetLastRect();
             rect1.width = 20;
 
@@ -692,14 +692,14 @@ namespace DevionGames
             public int elementIndex;
         }
 
-        static Regex arrayElementRegex = new Regex(@"\GArray\.data\[(\d+)\]", RegexOptions.Compiled);
+        static readonly Regex arrayElementRegex = new(@"\GArray\.data\[(\d+)\]", RegexOptions.Compiled);
 
         public static object GetValue(this SerializedProperty property)
         {
             string propertyPath = property.propertyPath;
             object value = property.serializedObject.targetObject;
             int i = 0;
-            while(NextPropertyPath(propertyPath, ref i, out var token))
+            while(NextPropertyPath(propertyPath, ref i, out PropertyPath token))
                 value = GetPropertyPathValue(value, token);
             return value;
         }
@@ -710,9 +710,9 @@ namespace DevionGames
             object container = property.serializedObject.targetObject;
 
             int i = 0;
-            NextPropertyPath(propertyPath, ref i, out var deferredToken);
+            NextPropertyPath(propertyPath, ref i, out PropertyPath deferredToken);
 
-            while(NextPropertyPath(propertyPath, ref i, out var token)){
+            while(NextPropertyPath(propertyPath, ref i, out PropertyPath token)){
                 container = GetPropertyPathValue(container, deferredToken);
                 deferredToken = token;
             }
@@ -721,7 +721,7 @@ namespace DevionGames
 
             EditorUtility.SetDirty(property.serializedObject.targetObject);
             property.serializedObject.ApplyModifiedProperties();
-            var prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
+            PrefabStage prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
 
             if(prefabStage != null){
                 UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(prefabStage.scene);
@@ -734,9 +734,9 @@ namespace DevionGames
             object container = property.serializedObject.targetObject;
 
             int i = 0;
-            NextPropertyPath(propertyPath, ref i, out var deferredToken);
+            NextPropertyPath(propertyPath, ref i, out PropertyPath deferredToken);
 
-            while(NextPropertyPath(propertyPath, ref i, out var token)){
+            while(NextPropertyPath(propertyPath, ref i, out PropertyPath token)){
                 container = GetPropertyPathValue(container, deferredToken);
                 deferredToken = token;
             }
@@ -751,7 +751,7 @@ namespace DevionGames
             if(index >= propertyPath.Length)
                 return false;
 
-            var arrayElementMatch = arrayElementRegex.Match(propertyPath, index);
+            Match arrayElementMatch = arrayElementRegex.Match(propertyPath, index);
 
             if(arrayElementMatch.Success){
                 index += arrayElementMatch.Length + 1;
@@ -804,14 +804,14 @@ namespace DevionGames
         {
             if(container == null)
                 return null;
-            var type = container.GetType();
+            Type type = container.GetType();
             FieldInfo field = type.GetSerializedField(name);
             return field.GetValue(container);
         }
 
         private static void SetFieldValue(object container, string name, object value)
         {
-            var type = container.GetType();
+            Type type = container.GetType();
             FieldInfo field = type.GetSerializedField(name);
             field.SetValue(container, value);
         }
@@ -1248,8 +1248,7 @@ namespace DevionGames
                 if(field.HasAttribute(typeof(TextAreaAttribute))){
                     TextAreaAttribute attribute = field.GetCustomAttribute<TextAreaAttribute>();
                     EditorGUILayout.LabelField(label);
-                    List<GUILayoutOption> op = new List<GUILayoutOption>(options);
-                    op.Add(GUILayout.Height(attribute.minLines * EditorGUIUtility.singleLineHeight));
+                    List<GUILayoutOption> op = new List<GUILayoutOption>(options){ GUILayout.Height(attribute.minLines * EditorGUIUtility.singleLineHeight) };
                     GUIStyle style = new GUIStyle(EditorStyles.textArea);
                     style.wordWrap = true;
                     return EditorGUILayout.TextArea((string)value, style, op.ToArray());
@@ -1575,8 +1574,8 @@ namespace DevionGames
 
         public static IEnumerable<SerializedProperty> EnumerateChildProperties(this SerializedProperty property)
         {
-            var iterator = property.Copy();
-            var end = iterator.GetEndProperty();
+            SerializedProperty iterator = property.Copy();
+            SerializedProperty end = iterator.GetEndProperty();
 
             if(iterator.NextVisible(enterChildren: true)){
                 do{
@@ -1618,13 +1617,13 @@ namespace DevionGames
 
         private static class Styles
         {
-            public static GUIStyle seperator;
-            public static Texture2D rightArrow;
-            public static GUIStyle leftTextButton;
-            public static GUIStyle leftTextToolbarButton;
-            public static GUIStyle inspectorTitle;
-            public static GUIStyle inspectorTitleText;
-            public static GUIStyle inspectorBigTitle;
+            public static readonly GUIStyle seperator;
+            public static readonly Texture2D rightArrow;
+            public static readonly GUIStyle leftTextButton;
+            public static readonly GUIStyle leftTextToolbarButton;
+            public static readonly GUIStyle inspectorTitle;
+            public static readonly GUIStyle inspectorTitleText;
+            public static readonly GUIStyle inspectorBigTitle;
 
             static Styles()
             {

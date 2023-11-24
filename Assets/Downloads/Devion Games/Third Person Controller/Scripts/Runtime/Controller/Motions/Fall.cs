@@ -11,51 +11,49 @@ namespace DevionGames
 
 		public override void OnStart ()
 		{
-			this.m_Animator.SetInteger ("Int Value", 0);
-            if (this.m_Controller.RawInput.z < 0f)
+			m_Animator.SetInteger ("Int Value", 0);
+            if (m_Controller.RawInput.z < 0f)
             {
-                this.m_Animator.SetBool("Bool Value", true);
+                m_Animator.SetBool("Bool Value", true);
             }
             else
             {
-                this.m_Animator.SetBool("Bool Value", false);
+                m_Animator.SetBool("Bool Value", false);
             }
         }
 
 		public override bool UpdateVelocity (ref Vector3 velocity)
 		{
-			Vector3 extraGravityForce = (Physics.gravity * this.m_GravityMultiplier) - Physics.gravity;
+			Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
 			velocity += extraGravityForce * Time.deltaTime;
 			return true;
 		}
 
 		public override bool UpdateAnimator ()
 		{
-			this.m_Animator.SetFloat ("Float Value", this.m_Rigidbody.velocity.y, 0.15f, Time.deltaTime);
+			m_Animator.SetFloat ("Float Value", m_Rigidbody.velocity.y, 0.15f, Time.deltaTime);
 			return true;
 		}
 
 		public override bool CanStart ()
 		{
-			if (this.m_FallMinHeight != 0f && Physics.Raycast (this.m_Transform.position + this.m_Transform.up, -this.m_Transform.up, out RaycastHit hitInfo, this.m_Transform.up.y + this.m_FallMinHeight) && hitInfo.distance < this.m_Transform.up.y + this.m_FallMinHeight) {
+			if (m_FallMinHeight != 0f && Physics.Raycast (m_Transform.position + m_Transform.up, -m_Transform.up, out RaycastHit hitInfo, m_Transform.up.y + m_FallMinHeight) && hitInfo.distance < m_Transform.up.y + m_FallMinHeight) {
 				return false;
 			}
 
-			return this.m_Rigidbody.velocity.y < 0f && !this.m_Controller.IsGrounded;
+			return m_Rigidbody.velocity.y < 0f && !m_Controller.IsGrounded;
 		}
 
 		private void OnControllerLanded ()
 		{
-			this.StopMotion (true);
-			//Debug.Log("OnControllerLanded Fall "+ Controller.GetComponent<Animator>().IsInTransition(0));
+			StopMotion (true);
 		}
 
         public void OnControllerGrounded(bool grounded)
         {
-			if (this.IsActive)
+			if (IsActive)
             {
-                this.m_Animator.SetInteger("Int Value", 1);
-               // Invoke("OnControllerLanded", 2f);
+                m_Animator.SetInteger("Int Value", 1);
             }
         }
     }

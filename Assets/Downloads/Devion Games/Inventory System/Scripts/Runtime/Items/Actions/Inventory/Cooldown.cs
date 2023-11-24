@@ -11,7 +11,7 @@ namespace DevionGames.InventorySystem.ItemActions{
        
 
         public override ActionStatus OnUpdate() {
-            ItemContainer.Cooldown(item, this.m_GlobalCooldown);
+            ItemContainer.Cooldown(item, m_GlobalCooldown);
 			return ActionStatus.Success;
 		}
 

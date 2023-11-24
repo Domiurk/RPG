@@ -11,20 +11,20 @@ namespace DevionGames.InventorySystem
     public class RaycastNotify : Raycast
     {
         [SerializeField]
-        protected NotificationOptions m_SuccessNotification = null;
+        protected NotificationOptions m_SuccessNotification;
         [SerializeField]
-        protected NotificationOptions m_FailureNotification = null;
+        protected NotificationOptions m_FailureNotification;
 
 
         public override ActionStatus OnUpdate()
         {
             if (DoRaycast()) {
-                if (this.m_SuccessNotification != null && !string.IsNullOrEmpty(this.m_SuccessNotification.text))
-                    this.m_SuccessNotification.Show();
+                if (m_SuccessNotification != null && !string.IsNullOrEmpty(m_SuccessNotification.text))
+                    m_SuccessNotification.Show();
                 return ActionStatus.Success;
             }
-            if (this.m_FailureNotification != null && !string.IsNullOrEmpty(this.m_FailureNotification.text))
-                this.m_FailureNotification.Show();
+            if (m_FailureNotification != null && !string.IsNullOrEmpty(m_FailureNotification.text))
+                m_FailureNotification.Show();
             return ActionStatus.Failure;
         }
 

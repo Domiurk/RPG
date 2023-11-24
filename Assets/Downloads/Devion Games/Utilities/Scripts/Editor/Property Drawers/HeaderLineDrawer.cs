@@ -39,10 +39,6 @@ namespace DevionGames
 					m_LineStyle.padding = new RectOffset();
 
 					m_LineStyle.normal.background = EditorGUIUtility.whiteTexture;
-					/* line = new GUIStyle ("ProjectBrowserHeaderBgMiddle");
-                     line.fontSize = 14;
-                     line.fontStyle = FontStyle.Bold;
-                     line.normal.textColor = ((GUIStyle)"label").normal.textColor;*/
 				}
 				return m_LineStyle;
 			}

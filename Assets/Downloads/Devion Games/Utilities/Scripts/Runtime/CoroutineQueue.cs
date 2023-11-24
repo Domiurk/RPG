@@ -8,7 +8,7 @@ namespace DevionGames
     {
         readonly MonoBehaviour m_Owner;
         Coroutine m_InternalCoroutine;
-        readonly Queue<IEnumerator> actions = new Queue<IEnumerator>();
+        readonly Queue<IEnumerator> actions = new();
 
         public CoroutineQueue(MonoBehaviour coroutineOwner)
         {

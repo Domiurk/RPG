@@ -18,7 +18,7 @@ namespace DevionGames.InventorySystem
 
         public Currency GetDefaultCurrency()
         {
-            Currency currency = Instantiate(this.m_Currency);
+            Currency currency = Instantiate(m_Currency);
             currency.Stack = 0;
             return currency;
         }
@@ -27,7 +27,7 @@ namespace DevionGames.InventorySystem
         {
             base.Repaint();
 
-            if (this.m_HideEmptySlot)
+            if (m_HideEmptySlot)
             {
                 
                 gameObject.SetActive(!(ObservedItem == null || ObservedItem.Stack == 0));

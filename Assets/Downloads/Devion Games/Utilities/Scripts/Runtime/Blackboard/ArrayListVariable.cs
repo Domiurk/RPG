@@ -6,7 +6,7 @@ namespace DevionGames
     [Serializable]
     public class ArrayListVariable : Variable
     {
-        private ArrayList m_Value = new ArrayList();
+        private ArrayList m_Value = new();
 
         public ArrayList Value
         {

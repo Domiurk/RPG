@@ -18,7 +18,7 @@ namespace DevionGames.InventorySystem{
             if (GUI.Button(buttonRect, buttonContent, buttonStyle))
             {
                 ObjectPickerWindow.ShowWindow(buttonRect, typeof(ItemDatabase), BuildSelectableObjects(),
-                    (UnityEngine.Object obj) => {
+                    (Object obj) => {
                         property.serializedObject.Update();
                         property.objectReferenceValue = obj;
                         property.serializedObject.ApplyModifiedProperties();

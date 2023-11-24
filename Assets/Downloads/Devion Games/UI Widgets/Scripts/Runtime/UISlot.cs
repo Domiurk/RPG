@@ -4,26 +4,15 @@ namespace DevionGames.UIWidgets
 {
     public class UISlot<T> : MonoBehaviour where T : class
     {
-        private UIContainer<T> m_Container;
         /// <summary>
         /// The item container that holds this slot
         /// </summary>
-        public UIContainer<T> Container
-        {
-            get => this.m_Container;
-            set => this.m_Container = value;
-        }
+        public UIContainer<T> Container { get; set; }
 
-        private int m_Index = -1;
         /// <summary>
         /// Index of item container
         /// </summary>
-        public int Index
-        {
-            get => this.m_Index;
-            set => this.m_Index = value;
-        }
-
+        public int Index { get; set; } = -1;
 
         private T m_Item;
         /// <summary>
@@ -31,10 +20,9 @@ namespace DevionGames.UIWidgets
         /// </summary>
         public virtual T ObservedItem
         {
-            get => this.m_Item;
-            set
-            {
-                this.m_Item = value;
+            get => m_Item;
+            set{
+                m_Item = value;
                 Repaint();
             }
         }
@@ -47,9 +35,7 @@ namespace DevionGames.UIWidgets
         /// <summary>
         /// Repaint slot visuals with item information
         /// </summary>
-        public virtual void Repaint()
-        {
-        }
+        public virtual void Repaint() { }
 
         /// <summary>
         /// Can the item be added to this slot. This does not check if the slot is empty.

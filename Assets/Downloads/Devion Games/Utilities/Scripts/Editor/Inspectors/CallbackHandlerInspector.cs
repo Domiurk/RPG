@@ -185,7 +185,7 @@ namespace DevionGames{
 				}
 				else
 				{
-					genericMenu.AddItem(eventCallbackTypes[i], false, new GenericMenu.MenuFunction2(OnAddNewSelected), eventCallbackTypes[i].text);
+					genericMenu.AddItem(eventCallbackTypes[i], false, OnAddNewSelected, eventCallbackTypes[i].text);
 				}
 			}
 			genericMenu.ShowAsContext();

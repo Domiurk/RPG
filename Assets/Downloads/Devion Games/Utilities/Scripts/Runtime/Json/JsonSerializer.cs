@@ -135,7 +135,7 @@ namespace DevionGames{
 				type = Utility.GetType(typeString);
 			}
 
-			object obj = System.Activator.CreateInstance(type);
+			object obj = Activator.CreateInstance(type);
 			DeserializeFields(obj, data, objectReferences);
 			return obj;
 		}
@@ -166,7 +166,7 @@ namespace DevionGames{
 				Debug.Log("key: "+key+" type:"+type);
 				if (typeof(UnityEngine.Object).IsAssignableFrom(type))
 				{
-					int index = System.Convert.ToInt32(value);
+					int index = Convert.ToInt32(value);
 					if (index >= 0 && index < objectReferences.Count)
 					{
 						return objectReferences[index];

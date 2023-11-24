@@ -216,7 +216,6 @@ namespace DevionGames
 					}
 					catch (BadImageFormatException)
 					{
-						// Thrown reflecting on C++ executable files for which the C++ compiler stripped the relocation addresses (such as Unity dlls): http://msdn.microsoft.com/en-us/library/x4cw969y(v=vs.110).aspx
 					}
 				}
 			}

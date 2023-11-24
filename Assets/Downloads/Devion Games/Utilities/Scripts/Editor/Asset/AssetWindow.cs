@@ -31,7 +31,7 @@ namespace DevionGames
         }
         protected UnityEngine.Object m_Target;
         protected static Component m_CopyComponent;
-        protected bool m_ApplyToPrefab=false;
+        protected readonly bool m_ApplyToPrefab=false;
         protected bool m_HasPrefab;
         protected static Component[] m_CopyComponents;
 
@@ -58,7 +58,6 @@ namespace DevionGames
                 window.m_Editors.Add(editor);
             }
             window.FixMissingAssets();
-          //  EditorApplication.playModeStateChanged += OnPlaymodeStateChange;
             window.ShowUtility();
         }
 
@@ -84,14 +83,6 @@ namespace DevionGames
         {
             Close();
         }
-
-
-        /*protected static void OnPlaymodeStateChange(PlayModeStateChange state) {
-            AssetWindow[] objArray = Resources.FindObjectsOfTypeAll<AssetWindow>();
-            for (int i = 0; i < objArray.Length; i++) {
-                objArray[i].Close();
-            }
-        }*/
 
         protected virtual void OnGUI()
         {
@@ -214,7 +205,7 @@ namespace DevionGames
             }
 
             element.hideFlags = HideFlags.HideInInspector;
-            ArrayUtility.Add<UnityEngine.Object>(ref m_Targets, element);
+            ArrayUtility.Add(ref m_Targets, element);
             Editor editor = Editor.CreateEditor(element);
             m_Editors.Add(editor);
             serializedObject.Update();
@@ -455,15 +446,13 @@ namespace DevionGames
         }
 
         protected void FixMissingAssets() {
-
-            //Component added manually
             if (typeof(Component).IsAssignableFrom(m_Target.GetType()))
             {
                 Component[] components = (m_Target as Component).GetComponents(elementType);
                 components = components.Where(x => !m_Targets.Contains(x)).ToArray();
                 for (int i = 0; i < components.Length; i++)
                 {
-                    ArrayUtility.Add<UnityEngine.Object>(ref m_Targets, components[i]);
+                    ArrayUtility.Add(ref m_Targets, components[i]);
                     Editor editor = Editor.CreateEditor(components[i]);
                     m_Editors.Add(editor);
                     SerializedObject serializedObject = new SerializedObject(m_Target);
@@ -478,7 +467,7 @@ namespace DevionGames
                     }
                 }
             }
-            //Component removed manually
+
             for (int i = 0; i < m_Targets.Length; i++) {
                 if (m_Targets[i] == null) {
                     DestroyImmediate(m_Editors[i]);

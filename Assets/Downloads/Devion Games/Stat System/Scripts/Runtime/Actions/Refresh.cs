@@ -18,12 +18,12 @@ namespace DevionGames.StatSystem
 
         public override void OnStart()
         {
-            this.m_Handler = this.m_Target == TargetType.Self ? gameObject.GetComponent<StatsHandler>() : playerInfo.gameObject.GetComponent<StatsHandler>();
+            m_Handler = m_Target == TargetType.Self ? gameObject.GetComponent<StatsHandler>() : playerInfo.gameObject.GetComponent<StatsHandler>();
         }
 
         public override ActionStatus OnUpdate()
         {
-            Attribute stat = this.m_Handler.GetStat(this.m_StatName) as Attribute;
+            Attribute stat = m_Handler.GetStat(m_StatName) as Attribute;
             if (stat == null) return ActionStatus.Failure;
 
             stat.CurrentValue = stat.Value;

@@ -12,7 +12,7 @@ namespace DevionGames.InventorySystem
 		{
 	
 			InventorySystemEditor[] objArray = Resources.FindObjectsOfTypeAll<InventorySystemEditor> ();
-			InventorySystemEditor editor = (objArray.Length <= 0 ? ScriptableObject.CreateInstance<InventorySystemEditor> () : objArray [0]);
+			InventorySystemEditor editor = (objArray.Length <= 0 ? CreateInstance<InventorySystemEditor> () : objArray [0]);
 
 			editor.hideFlags = HideFlags.HideAndDontSave;
 			editor.minSize = new Vector2 (690, 300);
@@ -23,29 +23,29 @@ namespace DevionGames.InventorySystem
 
 		private void OnEnable()
 		{
-			this.m_InventorySystemInspector = new InventorySystemInspector();
-			this.m_InventorySystemInspector.OnEnable();
+			m_InventorySystemInspector = new InventorySystemInspector();
+			m_InventorySystemInspector.OnEnable();
 		}
 
 		private void OnDisable()
 		{
-			this.m_InventorySystemInspector.OnDisable();
+			m_InventorySystemInspector.OnDisable();
 		}
 
 		private void OnDestroy()
 		{
-			this.m_InventorySystemInspector.OnDestroy();
+			m_InventorySystemInspector.OnDestroy();
 		}
 
 		private void Update()
 		{
-			if (EditorWindow.mouseOverWindow == this)
+			if (mouseOverWindow == this)
 				Repaint();
 		}
 
 		private void OnGUI()
 		{
-			this.m_InventorySystemInspector.OnGUI(position);
+			m_InventorySystemInspector.OnGUI(position);
 		}
 
 	}

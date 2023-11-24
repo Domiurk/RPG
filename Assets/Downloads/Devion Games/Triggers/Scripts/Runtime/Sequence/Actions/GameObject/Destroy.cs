@@ -7,14 +7,13 @@ namespace DevionGames
     [ComponentMenu("GameObject/Destroy")]
     public class Destroy : Action
     {
-        [SerializeField]
-        private TargetType m_Target = TargetType.Self;
-        [SerializeField]
-        private float m_Delay = 0f;
+        [SerializeField] private readonly TargetType m_Target = TargetType.Self;
+        [SerializeField] private readonly float m_Delay = 0f;
+
         public override ActionStatus OnUpdate()
         {
-            GameObject target = GetTarget(this.m_Target);
-            GameObject.Destroy(target,this.m_Delay);
+            GameObject target = GetTarget(m_Target);
+            Object.Destroy(target, m_Delay);
             return ActionStatus.Success;
         }
     }

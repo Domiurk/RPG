@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using DevionGames.UIWidgets;
-using System.Collections.Generic;
 
 namespace DevionGames.InventorySystem
 {
@@ -76,7 +75,7 @@ namespace DevionGames.InventorySystem
 		[Header ("Behaviour:")]
         [SerializeField]
         [CategoryPicker]
-        private Category m_Category = null;
+        private Category m_Category;
 
         public Category Category
         {
@@ -88,7 +87,6 @@ namespace DevionGames.InventorySystem
         private static Rarity DefaultRarity {
             get {
                 if (m_DefaultRarity is null) {
-                    //TODO make not deletable in editor
                     m_DefaultRarity = CreateInstance<Rarity>();
                     m_DefaultRarity.Name = "None";
                     m_DefaultRarity.Color = Color.grey;
@@ -110,13 +108,6 @@ namespace DevionGames.InventorySystem
             set => m_Rarity = value;
         }
 
-        /*[SerializeField]
-        private List<Rarity> m_PossibleRarity=new List<Rarity>();
-        public List<Rarity> PossibleRarity {
-            get { return this.m_PossibleRarity; }
-            set { this.m_PossibleRarity = value; }
-        }*/
-
         [Tooltip("Is this item sellable to a vendor? More options will appear if it is sellable.")]
         [SerializeField]
         private bool m_IsSellable = true;
@@ -127,10 +118,9 @@ namespace DevionGames.InventorySystem
 
         [Tooltip("Items buy price. This value will be multiplied with the rarities price multiplier.")]
 		[SerializeField]
-		private int m_BuyPrice=0;
+		private int m_BuyPrice;
 
 		public int BuyPrice => Mathf.RoundToInt(m_BuyPrice*Rarity.PriceMultiplier);
-        // set { this.m_BuyPrice = value; }
         [Tooltip("If set to true, this item will be added to the vendors inventory and the player can buy it back.")]
         [SerializeField]
         private bool m_CanBuyBack = true;
@@ -139,7 +129,7 @@ namespace DevionGames.InventorySystem
         [Tooltip("The buy currency. You can also use a lower currency, it will be auto converted. 120 Copper will be converted to 1 Silver and 20 Copper.")]
         [CurrencyPicker(true)]
         [SerializeField]
-        private Currency m_BuyCurrency=null;
+        private Currency m_BuyCurrency;
 
         public Currency BuyCurrency
         {
@@ -148,14 +138,14 @@ namespace DevionGames.InventorySystem
         }
         [Tooltip("Items sell price. This value will be multiplied with the rarities price multiplier.")]
         [SerializeField]
-		private int m_SellPrice=0;
+		private int m_SellPrice;
 
 		public int SellPrice => Mathf.RoundToInt(m_SellPrice*Rarity.PriceMultiplier);
 
         [Tooltip("The sell currency. You can also use a lower currency, it will be auto converted. 120 Copper will be converted to 1 Silver and 20 Copper.")]
         [CurrencyPicker(true)]
         [SerializeField]
-        private Currency m_SellCurrency= null;
+        private Currency m_SellCurrency;
 
         public Currency SellCurrency
         {
@@ -208,20 +198,18 @@ namespace DevionGames.InventorySystem
 
         [Tooltip("Sound that should be played when the item is dropped to the scene.")]
 		[SerializeField]
-		private AudioClip m_DropSound = null;
+		private AudioClip m_DropSound;
 
 		public AudioClip DropSound => m_DropSound;
 
         [Tooltip("By default items prefab will be instantiated when dropped to the scene, you can override this option.")]
         [SerializeField]
-		private GameObject m_OverridePrefab=null;
+		private GameObject m_OverridePrefab;
 
 		public GameObject OverridePrefab => m_OverridePrefab;
 
-        [Tooltip("Defines if the item is craftable.")]
-        //TODO Move all to CraftingData class
-        [SerializeField]
-        private bool m_IsCraftable=false;
+        [Tooltip("Defines if the item is craftable.")][SerializeField]
+        private bool m_IsCraftable;
 
         public bool IsCraftable => m_IsCraftable;
 
@@ -233,7 +221,7 @@ namespace DevionGames.InventorySystem
 
         [Tooltip("Should a skill be used when item is crafted?")]
         [SerializeField]
-        private bool m_UseCraftingSkill = false;
+        private bool m_UseCraftingSkill;
 
         public bool UseCraftingSkill => m_UseCraftingSkill;
 
@@ -245,18 +233,18 @@ namespace DevionGames.InventorySystem
         [Tooltip("What skill should be used when crafting? The current players skill will be searched in skill window set above.")]
         [ItemPicker(true)]
         [SerializeField]
-        private Skill m_CraftingSkill = null;
+        private Skill m_CraftingSkill;
         public Skill CraftingSkill => m_CraftingSkill;
 
         [Tooltip("Remove the ingredients when crafting fails.")]
         [SerializeField]
-        private bool m_RemoveIngredientsWhenFailed = false;
+        private bool m_RemoveIngredientsWhenFailed;
         public bool RemoveIngredientsWhenFailed => m_RemoveIngredientsWhenFailed;
 
         [Tooltip("Minimum required skill to craft this item. The player can only craft this item if his skill is high enough.")]
         [Range(0f,100f)]
         [SerializeField]
-        private float m_MinCraftingSkillValue=0f;
+        private float m_MinCraftingSkillValue;
 
         public float MinCraftingSkillValue => m_MinCraftingSkillValue;
 
@@ -267,13 +255,13 @@ namespace DevionGames.InventorySystem
         public string CraftingAnimatorState => m_CraftingAnimatorState;
 
         [SerializeField]
-        private ItemModifierList m_CraftingModifier= new ItemModifierList();
+        private ItemModifierList m_CraftingModifier= new();
         public ItemModifierList CraftingModifier {
             get => m_CraftingModifier;
             set => m_CraftingModifier = value;
         }
 
-        public List<Ingredient> ingredients = new List<Ingredient>();
+        public List<Ingredient> ingredients = new();
 
 
         public ItemContainer Container
@@ -286,8 +274,7 @@ namespace DevionGames.InventorySystem
             }
         }
 
-       // private Slot m_Slot;
-		public Slot Slot {
+        public Slot Slot {
 			get{ 
                 if(Slots.Count > 0)
                 {
@@ -297,14 +284,14 @@ namespace DevionGames.InventorySystem
             }
 		}
 
-        private List<Slot> m_Slots= new List<Slot>();
+        private List<Slot> m_Slots= new();
         public List<Slot> Slots
         {
             get => m_Slots;
             set => m_Slots = value;
         }
 
-        private List<Slot> m_ReferencedSlots = new List<Slot> ();
+        private List<Slot> m_ReferencedSlots = new();
 
 		public List<Slot> ReferencedSlots {
 			get => m_ReferencedSlots;
@@ -312,7 +299,7 @@ namespace DevionGames.InventorySystem
         }
 
 		[SerializeField]
-		private List<ObjectProperty> properties = new List<ObjectProperty> ();
+		private List<ObjectProperty> properties = new();
 
         public void AddProperty(string name, object value) {
             ObjectProperty property = new ObjectProperty();
@@ -422,9 +409,10 @@ namespace DevionGames.InventorySystem
                 List<object> references = new List<object>();
                 for (int i = 0; i < ReferencedSlots.Count; i++)
                 {
-                    Dictionary<string, object> referenceData = new Dictionary<string, object>();
-                    referenceData.Add("Container", ReferencedSlots[i].Container.Name);
-                    referenceData.Add("Slot", ReferencedSlots[i].Index);
+                    Dictionary<string, object> referenceData = new Dictionary<string, object>{
+                        { "Container", ReferencedSlots[i].Container.Name },
+                        { "Slot", ReferencedSlots[i].Index }
+                    };
                     references.Add(referenceData);
                 }
                 data.Add("Reference", references);

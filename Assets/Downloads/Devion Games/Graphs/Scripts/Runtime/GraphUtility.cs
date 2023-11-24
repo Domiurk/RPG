@@ -15,9 +15,9 @@ namespace DevionGames.Graphs
 			return AddNode(graph, typeof(T)) as T;
 		}
 
-		public static Node AddNode(Graph graph,System.Type type)
+		public static Node AddNode(Graph graph,Type type)
 		{
-			Node node = System.Activator.CreateInstance(type) as Node;
+			Node node = Activator.CreateInstance(type) as Node;
 			if (typeof(FlowNode).IsAssignableFrom(type))
 			{
 				CreatePorts(node as FlowNode);
@@ -99,7 +99,6 @@ namespace DevionGames.Graphs
 			graphData.Add("Nodes",nodeData);
 			graph.serializationData = MiniJSON.Serialize(graphData);
 			graph.serializedObjects = objectReferences;
-			//Debug.Log(graph.serializationData);
 		}
 
 		private static Dictionary<string,object> SerializeNode(Node node, ref List<UnityEngine.Object> objectReferences) {
@@ -214,7 +213,7 @@ namespace DevionGames.Graphs
 			{
 				type = Utility.GetType(typeString);
 			}
-			Node node = (Node)System.Activator.CreateInstance(type);
+			Node node = (Node)Activator.CreateInstance(type);
 			DeserializeFields(node, data, objectReferences);
 			return node;
 		}
@@ -245,7 +244,7 @@ namespace DevionGames.Graphs
 			{
 				if (typeof(UnityEngine.Object).IsAssignableFrom(type))
 				{
-					int index = System.Convert.ToInt32(value);
+					int index = Convert.ToInt32(value);
 					if (index >= 0 && index < objectReferences.Count)
 					{
 						return objectReferences[index];
@@ -309,7 +308,6 @@ namespace DevionGames.Graphs
 
 		public static object ConvertToArray(this IList collection)
 		{
-			// guess type
 			Type type;
 			if (collection.GetType().IsGenericType && collection.GetType().GetGenericArguments().Length == 0)
 				type = collection.GetType().GetGenericArguments()[0];
@@ -318,7 +316,7 @@ namespace DevionGames.Graphs
 			else
 				throw new NotSupportedException("Failed to identify collection type for: " + collection.GetType());
 
-			var array = (object[])Array.CreateInstance(type, collection.Count);
+			object[] array = (object[])Array.CreateInstance(type, collection.Count);
 			for (int i = 0; i < array.Length; ++i)
 				array[i] = collection[i];
 			return array;
@@ -326,12 +324,11 @@ namespace DevionGames.Graphs
 
 		public static object ConvertToArray(this IList collection, Type arrayType)
 		{
-			var array = (object[])Array.CreateInstance(arrayType, collection.Count);
+			object[] array = (object[])Array.CreateInstance(arrayType, collection.Count);
 			for (int i = 0; i < array.Length; ++i)
 			{
-				var obj = collection[i];
+				object obj = collection[i];
 
-				// if it's not castable, try to convert it
 				if (!arrayType.IsInstanceOfType(obj))
 					obj = Convert.ChangeType(obj, arrayType);
 

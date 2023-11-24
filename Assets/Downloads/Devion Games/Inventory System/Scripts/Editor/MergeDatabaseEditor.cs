@@ -16,7 +16,7 @@ namespace DevionGames.InventorySystem
 		private ItemDatabase m_Destination;
 		public static void ShowWindow()
 		{
-			MergeDatabaseEditor window = EditorWindow.GetWindow<MergeDatabaseEditor>(true, "Merge Database");
+			MergeDatabaseEditor window = GetWindow<MergeDatabaseEditor>(true, "Merge Database");
 			Vector2 size = new Vector2(380f, 72f);
 			window.minSize = size;
 			window.wantsMouseMove = true;
@@ -27,16 +27,16 @@ namespace DevionGames.InventorySystem
 			EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("Source Database", GUILayout.Width(150f));
-			SelectDatabase(this.m_Source,delegate(ItemDatabase db) { this.m_Source = db; });
+			SelectDatabase(m_Source,delegate(ItemDatabase db) { m_Source = db; });
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("Destination Database", GUILayout.Width(150f));
-			SelectDatabase(this.m_Destination,delegate (ItemDatabase db) { this.m_Destination = db; });
+			SelectDatabase(m_Destination,delegate (ItemDatabase db) { m_Destination = db; });
 			EditorGUILayout.EndHorizontal();
 			GUILayout.Space(5);
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.FlexibleSpace();
-			EditorGUI.BeginDisabledGroup(this.m_Source == null || this.m_Destination == null);
+			EditorGUI.BeginDisabledGroup(m_Source == null || m_Destination == null);
 			if (GUILayout.Button("Merge", GUILayout.Width(70))) {
 				MergeItems();
 				MergeRarities();
@@ -54,27 +54,27 @@ namespace DevionGames.InventorySystem
 		private void UpdateReferences()
 		{
 			List<INameable> items = new List<INameable>();
-			items.AddRange(this.m_Destination.items);
-			items.AddRange(this.m_Destination.categories);
-			items.AddRange(this.m_Destination.raritys);
-			items.AddRange(this.m_Destination.equipments);
-			items.AddRange(this.m_Destination.currencies);
-			items.AddRange(this.m_Destination.itemGroups);
-			for (int i = 0; i < this.m_Destination.items.Count; i++)
+			items.AddRange(m_Destination.items);
+			items.AddRange(m_Destination.categories);
+			items.AddRange(m_Destination.raritys);
+			items.AddRange(m_Destination.equipments);
+			items.AddRange(m_Destination.currencies);
+			items.AddRange(m_Destination.itemGroups);
+			for (int i = 0; i < m_Destination.items.Count; i++)
 			{
-				Item item = this.m_Destination.items[i];
+				Item item = m_Destination.items[i];
                 UpdateReference(item, items);
 			}
 
-			for (int i = 0; i < this.m_Destination.itemGroups.Count; i++)
+			for (int i = 0; i < m_Destination.itemGroups.Count; i++)
 			{
-				ItemGroup group = this.m_Destination.itemGroups[i];
+				ItemGroup group = m_Destination.itemGroups[i];
 				UpdateReference(group, items);
 			}
 
-			for (int i = 0; i < this.m_Destination.currencies.Count; i++)
+			for (int i = 0; i < m_Destination.currencies.Count; i++)
 			{
-				Currency currency = this.m_Destination.currencies[i];
+				Currency currency = m_Destination.currencies[i];
 				UpdateReference(currency, items);
 			}
 
@@ -92,15 +92,14 @@ namespace DevionGames.InventorySystem
 
 				if (typeof(IList).IsAssignableFrom(fieldInfo.FieldType))
 				{
-					System.Type elementType = fieldInfo.FieldType.GetElementType();
+					Type elementType = fieldInfo.FieldType.GetElementType();
 					if (elementType == null) { elementType = fieldInfo.FieldType.GetGenericArguments()[0]; }
 
 					if ( typeof(INameable).IsAssignableFrom(elementType) && typeof(ScriptableObject).IsAssignableFrom(elementType))
 					{
-						//Debug.Log("INameable List: "+(source as INameable).Name+" "+fieldInfo.Name + " (" + fieldInfo.FieldType + ")");
 						IList array = fieldInfo.GetValue(source) as IList;
 
-                        System.Type targetType = typeof(List<>).MakeGenericType(Utility.GetElementType(fieldInfo.FieldType));
+                        Type targetType = typeof(List<>).MakeGenericType(Utility.GetElementType(fieldInfo.FieldType));
 						IList items = (IList)Activator.CreateInstance(targetType);
 						for (int i = 0; i < array.Count; i++)
 						{
@@ -117,9 +116,8 @@ namespace DevionGames.InventorySystem
 						fieldInfo.SetValue(source, items);
 					}else
 					{
-						//Debug.Log("Custom Class List: " + (source as INameable).Name + " " + fieldInfo.Name + " (" + fieldInfo.FieldType.GetElementType().ToString() + ")");
 						IList list = fieldInfo.GetValue(source) as IList;
-						foreach (var o in list)
+						foreach (object o in list)
 						{
 							UpdateReference(o, destItems);
 						}
@@ -127,7 +125,6 @@ namespace DevionGames.InventorySystem
 				}
 				else if (typeof(INameable).IsAssignableFrom(fieldInfo.FieldType) && typeof(ScriptableObject).IsAssignableFrom(fieldInfo.FieldType))
 				{
-					//Debug.Log("Direct INameable Field: " +source.GetType()+" "+ fieldInfo.Name + " (" + fieldInfo.FieldType + ")");
 					INameable item = (INameable)fieldInfo.GetValue(source);
 					if (item != null)
 					{
@@ -137,7 +134,6 @@ namespace DevionGames.InventorySystem
 				}
 				else 
 				{
-					//Debug.Log("Custom Class: "+ (source as INameable).Name + " " + fieldInfo.Name + " (" + fieldInfo.FieldType + ")");
 					object subSource = fieldInfo.GetValue(source);
 					UpdateReference(subSource, destItems);
 
@@ -146,112 +142,99 @@ namespace DevionGames.InventorySystem
 		}
 
 		private void MergeItems() {
-			List<Item> items = this.m_Source.items.Where(y => !this.m_Destination.items.Any(z => z.Name == y.Name)).ToList();
+			List<Item> items = m_Source.items.Where(y => !m_Destination.items.Any(z => z.Name == y.Name)).ToList();
 			for (int i = 0; i < items.Count; i++)
 			{
-				Item item = ScriptableObject.Instantiate(items[i]);
+				Item item = Instantiate(items[i]);
 				item.hideFlags = HideFlags.HideInHierarchy;
-				AssetDatabase.AddObjectToAsset(item, this.m_Destination);
+				AssetDatabase.AddObjectToAsset(item, m_Destination);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
-				this.m_Destination.items.Add(item);
-				/*if (item is UsableItem) {
-					List<ItemAction> actions = (item as UsableItem).actions;
-					for (int j = 0; j < actions.Count; j++) {
-						ItemAction action = ScriptableObject.Instantiate(actions[j]);
-						action.hideFlags = HideFlags.HideInHierarchy;
-						AssetDatabase.AddObjectToAsset(action, item);
-						AssetDatabase.SaveAssets();
-						AssetDatabase.Refresh();
-						actions[j] = action;
-						EditorUtility.SetDirty(item);
-					}
+				m_Destination.items.Add(item);
 
-				}*/
-
-				EditorUtility.SetDirty(this.m_Destination);
+				EditorUtility.SetDirty(m_Destination);
 			}
 		}
 
 		private void MergeCurrencies() {
-			List<Currency> items = this.m_Source.currencies.Where(y => !this.m_Destination.currencies.Any(z => z.Name == y.Name)).ToList();
+			List<Currency> items = m_Source.currencies.Where(y => !m_Destination.currencies.Any(z => z.Name == y.Name)).ToList();
 			for (int i = 0; i < items.Count; i++)
 			{
-				Currency item = ScriptableObject.Instantiate(items[i]);
+				Currency item = Instantiate(items[i]);
 				item.hideFlags = HideFlags.HideInHierarchy;
-				AssetDatabase.AddObjectToAsset(item, this.m_Destination);
+				AssetDatabase.AddObjectToAsset(item, m_Destination);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
-				this.m_Destination.currencies.Add(item);
-				EditorUtility.SetDirty(this.m_Destination);
+				m_Destination.currencies.Add(item);
+				EditorUtility.SetDirty(m_Destination);
 			}
 
 
 		}
 
 		private void MergeRarities() {
-			List<Rarity> items = this.m_Source.raritys.Where(y => !this.m_Destination.raritys.Any(z => z.Name == y.Name)).ToList();
+			List<Rarity> items = m_Source.raritys.Where(y => !m_Destination.raritys.Any(z => z.Name == y.Name)).ToList();
 			for (int i = 0; i < items.Count; i++)
 			{
-				Rarity item = ScriptableObject.Instantiate(items[i]);
+				Rarity item = Instantiate(items[i]);
 				item.hideFlags = HideFlags.HideInHierarchy;
-				AssetDatabase.AddObjectToAsset(item, this.m_Destination);
+				AssetDatabase.AddObjectToAsset(item, m_Destination);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
-				this.m_Destination.raritys.Add(item);
-				EditorUtility.SetDirty(this.m_Destination);
+				m_Destination.raritys.Add(item);
+				EditorUtility.SetDirty(m_Destination);
 			}
 		}
 
 		private void MergeCategories()
 		{
-			List<Category> items = this.m_Source.categories.Where(y => !this.m_Destination.categories.Any(z => z.Name == y.Name)).ToList();
+			List<Category> items = m_Source.categories.Where(y => !m_Destination.categories.Any(z => z.Name == y.Name)).ToList();
 			for (int i = 0; i < items.Count; i++)
 			{
-				Category item = ScriptableObject.Instantiate(items[i]);
+				Category item = Instantiate(items[i]);
 				item.hideFlags = HideFlags.HideInHierarchy;
-				AssetDatabase.AddObjectToAsset(item, this.m_Destination);
+				AssetDatabase.AddObjectToAsset(item, m_Destination);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
-				this.m_Destination.categories.Add(item);
-				EditorUtility.SetDirty(this.m_Destination);
+				m_Destination.categories.Add(item);
+				EditorUtility.SetDirty(m_Destination);
 			}
 		}
 
 		private void MergeEquipmentRegions()
 		{
-			List<EquipmentRegion> items = this.m_Source.equipments.Where(y => !this.m_Destination.equipments.Any(z => z.Name == y.Name)).ToList();
+			List<EquipmentRegion> items = m_Source.equipments.Where(y => !m_Destination.equipments.Any(z => z.Name == y.Name)).ToList();
 			for (int i = 0; i < items.Count; i++)
 			{
-				EquipmentRegion item = ScriptableObject.Instantiate(items[i]);
+				EquipmentRegion item = Instantiate(items[i]);
 				item.hideFlags = HideFlags.HideInHierarchy;
-				AssetDatabase.AddObjectToAsset(item, this.m_Destination);
+				AssetDatabase.AddObjectToAsset(item, m_Destination);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
-				this.m_Destination.equipments.Add(item);
-				EditorUtility.SetDirty(this.m_Destination);
+				m_Destination.equipments.Add(item);
+				EditorUtility.SetDirty(m_Destination);
 			}
 		}
 
 		private void MergeItemGroups() {
-			List<ItemGroup> items = this.m_Source.itemGroups.Where(y => !this.m_Destination.itemGroups.Any(z => z.Name == y.Name)).ToList();
+			List<ItemGroup> items = m_Source.itemGroups.Where(y => !m_Destination.itemGroups.Any(z => z.Name == y.Name)).ToList();
 			for (int i = 0; i < items.Count; i++)
 			{
-				ItemGroup item = ScriptableObject.Instantiate(items[i]);
+				ItemGroup item = Instantiate(items[i]);
 				item.hideFlags = HideFlags.HideInHierarchy;
-				AssetDatabase.AddObjectToAsset(item, this.m_Destination);
+				AssetDatabase.AddObjectToAsset(item, m_Destination);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
-				this.m_Destination.itemGroups.Add(item);
-				EditorUtility.SetDirty(this.m_Destination);
+				m_Destination.itemGroups.Add(item);
+				EditorUtility.SetDirty(m_Destination);
 			}
 		}
 
 
-		private ScriptableObject CreateAsset(ScriptableObject target, System.Type type) 
+		private ScriptableObject CreateAsset(ScriptableObject target, Type type) 
 		{
 
-			ScriptableObject asset = ScriptableObject.CreateInstance(type);
+			ScriptableObject asset = CreateInstance(type);
 			asset.hideFlags = HideFlags.HideInHierarchy;
 			AssetDatabase.AddObjectToAsset(asset, target);
 			AssetDatabase.SaveAssets();

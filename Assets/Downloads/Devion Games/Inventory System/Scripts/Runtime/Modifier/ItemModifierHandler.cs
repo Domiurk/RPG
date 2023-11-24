@@ -5,7 +5,7 @@ namespace DevionGames.InventorySystem
 {
     public class ItemModifierHandler : MonoBehaviour
     {
-        public List<ItemModifier> modifiers = new List<ItemModifier>();
+        public List<ItemModifier> modifiers = new();
 
         public void ApplyModifiers(Item item) {
             for (int i = 0; i < modifiers.Count; i++) {

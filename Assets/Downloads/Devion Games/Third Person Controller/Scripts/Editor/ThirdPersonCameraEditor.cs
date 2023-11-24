@@ -16,29 +16,29 @@ namespace DevionGames
 
 		private void OnEnable ()
 		{
-			this.m_Camera = target as ThirdPersonCamera;
-			this.m_Presets = serializedObject.FindProperty ("m_Presets");
-			this.m_PresetList = new ReorderableList (serializedObject, this.m_Presets, true, true, true, true) {
-				drawHeaderCallback = new ReorderableList.HeaderCallbackDelegate (DrawPresetHeader),
-				drawElementCallback = new ReorderableList.ElementCallbackDelegate (DrawPreset),
-				onSelectCallback = new ReorderableList.SelectCallbackDelegate (SelectPreset),
-				onAddCallback = new ReorderableList.AddCallbackDelegate (AddPreset),
-				drawElementBackgroundCallback = new ReorderableList.ElementCallbackDelegate(DrawPresetBackground)
+			m_Camera = target as ThirdPersonCamera;
+			m_Presets = serializedObject.FindProperty ("m_Presets");
+			m_PresetList = new ReorderableList (serializedObject, m_Presets, true, true, true, true) {
+				drawHeaderCallback = DrawPresetHeader,
+				drawElementCallback = DrawPreset,
+				onSelectCallback = SelectPreset,
+				onAddCallback = AddPreset,
+				drawElementBackgroundCallback = DrawPresetBackground
 			};
 
 			int layerIndex = EditorPrefs.GetInt ("CameraPresetIndex" + target.GetInstanceID ().ToString (), -1);
-			if (this.m_PresetList.count > layerIndex) {
-				this.m_PresetList.index = layerIndex;
-				SelectPreset (this.m_PresetList);
+			if (m_PresetList.count > layerIndex) {
+				m_PresetList.index = layerIndex;
+				SelectPreset (m_PresetList);
 			}
 
-			this.m_Script = serializedObject.FindProperty ("m_Script");
+			m_Script = serializedObject.FindProperty ("m_Script");
 		}
 
 		public override void OnInspectorGUI ()
 		{
 
-			if (this.m_Camera.Presets == null || m_Camera.Presets.Length == 0)
+			if (m_Camera.Presets == null || m_Camera.Presets.Length == 0)
 			{
 				AddPreset(m_PresetList);
 				serializedObject.ApplyModifiedProperties();
@@ -48,15 +48,15 @@ namespace DevionGames
 			EditorGUI.BeginChangeCheck ();
 			bool enabled = GUI.enabled;
 			GUI.enabled = false;
-			EditorGUILayout.PropertyField (this.m_Script);
+			EditorGUILayout.PropertyField (m_Script);
 			GUI.enabled = enabled;
 			DrawPropertiesExcluding (serializedObject, "m_Script", "m_Presets");
 			
-			this.m_PresetList.DoLayoutList ();
+			m_PresetList.DoLayoutList ();
 
-			if (this.m_PresetList.index != -1) {
+			if (m_PresetList.index != -1) {
 				GUILayout.Space (15f);
-				DrawSelectedPreset (this.m_Presets.GetArrayElementAtIndex (this.m_PresetList.index));
+				DrawSelectedPreset (m_Presets.GetArrayElementAtIndex (m_PresetList.index));
 			}
 
 			if (EditorGUI.EndChangeCheck ()) {
@@ -72,11 +72,11 @@ namespace DevionGames
 		private void DrawPresetBackground(Rect rect, int index, bool isActive, bool isFocused)
 		{
 			Color color = GUI.color;
-			if (this.m_Camera.Presets != null)
+			if (m_Camera.Presets != null)
 			{
-				for (int i = 0; i < this.m_Camera.Presets.Length; i++)
+				for (int i = 0; i < m_Camera.Presets.Length; i++)
 				{
-					CameraSettings preset = this.m_Camera.Presets[i];
+					CameraSettings preset = m_Camera.Presets[i];
 					if (i == index)
 					{
 						if (preset.IsActive)
@@ -97,11 +97,11 @@ namespace DevionGames
 
 		private void DrawPreset (Rect rect, int index, bool isActive, bool isFocused)
 		{
-			SerializedProperty element = this.m_Presets.GetArrayElementAtIndex (index);
+			SerializedProperty element = m_Presets.GetArrayElementAtIndex (index);
 			SerializedProperty name = element.FindPropertyRelative ("m_Name");
 
 			EditorGUI.BeginDisabledGroup(name.stringValue == "Default");
-			if (index == this.m_RenameIndex) {
+			if (index == m_RenameIndex) {
 
 				string before = name.stringValue;
 				GUI.SetNextControlName ("RenamePresetField");
@@ -119,24 +119,24 @@ namespace DevionGames
 			switch (currentEvent.rawType) {
 			case EventType.MouseDown:
 				if (rect.Contains (currentEvent.mousePosition) && index == m_PresetList.index && currentEvent.button == 0 && currentEvent.type == EventType.MouseDown) {
-					this.m_ClickCount += 1;
+					m_ClickCount += 1;
 				} 
 				break;
 			case EventType.KeyUp:
-				if (currentEvent.keyCode == KeyCode.Return && this.m_RenameIndex != -1) {
-					this.m_RenameIndex = -1;
+				if (currentEvent.keyCode == KeyCode.Return && m_RenameIndex != -1) {
+					m_RenameIndex = -1;
 					currentEvent.Use ();
 				}
 				break;
 			case EventType.MouseUp:
-				if (this.m_ClickCount > 0 && rect.Contains (currentEvent.mousePosition) && index == m_PresetList.index && currentEvent.button == 0 && currentEvent.type == EventType.MouseUp) {
-					this.m_RenameIndex = index;
-					this.m_ClickCount = 0;
+				if (m_ClickCount > 0 && rect.Contains (currentEvent.mousePosition) && index == m_PresetList.index && currentEvent.button == 0 && currentEvent.type == EventType.MouseUp) {
+					m_RenameIndex = index;
+					m_ClickCount = 0;
 					EditorGUI.FocusTextInControl ("RenamePresetField");
 					Event.current.Use ();
 
-				} else if (!rect.Contains (Event.current.mousePosition) && Event.current.clickCount > 0 && index == this.m_PresetList.index && this.m_RenameIndex != -1) {
-					this.m_RenameIndex = -1;
+				} else if (!rect.Contains (Event.current.mousePosition) && Event.current.clickCount > 0 && index == m_PresetList.index && m_RenameIndex != -1) {
+					m_RenameIndex = -1;
 					Event.current.Use ();
 				}
 				break;
@@ -171,7 +171,7 @@ namespace DevionGames
 		private void SelectPreset (ReorderableList list)
 		{
 			EditorPrefs.SetInt ("CameraPresetIndex" + target.GetInstanceID ().ToString (), list.index);
-			this.m_RenameIndex = -1;
+			m_RenameIndex = -1;
 		}
 
 		private void DrawSelectedPreset (SerializedProperty property)
@@ -180,7 +180,6 @@ namespace DevionGames
 			GUIStyle style = new GUIStyle ("ProjectBrowserHeaderBgMiddle") {
 				fontSize = 12,
 				fontStyle = FontStyle.Bold,
-				//contentOffset = new Vector2 (3, -2),
 			};
 
 			EditorGUILayout.LabelField (property.FindPropertyRelative ("m_Name").stringValue, style);
@@ -192,8 +191,6 @@ namespace DevionGames
 			do {
 				EditorGUILayout.PropertyField (property, false);
 			} while (property.NextVisible (false) && property.depth == depth);
-				
-			//EditorGUILayout.LabelField ("", style);
 		}
 	}
 }

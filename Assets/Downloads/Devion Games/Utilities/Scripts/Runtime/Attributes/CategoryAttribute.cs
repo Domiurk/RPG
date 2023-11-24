@@ -9,7 +9,7 @@ namespace DevionGames
 
         public CategoryAttribute(string category)
         {
-            this.Category = category;
+            Category = category;
         }
     }
 }

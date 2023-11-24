@@ -13,7 +13,7 @@ namespace DevionGames.InventorySystem
 
         public override void Modify(Item item)
         {
-            int stack = Random.Range(this.m_Min, this.m_Max);
+            int stack = Random.Range(m_Min, m_Max);
             item.Stack = stack;
         }
     }

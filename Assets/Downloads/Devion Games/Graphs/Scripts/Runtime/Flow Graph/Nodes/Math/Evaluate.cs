@@ -10,7 +10,7 @@ namespace DevionGames.Graphs
         [Input(false,true)]
         public float time;
         [Input(false, false)]
-        public AnimationCurve curve=new AnimationCurve();
+        public AnimationCurve curve=new();
         [Output]
         public float output;
 

@@ -8,7 +8,7 @@ namespace DevionGames.InventorySystem
     public class VisibleItemsEditor : AssetWindow
     {
 
-        private static VisibleItemsEditor.Styles m_Styles;
+        private static Styles m_Styles;
         private string m_SearchString = "Search...";
         private int m_SelectedIndex = -1;
         private Item m_SelectedItem;
@@ -16,7 +16,7 @@ namespace DevionGames.InventorySystem
         public new static void ShowWindow(string title, SerializedProperty elements)
         {
             VisibleItemsEditor[] objArray = Resources.FindObjectsOfTypeAll<VisibleItemsEditor>();
-            VisibleItemsEditor window = (objArray.Length <= 0 ? ScriptableObject.CreateInstance<VisibleItemsEditor>() : objArray[0]);
+            VisibleItemsEditor window = (objArray.Length <= 0 ? CreateInstance<VisibleItemsEditor>() : objArray[0]);
             window.hideFlags = HideFlags.HideAndDontSave;
             window.minSize = new Vector2(260f, 200f);
             window.titleContent = new GUIContent(title);
@@ -44,14 +44,14 @@ namespace DevionGames.InventorySystem
 
         protected override void OnGUI()
         {
-            if (VisibleItemsEditor.m_Styles == null)
+            if (m_Styles == null)
             {
-                VisibleItemsEditor.m_Styles = new VisibleItemsEditor.Styles();
+                m_Styles = new Styles();
             }
             DrawSearchField();
             DrawHeader();
-            this.m_ScrollPosition = EditorGUILayout.BeginScrollView(this.m_ScrollPosition);
-            if (this.m_SelectedIndex != -1)
+            m_ScrollPosition = EditorGUILayout.BeginScrollView(m_ScrollPosition);
+            if (m_SelectedIndex != -1)
             {
                 DrawElement();
             }
@@ -61,7 +61,7 @@ namespace DevionGames.InventorySystem
             }
            
             EditorGUILayout.EndScrollView();
-            if (this.m_SelectedIndex == -1)
+            if (m_SelectedIndex == -1)
             {
                 GUILayout.FlexibleSpace();
                 DoAddButton(); 
@@ -70,23 +70,17 @@ namespace DevionGames.InventorySystem
         }
 
         private void DrawElement() {
-            Editor editor = this.m_Editors[this.m_SelectedIndex];
+            Editor editor = m_Editors[m_SelectedIndex];
             editor.OnInspectorGUI();
-            SerializedObject elementObject = new SerializedObject(this.m_Targets[this.m_SelectedIndex]);
+            SerializedObject elementObject = new SerializedObject(m_Targets[m_SelectedIndex]);
             m_SelectedItem = elementObject.FindProperty("item").objectReferenceValue as Item;
         }
 
         private void DrawElementList()
         {
-          /*  GUIStyle selectButton = new GUIStyle("MeTransitionSelectHead")
+            for (int i = 0; i < m_Targets.Length; i++)
             {
-                alignment = TextAnchor.MiddleLeft
-            };
-            selectButton.padding.left = 10;*/
-
-            for (int i = 0; i < this.m_Targets.Length; i++)
-            {
-                UnityEngine.Object target = this.m_Targets[i];
+                UnityEngine.Object target = m_Targets[i];
 
                 SerializedObject elementObject = new SerializedObject(target);
 
@@ -97,15 +91,15 @@ namespace DevionGames.InventorySystem
                 }
                 GUILayout.BeginHorizontal();
                 Color color = GUI.backgroundColor;
-                Rect rect = GUILayoutUtility.GetRect(new GUIContent((item != null ? item.Name : "Null")), VisibleItemsEditor.m_Styles.elementButtonText, GUILayout.Height(25f));
+                Rect rect = GUILayoutUtility.GetRect(new GUIContent((item != null ? item.Name : "Null")), m_Styles.elementButtonText, GUILayout.Height(25f));
                 rect.width -= 25f;
                 GUI.backgroundColor = (rect.Contains(Event.current.mousePosition) ? new Color(0, 1.0f, 0, 0.3f) : new Color(0, 0, 0, 0.0f));
 
-                if (GUI.Button(rect, (item != null ? item.Name : "Null"), VisibleItemsEditor.m_Styles.elementButtonText))
+                if (GUI.Button(rect, (item != null ? item.Name : "Null"), m_Styles.elementButtonText))
                 {
                     GUI.FocusControl("");
-                    this.m_SelectedIndex = i;
-                    this.m_SelectedItem = item;
+                    m_SelectedIndex = i;
+                    m_SelectedItem = item;
                 }
                 GUI.backgroundColor = color;
                 Rect position = new Rect(rect.x + rect.width + 4f, rect.y + 4f, 25, 25);
@@ -128,45 +122,23 @@ namespace DevionGames.InventorySystem
 
         private void DrawHeader()
         {
-            GUIContent content = new GUIContent((this.m_SelectedIndex != -1) ? (this.m_SelectedItem != null ? this.m_SelectedItem.Name : "Null") : "Items");
-            Rect headerRect = GUILayoutUtility.GetRect(content, VisibleItemsEditor.m_Styles.header);
-            if (GUI.Button(headerRect, content, VisibleItemsEditor.m_Styles.header))
+            GUIContent content = new GUIContent((m_SelectedIndex != -1) ? (m_SelectedItem != null ? m_SelectedItem.Name : "Null") : "Items");
+            Rect headerRect = GUILayoutUtility.GetRect(content, m_Styles.header);
+            if (GUI.Button(headerRect, content, m_Styles.header))
             {
-                this.m_SelectedIndex = -1;
+                m_SelectedIndex = -1;
             }
-            if (Event.current.type == EventType.Repaint && this.m_SelectedIndex != -1)
+            if (Event.current.type == EventType.Repaint && m_SelectedIndex != -1)
             {
-                VisibleItemsEditor.m_Styles.leftArrow.Draw(new Rect(headerRect.x, headerRect.y + 4f, 16f, 16f), false, false, false, false);
+                m_Styles.leftArrow.Draw(new Rect(headerRect.x, headerRect.y + 4f, 16f, 16f), false, false, false, false);
             }
         }
-
-        /*private void DrawHeader()
-        {
-            GUIStyle headerStyle = new GUIStyle("In BigTitle")
-            {
-                font = EditorStyles.boldLabel.font,
-                stretchWidth = true,
-            };
-
-            string headerTitle = (this.m_SelectedIndex != -1) ? (this.m_SelectedItem != null ? this.m_SelectedItem.Name : "Null") : "Items";
-            Rect headerRect = GUILayoutUtility.GetRect(new GUIContent(headerTitle), headerStyle);
-
-            if (GUI.Button(headerRect, headerTitle, headerStyle))
-            {
-                this.m_SelectedIndex = -1;
-            }
-            if (this.m_SelectedIndex != -1)
-            {
-                GUIStyle leftArrow = new GUIStyle("AC LeftArrow");
-                GUI.Label(new Rect(headerRect.x, headerRect.y + 4f, 16f, 16f), "", leftArrow);
-            }
-        }*/
 
         private void DrawSearchField()
         {
             GUILayout.Space(6f);
-            EditorGUI.BeginDisabledGroup(this.m_SelectedIndex != -1);
-            this.m_SearchString = SearchField(this.m_SearchString);
+            EditorGUI.BeginDisabledGroup(m_SelectedIndex != -1);
+            m_SearchString = SearchField(m_SearchString);
             EditorGUI.EndDisabledGroup();
         }
 
@@ -201,7 +173,7 @@ namespace DevionGames.InventorySystem
                 style.hover.textColor = Color.gray;
             }
             string after = EditorGUI.TextField(rect, "", before, style);
-            if(this.m_SelectedIndex == -1)
+            if(m_SelectedIndex == -1)
             EditorGUI.FocusTextInControl("SearchTextFieldFocus");
 
             GUI.Button(buttonRect, GUIContent.none, (after != "" && after != "Search...") ? "ToolbarSeachCancelButton" : "ToolbarSeachCancelButtonEmpty");
@@ -212,22 +184,22 @@ namespace DevionGames.InventorySystem
 
         private class Styles
         {
-            public GUIStyle header = new GUIStyle("DD HeaderStyle");
+            public readonly GUIStyle header = new("DD HeaderStyle");
             public GUIStyle rightArrow = "AC RightArrow";
-            public GUIStyle leftArrow = "AC LeftArrow";
-            public GUIStyle elementButton = new GUIStyle("MeTransitionSelectHead");
+            public readonly GUIStyle leftArrow = "AC LeftArrow";
+            public readonly GUIStyle elementButton = new("MeTransitionSelectHead");
             public GUIStyle background = "grey_border";
-            public GUIStyle elementButtonText;
+            public readonly GUIStyle elementButtonText;
 
             public Styles()
             {
 
-                this.header.stretchWidth = true;
-                this.header.margin = new RectOffset(1, 1, 0, 4);
+                header.stretchWidth = true;
+                header.margin = new RectOffset(1, 1, 0, 4);
 
-                this.elementButton.alignment = TextAnchor.MiddleLeft;
-                this.elementButton.padding.left = 22;
-                this.elementButton.margin = new RectOffset(1, 1, 0, 0);
+                elementButton.alignment = TextAnchor.MiddleLeft;
+                elementButton.padding.left = 22;
+                elementButton.margin = new RectOffset(1, 1, 0, 0);
 
                 elementButtonText = new GUIStyle("MeTransitionSelectHead")
                 {

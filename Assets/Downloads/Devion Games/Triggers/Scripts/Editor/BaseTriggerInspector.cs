@@ -1,7 +1,6 @@
 ﻿using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace DevionGames
 {
@@ -16,26 +15,26 @@ namespace DevionGames
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.m_UseDistance = serializedObject.FindProperty("useDistance");
-            this.m_TriggerInputType = serializedObject.FindProperty("triggerType");
-            this.m_TriggerKey = serializedObject.FindProperty("key");
-            if (this.m_KeyOptions == null)
+            m_UseDistance = serializedObject.FindProperty("useDistance");
+            m_TriggerInputType = serializedObject.FindProperty("triggerType");
+            m_TriggerKey = serializedObject.FindProperty("key");
+            if (m_KeyOptions == null)
             {
-                this.m_KeyOptions = new AnimBool((target as BaseTrigger).triggerType.HasFlag<BaseTrigger.TriggerInputType>(BaseTrigger.TriggerInputType.Key));
-                this.m_KeyOptions.valueChanged.AddListener(new UnityAction(Repaint));
+                m_KeyOptions = new AnimBool((target as BaseTrigger).triggerType.HasFlag<BaseTrigger.TriggerInputType>(BaseTrigger.TriggerInputType.Key));
+                m_KeyOptions.valueChanged.AddListener(Repaint);
             }
         }
 
         private void DrawInspector()
         {
-            EditorGUILayout.PropertyField(this.m_UseDistance);
-            EditorGUILayout.PropertyField(this.m_TriggerInputType);
+            EditorGUILayout.PropertyField(m_UseDistance);
+            EditorGUILayout.PropertyField(m_TriggerInputType);
 
-            this.m_KeyOptions.target = (target as BaseTrigger).triggerType.HasFlag<BaseTrigger.TriggerInputType>(BaseTrigger.TriggerInputType.Key);
-            if (EditorGUILayout.BeginFadeGroup(this.m_KeyOptions.faded))
+            m_KeyOptions.target = (target as BaseTrigger).triggerType.HasFlag<BaseTrigger.TriggerInputType>(BaseTrigger.TriggerInputType.Key);
+            if (EditorGUILayout.BeginFadeGroup(m_KeyOptions.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_TriggerKey);
+                EditorGUILayout.PropertyField(m_TriggerKey);
                 EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
             }
             EditorGUILayout.EndFadeGroup();

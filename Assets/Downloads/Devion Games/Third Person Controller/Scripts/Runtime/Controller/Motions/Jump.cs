@@ -21,31 +21,31 @@ namespace DevionGames
 
         public override bool UpdateAnimator ()
 		{
-            this.m_Animator.SetFloat ("Float Value", this.m_Rigidbody.velocity.y, 0.15f, Time.deltaTime);
+            m_Animator.SetFloat ("Float Value", m_Rigidbody.velocity.y, 0.15f, Time.deltaTime);
 			return true;
 		}
 
 		private void StartJump ()
 		{
-			if (this.IsActive) {
-				this.jumpTime = Time.time;
-				this.m_Controller.IsGrounded = false;
-				Vector3 velocity = this.m_Rigidbody.velocity;
+			if (IsActive) {
+				jumpTime = Time.time;
+				m_Controller.IsGrounded = false;
+				Vector3 velocity = m_Rigidbody.velocity;
 				velocity.y = m_Force;
-				this.m_Rigidbody.velocity = velocity;
-				this.m_Animator.SetFloat ("Float Value", this.m_Rigidbody.velocity.y);
+				m_Rigidbody.velocity = velocity;
+				m_Animator.SetFloat ("Float Value", m_Rigidbody.velocity.y);
                 float cycle = 0f;
-                if (this.m_Controller.IsMoving)
+                if (m_Controller.IsMoving)
                 {
-                    float normalizedTime = this.m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
+                    float normalizedTime = m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
                     cycle = Mathf.Sin(360f * normalizedTime);
                 }
-                this.m_Animator.SetFloat("Leg", cycle);
-                if (this.m_Controller.RawInput.z < 0f)
+                m_Animator.SetFloat("Leg", cycle);
+                if (m_Controller.RawInput.z < 0f)
                 {
-                    this.m_Animator.SetBool("Bool Value", true);
+                    m_Animator.SetBool("Bool Value", true);
                 }else {
-                    this.m_Animator.SetBool("Bool Value", false);
+                    m_Animator.SetBool("Bool Value", false);
                 }
             }
 		}
@@ -66,20 +66,20 @@ namespace DevionGames
         public void OnControllerGrounded (bool grounded)
 		{
 			if (grounded) {
-				this.lastJumpTime = Time.time;
-				this.StopMotion (true);
+				lastJumpTime = Time.time;
+				StopMotion (true);
 			}
 		}
 
 		public override bool CanStart ()
 		{
-			return this.m_Controller.IsGrounded && (Time.time > lastJumpTime + this.m_RecurrenceDelay);
+			return m_Controller.IsGrounded && (Time.time > lastJumpTime + m_RecurrenceDelay);
 		}
 
 		public override bool CanStop ()
 		{
 		
-			return !this.m_Controller.IsGrounded && this.m_Rigidbody.velocity.y < 0.01f && Time.time > jumpTime + 0.2f; 
+			return !m_Controller.IsGrounded && m_Rigidbody.velocity.y < 0.01f && Time.time > jumpTime + 0.2f; 
 		}
 	}
 }

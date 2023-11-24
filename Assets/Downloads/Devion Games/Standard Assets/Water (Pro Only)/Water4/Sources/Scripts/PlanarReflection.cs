@@ -9,7 +9,7 @@ namespace UnityStandardAssets.Water
     public class PlanarReflection : MonoBehaviour
     {
         public LayerMask reflectionMask;
-        public bool reflectSkybox = false;
+        public bool reflectSkybox;
         public Color clearColor = Color.grey;
         public String reflectionSampler = "_ReflectionTex";
         public float clipPlaneOffset = 0.07F;
@@ -167,12 +167,11 @@ namespace UnityStandardAssets.Water
 
             GL.invertCulling = true;
 
-            Transform reflectiveSurface = transform; //waterHeight;
+            Transform reflectiveSurface = transform;
 
             Vector3 eulerA = cam.transform.eulerAngles;
 
             reflectCamera.transform.eulerAngles = new Vector3(-eulerA.x, eulerA.y, eulerA.z);
-            // reflectCamera.transform.position = cam.transform.position;
             float xPos = Mathf.Clamp(cam.transform.position.x, -float.MaxValue + 100, float.MaxValue - 100);
             float yPos = Mathf.Clamp(cam.transform.position.y, -float.MaxValue + 100, float.MaxValue - 100);
             float zPos = Mathf.Clamp(cam.transform.position.z, -float.MaxValue + 100, float.MaxValue - 100);
@@ -197,7 +196,6 @@ namespace UnityStandardAssets.Water
             projection = CalculateObliqueMatrix(projection, clipPlane);
             reflectCamera.projectionMatrix = projection;
 
-          //  reflectCamera.transform.position = newpos;
             xPos = Mathf.Clamp(newpos.x, -float.MaxValue + 100, float.MaxValue - 100);
             yPos = Mathf.Clamp(newpos.y, -float.MaxValue + 100, float.MaxValue - 100);
             zPos = Mathf.Clamp(newpos.z, -float.MaxValue + 100, float.MaxValue - 100);
@@ -229,7 +227,6 @@ namespace UnityStandardAssets.Water
                 1.0F
                 );
             Vector4 c = clipPlane * (2.0F / (Vector4.Dot(clipPlane, q)));
-            // third row = clip plane - fourth row
             projection[2] = c.x - projection[3];
             projection[6] = c.y - projection[7];
             projection[10] = c.z - projection[11];

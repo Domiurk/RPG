@@ -18,8 +18,8 @@ namespace Text_Renaming.Scripts.Runtime
 
             if (Object == null)
             {
-                Debug.Log($"Start renaming children on this:{this.name}");
-                Object = this.gameObject;
+                Debug.Log($"Start renaming children on this:{name}");
+                Object = gameObject;
             }
 
             int count = 0;

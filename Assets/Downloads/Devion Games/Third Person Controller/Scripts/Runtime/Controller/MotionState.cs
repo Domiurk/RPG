@@ -10,22 +10,22 @@ namespace DevionGames
         [HideInInspector]
         [SerializeField] private string m_FriendlyName = string.Empty;
 
-        public string FriendlyName => this.m_FriendlyName;
+        public string FriendlyName => m_FriendlyName;
 
         [SerializeField] private InputActionReference m_InputAction;
 
         public InputActionReference InputAction
         {
-            get => this.m_InputAction;
-            set => this.m_InputAction = value;
+            get => m_InputAction;
+            set => m_InputAction = value;
         }
 
         [SerializeField] private StartType m_StartType = StartType.Automatic;
 
         public StartType StartType
         {
-            get => this.m_StartType;
-            set => this.m_StartType = value;
+            get => m_StartType;
+            set => m_StartType = value;
         }
 
         [SerializeField]
@@ -33,40 +33,40 @@ namespace DevionGames
 
         public StopType StopType
         {
-            get => this.m_StopType;
-            set => this.m_StopType = value;
+            get => m_StopType;
+            set => m_StopType = value;
         }
 
         [SerializeField]
-        private bool m_ConsumeInputOverUI = false;
+        private bool m_ConsumeInputOverUI;
 
-        public bool ConsumeInputOverUI => this.m_ConsumeInputOverUI;
+        public bool ConsumeInputOverUI => m_ConsumeInputOverUI;
 
         [SerializeField]
         private bool m_PauseItemUpdate = true;
 
-        public bool PauseItemUpdate => this.m_PauseItemUpdate;
+        public bool PauseItemUpdate => m_PauseItemUpdate;
 
         [SerializeField]
         private float m_TransitionDuration = 0.2f;
 
-        public float TransitionDuration => this.m_TransitionDuration;
+        public float TransitionDuration => m_TransitionDuration;
 
         [SerializeField]
         private string m_State;
 
         public string State
         {
-            get => this.m_State;
-            set => this.m_State = value;
+            get => m_State;
+            set => m_State = value;
         }
 
         [SerializeField]
         private string m_CameraPreset = "Default";
         public string CameraPreset
         {
-            get => this.m_CameraPreset;
-            set => this.m_CameraPreset = value;
+            get => m_CameraPreset;
+            set => m_CameraPreset = value;
         }
 
         public bool IsActive { get; private set; }
@@ -77,8 +77,8 @@ namespace DevionGames
 
         public ThirdPersonController Controller
         {
-            get => this.m_Controller;
-            set => this.m_Controller = value;
+            get => m_Controller;
+            set => m_Controller = value;
         }
 
         protected Animator m_Animator;
@@ -91,18 +91,17 @@ namespace DevionGames
 
         private void Start()
         {
-            //this.m_Transform = transform.root;
-            this.m_Transform = transform;
-            this.m_Animator = this.m_Transform.GetComponent<Animator>();
-            this.m_Rigidbody = this.m_Transform.GetComponent<Rigidbody>();
-            this.m_CapsuleCollider = this.m_Transform.GetComponent<CapsuleCollider>();
-            this.m_Camera = Camera.main?.GetComponent<ThirdPersonCamera>();
+            m_Transform = transform;
+            m_Animator = m_Transform.GetComponent<Animator>();
+            m_Rigidbody = m_Transform.GetComponent<Rigidbody>();
+            m_CapsuleCollider = m_Transform.GetComponent<CapsuleCollider>();
+            m_Camera = Camera.main?.GetComponent<ThirdPersonCamera>();
 
-            ThirdPersonController[] controllers = this.m_Transform.GetComponents<ThirdPersonController>();
+            ThirdPersonController[] controllers = m_Transform.GetComponents<ThirdPersonController>();
 
             foreach(ThirdPersonController control in controllers){
                 if(control.enabled){
-                    this.m_Controller = control;
+                    m_Controller = control;
                 }
             }
         }
@@ -116,17 +115,17 @@ namespace DevionGames
 
         public void StopMotion(bool force)
         {
-            if(!this.IsActive || !force && !this.CanStop()){
+            if(!IsActive || !force && !CanStop()){
                 return;
             }
 
             if(PauseItemUpdate)
                 SendMessage("PauseItemUpdate", false, SendMessageOptions.DontRequireReceiver);
-            this.IsActive = false;
+            IsActive = false;
             OnStop();
             if(!string.IsNullOrEmpty(GetDestinationState()))
                 m_Controller.CheckDefaultAnimatorStates();
-            CameraSettings preset = this.m_Camera.Presets.FirstOrDefault(x => x.Name == CameraPreset);
+            CameraSettings preset = m_Camera.Presets.FirstOrDefault(x => x.Name == CameraPreset);
 
             if(preset != null && preset.Name != "Default"){
                 preset.IsActive = false;
@@ -137,7 +136,7 @@ namespace DevionGames
         {
             if(PauseItemUpdate)
                 SendMessage("PauseItemUpdate", true, SendMessageOptions.DontRequireReceiver);
-            this.IsActive = true;
+            IsActive = true;
 
             OnStart();
 
@@ -157,11 +156,11 @@ namespace DevionGames
 
         protected bool IsPlaying()
         {
-            int layers = this.m_Animator.layerCount;
+            int layers = m_Animator.layerCount;
             string destinationState = GetDestinationState();
 
             for(int i = 0; i < layers; i++){
-                AnimatorStateInfo info = this.m_Animator.GetCurrentAnimatorStateInfo(i);
+                AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(i);
                 if(info.IsName(destinationState))
                     return true;
             }
@@ -215,7 +214,7 @@ namespace DevionGames
 
         public virtual string GetDestinationState()
         {
-            return this.m_State;
+            return m_State;
         }
 
         protected void MoveToTarget(Transform transform,
@@ -233,7 +232,7 @@ namespace DevionGames
                                                  float time,
                                                  System.Action onComplete)
         {
-            this.m_InPosition = false;
+            m_InPosition = false;
             float elapsedTime = 0f;
             Vector3 startingPosition = transform.position;
             Quaternion startingRotation = transform.rotation;
@@ -245,7 +244,7 @@ namespace DevionGames
                 yield return new WaitForEndOfFrame();
             }
 
-            this.m_InPosition = true;
+            m_InPosition = true;
 
             if(onComplete != null){
                 onComplete.Invoke();

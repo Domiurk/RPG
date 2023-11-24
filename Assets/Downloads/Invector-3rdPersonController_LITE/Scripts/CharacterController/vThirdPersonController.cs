@@ -6,7 +6,7 @@ namespace Invector.vCharacterController
     {
         public virtual void ControlAnimatorRootMotion()
         {
-            if (!this.enabled) return;
+            if (!enabled) return;
 
             if (inputSmooth == Vector3.zero)
             {
@@ -46,7 +46,6 @@ namespace Invector.vCharacterController
 
             if (validInput)
             {
-                // calculate input smooth
                 inputSmooth = Vector3.Lerp(inputSmooth, input, (isStrafing ? strafeSpeed.movementSmooth : freeSpeed.movementSmooth) * Time.deltaTime);
 
                 Vector3 dir = (isStrafing && (!isSprinting || sprintOnlyFree == false) || (freeSpeed.rotateWithCamera && input == Vector3.zero)) && rotateTarget ? rotateTarget.forward : moveDirection;
@@ -64,12 +63,9 @@ namespace Invector.vCharacterController
 
             if (referenceTransform && !rotateByWorld)
             {
-                //get the right-facing direction of the referenceTransform
-                var right = referenceTransform.right;
+                Vector3 right = referenceTransform.right;
                 right.y = 0;
-                //get the forward direction relative to referenceTransform Right
-                var forward = Quaternion.AngleAxis(-90, Vector3.up) * right;
-                // determine the direction the player will face based on input and the referenceTransform's right and forward directions
+                Vector3 forward = Quaternion.AngleAxis(-90, Vector3.up) * right;
                 moveDirection = (inputSmooth.x * right) + (inputSmooth.z * forward);
             }
             else
@@ -80,8 +76,8 @@ namespace Invector.vCharacterController
 
         public virtual void Sprint(bool value)
         {
-            var sprintConditions = (input.sqrMagnitude > 0.1f && isGrounded &&
-                !(isStrafing && !strafeSpeed.walkByDefault && (horizontalSpeed >= 0.5 || horizontalSpeed <= -0.5 || verticalSpeed <= 0.1f)));
+            bool sprintConditions = (input.sqrMagnitude > 0.1f && isGrounded &&
+                                     !(isStrafing && !strafeSpeed.walkByDefault && (horizontalSpeed >= 0.5 || horizontalSpeed <= -0.5 || verticalSpeed <= 0.1f)));
 
             if (value && sprintConditions)
             {
@@ -114,11 +110,9 @@ namespace Invector.vCharacterController
 
         public virtual void Jump()
         {
-            // trigger jump behaviour
             jumpCounter = jumpTimer;
             isJumping = true;
 
-            // trigger jump animations
             if (input.sqrMagnitude < 0.1f)
                 animator.CrossFadeInFixedTime("Jump", 0.1f);
             else

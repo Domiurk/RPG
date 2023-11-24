@@ -12,17 +12,17 @@ namespace DevionGames
         {
             get
             {
-                if (this.m_Icon == null)
+                if (m_Icon == null)
                 {
-                    this.m_Icon = Resources.Load<Texture2D>("ModuleIcon");
+                    m_Icon = Resources.Load<Texture2D>("ModuleIcon");
                 }
-                return this.m_Icon;
+                return m_Icon;
             }
         }
 
         public static void ShowWindow(ModuleItem[] updatedItems)
 		{
-			UpdateNotificationWindow window = EditorWindow.GetWindow<UpdateNotificationWindow>(true, "Module Update Check");
+			UpdateNotificationWindow window = GetWindow<UpdateNotificationWindow>(true, "Module Update Check");
 			Vector2 size = new Vector2(520f, 260f);
 			window.minSize = size;
             window.maxSize = size;

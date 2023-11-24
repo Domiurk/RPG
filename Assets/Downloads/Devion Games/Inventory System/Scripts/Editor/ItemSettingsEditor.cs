@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 
 namespace DevionGames.InventorySystem.Configuration{
-	[System.Serializable]
+	[Serializable]
 	public class ItemSettingsEditor : ScriptableObjectCollectionEditor<Settings>{
 
         public override string ToolbarName => "Settings";

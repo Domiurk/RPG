@@ -11,10 +11,10 @@ namespace DevionGames.InventorySystem.Configuration
         public float maxDropDistance = 3f;
 
         [Header("Physics")]
-        public bool queriesHitTriggers = false;
+        public bool queriesHitTriggers;
 
         [Header("Debug")]
         public bool debugMessages = true;
-        public bool showAllComponents = false;
+        public bool showAllComponents;
     }
 }

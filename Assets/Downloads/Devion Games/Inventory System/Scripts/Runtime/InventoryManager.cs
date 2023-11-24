@@ -32,7 +32,7 @@ namespace DevionGames.InventorySystem
 
 
 		[SerializeField]
-		private ItemDatabase m_Database = null;
+		private ItemDatabase m_Database;
 
 		/// <summary>
 		/// Gets the item database. Configurate it inside the editor.
@@ -40,16 +40,16 @@ namespace DevionGames.InventorySystem
 		/// <value>The database.</value>
 		public static ItemDatabase Database {
 			get {
-				if (InventoryManager.current != null) {
-                    Assert.IsNotNull(InventoryManager.current.m_Database, "Please assign ItemDatabase to the Inventory Manager!");
-                    return InventoryManager.current.m_Database;
+				if (current != null) {
+                    Assert.IsNotNull(current.m_Database, "Please assign ItemDatabase to the Inventory Manager!");
+                    return current.m_Database;
 				}
 				return null;
 			}
 		}
 
         [SerializeField]
-        private ItemDatabase[] m_ChildDatabases= null;
+        private ItemDatabase[] m_ChildDatabases;
 
         private static Default m_DefaultSettings;
         public static Default DefaultSettings {
@@ -114,10 +114,10 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        private static T GetSetting<T>() where T: Configuration.Settings{
-            if (InventoryManager.Database != null)
+        private static T GetSetting<T>() where T: Settings{
+            if (Database != null)
             {
-                return (T)InventoryManager.Database.settings.Where(x => x.GetType() == typeof(T)).FirstOrDefault();
+                return (T)Database.settings.Where(x => x.GetType() == typeof(T)).FirstOrDefault();
             }
             return default(T);
         }
@@ -128,8 +128,8 @@ namespace DevionGames.InventorySystem
         private PlayerInfo m_PlayerInfo;
         public PlayerInfo PlayerInfo {
             get { 
-                if (this.m_PlayerInfo == null) { this.m_PlayerInfo = new PlayerInfo(InventoryManager.DefaultSettings.playerTag); }
-                return this.m_PlayerInfo;
+                if (m_PlayerInfo == null) { m_PlayerInfo = new PlayerInfo(DefaultSettings.playerTag); }
+                return m_PlayerInfo;
             }
         }
 
@@ -138,82 +138,75 @@ namespace DevionGames.InventorySystem
         [HideInInspector]
         public UnityEvent onDataSaved;
 
-        protected static bool m_IsLoaded = false;
+        protected static bool m_IsLoaded;
         public static bool IsLoaded => m_IsLoaded;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
         private void Awake ()
-		{
-			if (InventoryManager.m_Current != null) {
-                //if(InventoryManager.DefaultSettings.debugMessages)
-                  //  Debug.Log ("Multiple Inventory Manager in scene...this is not supported. Destroying instance!");
-				Destroy (gameObject);
+        {
+            if (m_Current != null) {
+                Destroy (gameObject);
 				return;
-			} else {
-				InventoryManager.m_Current = this;
-                if (EventSystem.current == null) {
-                    if (InventoryManager.DefaultSettings.debugMessages)
-                        Debug.Log("Missing EventSystem in scene. Auto creating!");
-                        new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-                }
+			}
 
-                if (Camera.main != null && Camera.main.GetComponent<PhysicsRaycaster>() == null) {
-                    if (InventoryManager.DefaultSettings.debugMessages)
-                        Debug.Log("Missing PhysicsRaycaster on Main Camera. Auto adding!");
-                    PhysicsRaycaster physicsRaycaster = Camera.main.gameObject.AddComponent<PhysicsRaycaster>();
-                    physicsRaycaster.eventMask = Physics.DefaultRaycastLayers;
-                }
-
-                this.m_Database = ScriptableObject.Instantiate(this.m_Database);
-                for (int i = 0; i < this.m_ChildDatabases.Length; i++) {
-                    ItemDatabase child = this.m_ChildDatabases[i];
-                    this.m_Database.Merge(child);
-                }
-
-                m_PrefabCache = new Dictionary<string, GameObject>();
-                UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ChangedActiveScene;
-
-                if (dontDestroyOnLoad) {
-                    if (transform.parent != null)
-                    {
-                        if (InventoryManager.DefaultSettings.debugMessages)
-                            Debug.Log("Inventory Manager with DontDestroyOnLoad can't be a child transform. Unparent!");
-                        transform.parent = null;
-                    }
-					DontDestroyOnLoad (gameObject);
-				}
-                if (InventoryManager.SavingLoading.autoSave) {
-                    StartCoroutine(RepeatSaving(InventoryManager.SavingLoading.savingRate));
-                }
-
-                Physics.queriesHitTriggers = InventoryManager.DefaultSettings.queriesHitTriggers;
-
-                m_IsLoaded = !HasSavedData();
-                this.onDataLoaded.AddListener(() => { m_IsLoaded = true; });
-                if (InventoryManager.DefaultSettings.debugMessages)
-                    Debug.Log("Inventory Manager initialized.");
+            m_Current = this;
+            if (EventSystem.current == null) {
+                if (DefaultSettings.debugMessages)
+                    Debug.Log("Missing EventSystem in scene. Auto creating!");
+                new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
             }
-		}
+
+            if (Camera.main != null && Camera.main.GetComponent<PhysicsRaycaster>() == null) {
+                if (DefaultSettings.debugMessages)
+                    Debug.Log("Missing PhysicsRaycaster on Main Camera. Auto adding!");
+                PhysicsRaycaster physicsRaycaster = Camera.main.gameObject.AddComponent<PhysicsRaycaster>();
+                physicsRaycaster.eventMask = Physics.DefaultRaycastLayers;
+            }
+
+            m_Database = ScriptableObject.Instantiate(m_Database);
+            for (int i = 0; i < m_ChildDatabases.Length; i++) {
+                ItemDatabase child = m_ChildDatabases[i];
+                m_Database.Merge(child);
+            }
+
+            m_PrefabCache = new Dictionary<string, GameObject>();
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ChangedActiveScene;
+
+            if (dontDestroyOnLoad) {
+                if (transform.parent != null)
+                {
+                    if (DefaultSettings.debugMessages)
+                        Debug.Log("Inventory Manager with DontDestroyOnLoad can't be a child transform. Unparent!");
+                    transform.parent = null;
+                }
+                DontDestroyOnLoad (gameObject);
+            }
+            if (SavingLoading.autoSave) {
+                StartCoroutine(RepeatSaving(SavingLoading.savingRate));
+            }
+
+            Physics.queriesHitTriggers = DefaultSettings.queriesHitTriggers;
+
+            m_IsLoaded = !HasSavedData();
+            onDataLoaded.AddListener(() => { m_IsLoaded = true; });
+            if (DefaultSettings.debugMessages)
+                Debug.Log("Inventory Manager initialized.");
+        }
 
         private void Start()
-        {
-            /*if (InventoryManager.SavingLoading.autoSave){
-                StartCoroutine(DelayedLoading(1f));
-            }*/
-        }
+        { }
 
         private static void ChangedActiveScene(UnityEngine.SceneManagement.Scene current, UnityEngine.SceneManagement.Scene next)
         {
-            if (InventoryManager.SavingLoading.autoSave)
+            if (SavingLoading.autoSave)
             {
-                InventoryManager.m_IsLoaded = false;
-                InventoryManager.Load();
+                m_IsLoaded = false;
+                Load();
             }
         }
- 
-        //TODO move to utility
+
         [Obsolete("InventoryManager.GetBounds is obsolete Use UnityUtility.GetBounds")]
         public Bounds GetBounds(GameObject obj)
         {
@@ -253,25 +246,11 @@ namespace DevionGames.InventorySystem
         }
 
         public static void Save() {
-            string key = PlayerPrefs.GetString(InventoryManager.SavingLoading.savingKey, InventoryManager.SavingLoading.savingKey);
+            string key = PlayerPrefs.GetString(SavingLoading.savingKey, SavingLoading.savingKey);
             Save(key);
         }
 
         public static void Save(string key) {
-
-            /* List<MonoBehaviour> results = new List<MonoBehaviour>();
-             UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().ToList().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
-             //DontDestroyOnLoad GameObjects
-             SingleInstance.GetInstanceObjects().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
-
-             ItemCollection[] serializables  = results.OfType<ItemCollection>().Where(x=>x.saveable).ToArray();
-
-             IJsonSerializable[] ui = serializables.Where(x=>x.GetComponent<ItemContainer>() != null).ToArray();
-             IJsonSerializable[] world = serializables.Except(ui).ToArray();
-
-             string uiData = JsonSerializer.Serialize(ui);
-             string worldData = JsonSerializer.Serialize(world);*/
-
             string uiData = string.Empty;
             string worldData = string.Empty;
             Serialize(ref uiData, ref worldData);
@@ -294,11 +273,11 @@ namespace DevionGames.InventorySystem
             PlayerPrefs.SetString("InventorySystemSavedKeys",string.Join(";",keys));
 
 
-            if (InventoryManager.current != null && InventoryManager.current.onDataSaved != null){
-                InventoryManager.current.onDataSaved.Invoke();
+            if (current != null && current.onDataSaved != null){
+                current.onDataSaved.Invoke();
             }
          
-            if (InventoryManager.DefaultSettings.debugMessages){
+            if (DefaultSettings.debugMessages){
                 Debug.Log("[Inventory System] UI Saved: "+uiData);
                 Debug.Log("[Inventory System] Scene Saved: " + worldData);
             }
@@ -307,7 +286,6 @@ namespace DevionGames.InventorySystem
         public static void Serialize(ref string uiData, ref string sceneData) {
             List<MonoBehaviour> results = new List<MonoBehaviour>();
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().ToList().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
-            //DontDestroyOnLoad GameObjects
             SingleInstance.GetInstanceObjects().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
 
             ItemCollection[] serializables = results.OfType<ItemCollection>().Where(x => x.saveable).ToArray();
@@ -320,7 +298,7 @@ namespace DevionGames.InventorySystem
         }
 
         public static void Load() {
-            string key = PlayerPrefs.GetString(InventoryManager.SavingLoading.savingKey, InventoryManager.SavingLoading.savingKey);
+            string key = PlayerPrefs.GetString(SavingLoading.savingKey, SavingLoading.savingKey);
             Load(key);
         }
 
@@ -333,20 +311,18 @@ namespace DevionGames.InventorySystem
         }
 
         public static void Load(string uiData, string sceneData) {
-            //Load UI
             LoadUI(uiData);
-            //Load Scene
             LoadScene(sceneData);
 
-            if (InventoryManager.current != null && InventoryManager.current.onDataLoaded != null)
+            if (current != null && current.onDataLoaded != null)
             {
-                InventoryManager.current.onDataLoaded.Invoke();
+                current.onDataLoaded.Invoke();
             }
         }
 
         public static bool HasSavedData() {
-            string key = PlayerPrefs.GetString(InventoryManager.SavingLoading.savingKey, InventoryManager.SavingLoading.savingKey);
-            return InventoryManager.HasSavedData(key);
+            string key = PlayerPrefs.GetString(SavingLoading.savingKey, SavingLoading.savingKey);
+            return HasSavedData(key);
         }
 
         public static bool HasSavedData(string key) {
@@ -366,8 +342,8 @@ namespace DevionGames.InventorySystem
                 List<object> rotationData = mData["Rotation"] as List<object>;
                 string type = (string)mData["Type"];
 
-                Vector3 position = new Vector3(System.Convert.ToSingle(positionData[0]), System.Convert.ToSingle(positionData[1]), System.Convert.ToSingle(positionData[2]));
-                Quaternion rotation = Quaternion.Euler(new Vector3(System.Convert.ToSingle(rotationData[0]), System.Convert.ToSingle(rotationData[1]), System.Convert.ToSingle(rotationData[2])));
+                Vector3 position = new Vector3(Convert.ToSingle(positionData[0]), Convert.ToSingle(positionData[1]), Convert.ToSingle(positionData[2]));
+                Quaternion rotation = Quaternion.Euler(new Vector3(Convert.ToSingle(rotationData[0]), Convert.ToSingle(rotationData[1]), Convert.ToSingle(rotationData[2])));
                 ItemCollection itemCollection = null;
                 if (type == "UI")
                 {
@@ -381,7 +357,7 @@ namespace DevionGames.InventorySystem
                     itemCollection.SetObjectData(mData);
                 }
             }
-            if (InventoryManager.DefaultSettings.debugMessages)
+            if (DefaultSettings.debugMessages)
             {
                   Debug.Log("[Inventory System] UI Loaded: "+json);
             }
@@ -396,17 +372,15 @@ namespace DevionGames.InventorySystem
             {
                 ItemCollection collection = itemCollections[i];
 
-                //Dont destroy ui game objects
                 if (collection.GetComponent<ItemContainer>() != null)
                     continue;
 
-                GameObject prefabForCollection = InventoryManager.GetPrefab(collection.name);
+                GameObject prefabForCollection = GetPrefab(collection.name);
 
-                //Store real prefab to cache
                 if (prefabForCollection == null)
                 {
-                    collection.transform.parent = InventoryManager.current.transform;
-                    InventoryManager.m_PrefabCache.Add(collection.name, collection.gameObject);
+                    collection.transform.parent = current.transform;
+                    m_PrefabCache.Add(collection.name, collection.gameObject);
                     collection.gameObject.SetActive(false);
                     continue;
                 }
@@ -422,8 +396,8 @@ namespace DevionGames.InventorySystem
                 List<object> positionData = mData["Position"] as List<object>;
                 List<object> rotationData = mData["Rotation"] as List<object>;
               
-                Vector3 position = new Vector3(System.Convert.ToSingle(positionData[0]), System.Convert.ToSingle(positionData[1]), System.Convert.ToSingle(positionData[2]));
-                Quaternion rotation = Quaternion.Euler(new Vector3(System.Convert.ToSingle(rotationData[0]), System.Convert.ToSingle(rotationData[1]), System.Convert.ToSingle(rotationData[2])));
+                Vector3 position = new Vector3(Convert.ToSingle(positionData[0]), Convert.ToSingle(positionData[1]), Convert.ToSingle(positionData[2]));
+                Quaternion rotation = Quaternion.Euler(new Vector3(Convert.ToSingle(rotationData[0]), Convert.ToSingle(rotationData[1]), Convert.ToSingle(rotationData[2])));
                
                 GameObject collectionGameObject = CreateCollection(prefab, position, rotation);
                 if (collectionGameObject != null)
@@ -439,7 +413,7 @@ namespace DevionGames.InventorySystem
                 
             }
 
-            if (InventoryManager.DefaultSettings.debugMessages)
+            if (DefaultSettings.debugMessages)
             {
                 Debug.Log("[Inventory System] Scene Loaded: " + json);
             }
@@ -448,20 +422,19 @@ namespace DevionGames.InventorySystem
 
         private static GameObject GetPrefab(string prefabName) {
             GameObject prefab = null;
-            //Return from cache
-            if (InventoryManager.m_PrefabCache.TryGetValue(prefabName, out prefab)) {
+
+            if (m_PrefabCache.TryGetValue(prefabName, out prefab)) {
                 return prefab;
             }
-            //Get from database
-            prefab = InventoryManager.Database.GetItemPrefab(prefabName);
 
-            //Load from Resources
+            prefab = Database.GetItemPrefab(prefabName);
+
             if (prefab == null){
                 prefab = Resources.Load<GameObject>(prefabName);
             }
-            // Add to cache
+
             if (prefab != null) {
-                InventoryManager.m_PrefabCache.Add(prefabName, prefab);
+                m_PrefabCache.Add(prefabName, prefab);
             }
             return prefab;
 
@@ -469,11 +442,11 @@ namespace DevionGames.InventorySystem
 
         private static GameObject CreateCollection(string prefabName, Vector3 position, Quaternion rotation)
         {
-            GameObject prefab = InventoryManager.GetPrefab(prefabName);
+            GameObject prefab = GetPrefab(prefabName);
 
             if (prefab != null)
             {
-                GameObject go = InventoryManager.Instantiate(prefab, position, rotation);
+                GameObject go = Instantiate(prefab, position, rotation);
                 go.name = go.name.Replace("(Clone)","");
                 go.SetActive(true);
                 return go;

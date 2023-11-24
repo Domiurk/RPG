@@ -12,7 +12,7 @@ namespace DevionGames{
 		private const  float LIST_MAX_WIDTH = 400f;
 		private const float LIST_RESIZE_WIDTH = 10f;
 
-		protected Rect m_SidebarRect = new Rect(0,30,200,1000);
+		protected Rect m_SidebarRect = new(0,30,200,1000);
 		protected Vector2 m_ScrollPosition;
 		protected string m_SearchString=string.Empty;
 		protected Vector2 m_SidebarScrollPosition;
@@ -194,7 +194,8 @@ namespace DevionGames{
 								Select(Items[index-1]);
 								break;
 							}
-							else if (rect2.Contains(Event.current.mousePosition))
+
+							if (rect2.Contains(Event.current.mousePosition))
 							{
 								MoveItem(m_SelectedItemIndex, index );
 								Select(Items[index]);
@@ -233,7 +234,8 @@ namespace DevionGames{
 					m_DragRect.x = rect.x + 5f;
 					break;
 				}
-				else if (rect2.Contains(Event.current.mousePosition))
+
+				if (rect2.Contains(Event.current.mousePosition))
 				{
 					m_DragRect = rect;
 					m_DragRect.y = rect.y + 10f;
@@ -241,10 +243,7 @@ namespace DevionGames{
 
 					break;
 				}
-				else
-				{
-					m_DragRect = Rect.zero;
-				}
+				m_DragRect = Rect.zero;
 			}
 
 			if (m_Drag){
@@ -455,7 +454,7 @@ namespace DevionGames{
 
         public static class Styles{
 			public static GUIStyle minusButton;
-			public static GUIStyle selectButton;
+			public static readonly GUIStyle selectButton;
 			public static GUIStyle background;
 
 			private static GUIStyle m_LeftPaneDark;
@@ -466,15 +465,15 @@ namespace DevionGames{
 			private static GUIStyle m_CenterPaneLight;
 			public static GUIStyle centerPane => EditorGUIUtility.isProSkin ? m_CenterPaneDark : m_CenterPaneLight;
 
-			public static GUIStyle selectButtonText;
+			public static readonly GUIStyle selectButtonText;
 			public static Color normalColor;
 			public static Color hoverColor;
 			public static Color activeColor;
 			public static Color warningColor;
-			public static GUIStyle dragInsertion;
+			public static readonly GUIStyle dragInsertion;
 			public static Texture2D errorIcon;
 
-			public static GUIStyle indicatorColor;
+			public static readonly GUIStyle indicatorColor;
 
 			private static GUISkin skin;
 

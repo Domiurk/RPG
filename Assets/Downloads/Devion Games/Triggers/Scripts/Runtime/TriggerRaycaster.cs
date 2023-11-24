@@ -58,7 +58,7 @@ namespace DevionGames
 
                 if(button != -1){
                     m_LastCameraHit = current;
-                    EventHandler.Execute<int>(m_LastCameraHit, "OnPointerClickTrigger", button);
+                    EventHandler.Execute(m_LastCameraHit, "OnPointerClickTrigger", button);
                 }
 
                 m_PointerOverTrigger = true;
@@ -94,8 +94,6 @@ namespace DevionGames
                     hit = current;
                     return true;
                 }
-
-                return false;
             }
 
             return false;

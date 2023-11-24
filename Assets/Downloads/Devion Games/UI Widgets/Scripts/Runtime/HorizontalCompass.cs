@@ -6,15 +6,16 @@ namespace DevionGames.UIWidgets
     public class HorizontalCompass : MonoBehaviour
     {
         public RawImage image;
+        private Camera cameraMain;
 
-        void Start()
+        private void Start()
         {
-
+            cameraMain = Camera.main;
         }
 
-        void Update()
+        private void Update()
         {
-            image.uvRect = new Rect(Camera.main.transform.localEulerAngles.y / 360f, 0f, 1f, 1f);
+            image.uvRect = new Rect(cameraMain.transform.localEulerAngles.y / 360f, 0f, 1f, 1f);
         }
     }
 }

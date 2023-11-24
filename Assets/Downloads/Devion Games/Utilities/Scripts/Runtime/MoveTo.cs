@@ -21,19 +21,16 @@ namespace DevionGames
             transform.rotation = Random.rotation;
         }
 
-        // Update is called once per frame
         void Update()
         {
             if(player == null)
                 return;
 
             Vector3 dir = (player.position + m_Offset) - transform.position;
-            //  dir.y = 0.0f;
             if(dir != Vector3.zero)
                 transform.rotation =
                     Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * 10f);
 
-            // transform.LookAt(player.position + this.m_Offset);
             if(Vector3.Distance(transform.position, player.position + m_Offset) > 0.5f){
                 transform.Translate(new Vector3(0, 0, speed * Time.deltaTime));
             }

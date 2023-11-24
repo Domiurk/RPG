@@ -22,12 +22,12 @@ namespace DevionGames.InventorySystem
 
 		private void Start()
 		{
-			this.m_BoxCollider = GetComponent<BoxCollider>();
+			m_BoxCollider = GetComponent<BoxCollider>();
 
 			keyboard = Keyboard.current;
 			cameraMain = Camera.main;
-			this.m_Player = InventoryManager.current.PlayerInfo.transform;
-			this.m_Layer = gameObject.layer;
+			m_Player = InventoryManager.current.PlayerInfo.transform;
+			m_Layer = gameObject.layer;
 			gameObject.layer = 2;
 			SetColor(Color.red);
 		}
@@ -44,11 +44,11 @@ namespace DevionGames.InventorySystem
 			{
 				pos = hit.point;
 			}
-			Vector3 diff = pos - this.m_Player.transform.position;
+			Vector3 diff = pos - m_Player.transform.position;
 			float distance = diff.magnitude;
 			if (distance > maxDistance)
 			{
-				pos = this.m_Player.transform.position + (diff / distance) * maxDistance;
+				pos = m_Player.transform.position + (diff / distance) * maxDistance;
 			}
 
 			float maxHeight = GetMaxCornerHeight();
@@ -60,9 +60,9 @@ namespace DevionGames.InventorySystem
 			transform.position = pos;
 
 			bool canPlace = CanPlace();
-			if (canPlace != this.m_CanPlaceChanged)
+			if (canPlace != m_CanPlaceChanged)
 			{
-				this.m_CanPlaceChanged = canPlace;
+				m_CanPlaceChanged = canPlace;
 				SetColor(canPlace ? Color.green : Color.red);
 			}
 
@@ -75,7 +75,7 @@ namespace DevionGames.InventorySystem
 		protected virtual void Build()
 		{
 			SetColor(Color.white);
-			gameObject.layer = this.m_Layer;
+			gameObject.layer = m_Layer;
 			onPlace?.Invoke();
 			enabled = false;
 		}
@@ -91,8 +91,8 @@ namespace DevionGames.InventorySystem
 
 		private bool CanPlace()
 		{
-			Vector3 boxColliderCenter = this.m_BoxCollider.center;
-			Vector3 boxColliderExtents = this.m_BoxCollider.size;
+			Vector3 boxColliderCenter = m_BoxCollider.center;
+			Vector3 boxColliderExtents = m_BoxCollider.size;
 			bool res = true;
 			for (int i = 0; i < 4; i++)
 			{

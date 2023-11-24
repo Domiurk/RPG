@@ -28,30 +28,25 @@ namespace DevionGames.StatSystem
 
         public override void OnStart()
         {
-            this.m_Handler = this.m_Target == TargetType.Self ? gameObject.GetComponent<StatsHandler>() : playerInfo.gameObject.GetComponent<StatsHandler>();
+            m_Handler = m_Target == TargetType.Self ? gameObject.GetComponent<StatsHandler>() : playerInfo.gameObject.GetComponent<StatsHandler>();
         }
 
         public override ActionStatus OnUpdate()
         {
-            Stat stat = this.m_Handler.GetStat(this.m_StatName) as Stat;
+            Stat stat = m_Handler.GetStat(m_StatName) as Stat;
             if (stat == null) return ActionStatus.Failure;
 
             float value = stat.Value;
-            if (this.m_ValueType == ValueType.CurrentValue)
+            if (m_ValueType == ValueType.CurrentValue)
                 value = (stat as Attribute).CurrentValue;
 
-            switch (this.m_Condition) {
-                case ConditionType.Greater:
-                    return value > this.m_Value ? ActionStatus.Success : ActionStatus.Failure;
-                case ConditionType.GreaterOrEqual:
-                    return value >= this.m_Value ? ActionStatus.Success : ActionStatus.Failure;
-                case ConditionType.Less:
-                    return value < this.m_Value ? ActionStatus.Success : ActionStatus.Failure;
-                case ConditionType.LessOrEqual:
-                    return value <= this.m_Value ? ActionStatus.Success : ActionStatus.Failure;
-            }
-
-            return ActionStatus.Failure;
+            return m_Condition switch{
+                ConditionType.Greater => value > m_Value ? ActionStatus.Success : ActionStatus.Failure,
+                ConditionType.GreaterOrEqual => value >= m_Value ? ActionStatus.Success : ActionStatus.Failure,
+                ConditionType.Less => value < m_Value ? ActionStatus.Success : ActionStatus.Failure,
+                ConditionType.LessOrEqual => value <= m_Value ? ActionStatus.Success : ActionStatus.Failure,
+                _ => ActionStatus.Failure
+            };
         }
     }
 }

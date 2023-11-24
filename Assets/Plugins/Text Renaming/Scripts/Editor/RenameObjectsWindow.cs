@@ -97,18 +97,18 @@ namespace Text_Renaming.Scripts.Editor
                         ev.Use();
                         break;
                     case EventType.DragPerform:{
-                        this.dragObjects.Clear();
+                        dragObjects.Clear();
 
                         Object[] objects = DragAndDrop.objectReferences;
 
                         foreach(Object draggedObj in objects)
-                            this.dragObjects.Add(draggedObj);
-                        switch(this.dragObjects[0]){
+                            dragObjects.Add(draggedObj);
+                        switch(dragObjects[0]){
                             case GameObject:
                                 RenameTransform();
                                 break;
                             case AnimationClip:
-                                Rename<AnimationClip>(this.dragObjects);
+                                Rename<AnimationClip>(dragObjects);
                                 break;
                         }
 

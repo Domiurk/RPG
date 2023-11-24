@@ -13,8 +13,8 @@ namespace DevionGames.InventorySystem
         protected Text m_Instruction;
 
         public void Show(string title, string instruction) {
-            this.m_Title.text = title;
-            this.m_Instruction.text = instruction;
+            m_Title.text = title;
+            m_Instruction.text = instruction;
             base.Show();
         }
     }

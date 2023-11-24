@@ -17,46 +17,46 @@ namespace DevionGames.StatSystem
 
         protected virtual void OnEnable() {
             if (target == null) return;
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_Stats = serializedObject.FindProperty("m_Stats");
-            this.m_StatList = CreateList("Stats", serializedObject, this.m_Stats);
-            this.m_Effects = serializedObject.FindProperty("m_Effects");
-            this.m_EffectsList = CreateList("Effects", serializedObject, this.m_Effects);
-            this.m_StatOverrides = serializedObject.FindProperty("m_StatOverrides");
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_Stats = serializedObject.FindProperty("m_Stats");
+            m_StatList = CreateList("Stats", serializedObject, m_Stats);
+            m_Effects = serializedObject.FindProperty("m_Effects");
+            m_EffectsList = CreateList("Effects", serializedObject, m_Effects);
+            m_StatOverrides = serializedObject.FindProperty("m_StatOverrides");
 
             int selectedStatIndex = EditorPrefs.GetInt("SelectedStatIndex." + target.GetInstanceID(), -1);
-            this.m_StatList.index = selectedStatIndex;
+            m_StatList.index = selectedStatIndex;
         }
 
 
         protected virtual void OnDisable() {
             if (target == null) return;
-            EditorPrefs.SetInt("SelectedStatIndex." + target.GetInstanceID(),this.m_StatList.index) ;
+            EditorPrefs.SetInt("SelectedStatIndex." + target.GetInstanceID(),m_StatList.index) ;
         }
 
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.m_Script);
+            EditorGUILayout.PropertyField(m_Script);
             EditorGUI.EndDisabledGroup();
 
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject,this.m_Script.propertyPath,this.m_Stats.propertyPath,this.m_Effects.propertyPath);
+            DrawPropertiesExcluding(serializedObject,m_Script.propertyPath,m_Stats.propertyPath,m_Effects.propertyPath);
 
-            this.m_StatList.DoLayoutList();
+            m_StatList.DoLayoutList();
 
-            if (this.m_StatOverrides.arraySize < this.m_Stats.arraySize)
+            if (m_StatOverrides.arraySize < m_Stats.arraySize)
             {
-                for (int i = this.m_StatOverrides.arraySize; i < this.m_Stats.arraySize; i++)
+                for (int i = m_StatOverrides.arraySize; i < m_Stats.arraySize; i++)
                 {
-                    this.m_StatOverrides.InsertArrayElementAtIndex(i);
+                    m_StatOverrides.InsertArrayElementAtIndex(i);
                 }
             }
 
-            int selectedStatIndex = this.m_StatList.index;
-            if (selectedStatIndex > -1 && this.m_Stats.arraySize > 0)
+            int selectedStatIndex = m_StatList.index;
+            if (selectedStatIndex > -1 && m_Stats.arraySize > 0)
             {
-                SerializedProperty statOverride = this.m_StatOverrides.GetArrayElementAtIndex(selectedStatIndex);
+                SerializedProperty statOverride = m_StatOverrides.GetArrayElementAtIndex(selectedStatIndex);
                 SerializedProperty overrideBaseValue = statOverride.FindPropertyRelative("overrideBaseValue");
                 SerializedProperty baseValue = statOverride.FindPropertyRelative("baseValue");
               
@@ -67,29 +67,11 @@ namespace DevionGames.StatSystem
                     EditorGUILayout.PropertyField(baseValue);
                     EditorGUI.indentLevel -= 1;
                 }
-               
-
-                /*SerializedProperty stat = this.m_Stats.GetArrayElementAtIndex(selectedStatIndex);
-                if (stat.objectReferenceValue != null)
-                {
-                    SerializedObject statObj = new SerializedObject(stat.objectReferenceValue);
-                    SerializedProperty inherit = statObj.FindProperty("m_InheritBaseValue");
-                    SerializedProperty overrideBaseValue = statObj.FindProperty("m_OverrideBaseValue");
-                    statObj.Update();
-                    EditorGUILayout.PropertyField(inherit);
-                    if (!inherit.boolValue)
-                    {
-                        EditorGUI.indentLevel += 1;
-                        EditorGUILayout.PropertyField(overrideBaseValue);
-                        EditorGUI.indentLevel -= 1;
-                    }
-                    statObj.ApplyModifiedProperties();
-                }*/
             }
 
 
             EditorGUILayout.Space();
-            this.m_EffectsList.DoLayoutList();
+            m_EffectsList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -100,7 +82,7 @@ namespace DevionGames.StatSystem
                 EditorGUI.LabelField(rect, title);
             };
 
-            reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            reorderableList.drawElementCallback = (Rect rect, int index, bool _, bool _) => {
                 float verticalOffset = (rect.height - EditorGUIUtility.singleLineHeight) * 0.5f;
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;

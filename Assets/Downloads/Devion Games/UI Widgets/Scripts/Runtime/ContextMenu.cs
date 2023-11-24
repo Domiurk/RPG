@@ -6,72 +6,76 @@ using UnityEngine.EventSystems;
 
 namespace DevionGames.UIWidgets
 {
-	public class ContextMenu : UIWidget
-	{
-		[Header ("Reference")]
-		[SerializeField]
-		protected MenuItem m_MenuItemPrefab= null;
-		protected List<MenuItem> itemCache = new List<MenuItem> ();
+    public sealed class ContextMenu : UIWidget
+    {
+        [Header("Reference")]
+        [SerializeField]
+        private MenuItem m_MenuItemPrefab;
+        private readonly List<MenuItem> itemCache = new();
 
-		public override void Show ()
-		{
-			m_RectTransform.position = Input.mousePosition;
-			base.Show ();
-		}
+        public override void Show()
+        {
+            m_RectTransform.position = Input.mousePosition;
+            base.Show();
+        }
 
-		protected override void Update ()
-		{
-			base.Update();
-			if (m_CanvasGroup.alpha > 0f && (Input.GetMouseButtonDown (0) || Input.GetMouseButtonDown (1) || Input.GetMouseButtonDown (2))) {
+        protected override void Update()
+        {
+            base.Update();
 
-				var pointer = new PointerEventData (EventSystem.current);
-				pointer.position = Input.mousePosition;
-				var raycastResults = new List<RaycastResult> ();
-				EventSystem.current.RaycastAll (pointer, raycastResults);
+            if(m_CanvasGroup.alpha > 0f && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) ||
+                                            Input.GetMouseButtonDown(2))){
+                var pointer = new PointerEventData(EventSystem.current){
+                    position = Input.mousePosition
+                };
+                var raycastResults = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointer, raycastResults);
 
-				for (int i = 0; i < raycastResults.Count; i++) {
-					MenuItem item = raycastResults [i].gameObject.GetComponent<MenuItem> ();
-					if (item != null) {
-						item.OnPointerClick (pointer);
-						return;
-					}
-				}
+                foreach(RaycastResult result in raycastResults){
+                    MenuItem item = result.gameObject.GetComponent<MenuItem>();
 
-				Close ();
-			}
-		}
+                    if(item != null){
+                        item.OnPointerClick(pointer);
+                        return;
+                    }
+                }
 
-		public virtual void Clear ()
-		{
-			for (int i = 0; i < itemCache.Count; i++) {
-				itemCache [i].gameObject.SetActive (false);
-			}
-		}
+                Close();
+            }
+        }
 
-		public virtual MenuItem AddMenuItem (string text, UnityAction used)
-		{
-			MenuItem item = itemCache.Find (x => !x.gameObject.activeSelf);
+        public void Clear()
+        {
+            foreach(MenuItem menu in itemCache)
+                menu.gameObject.SetActive(false);
+        }
 
-			if (item == null) {
-				Debug.Log(text);
-				item = Instantiate (m_MenuItemPrefab) as MenuItem;
-				itemCache.Add (item);
-			}
-			Text itemText = item.GetComponentInChildren<Text> ();
+        public MenuItem AddMenuItem(string text, UnityAction used)
+        {
+            MenuItem item = itemCache.Find(x => !x.gameObject.activeSelf);
 
-			if (itemText != null) {
-				itemText.text = text;
-			}
-			item.onTrigger.RemoveAllListeners ();
-			item.gameObject.SetActive (true);
-			item.transform.SetParent (m_RectTransform, false);
-			item.onTrigger.AddListener (delegate() {
-				Close ();
-				if (used != null) {
-					used.Invoke ();
-				}
-			});
-			return item;
-		}
-	}
+            if(item == null){
+                Debug.Log(text);
+                item = Instantiate(m_MenuItemPrefab);
+                itemCache.Add(item);
+            }
+
+            Text itemText = item.GetComponentInChildren<Text>();
+
+            if(itemText != null){
+                itemText.text = text;
+            }
+
+            item.onTrigger.RemoveAllListeners();
+            item.gameObject.SetActive(true);
+            item.transform.SetParent(m_RectTransform, false);
+            item.onTrigger.AddListener(delegate
+                                           {
+                                               Close();
+
+                                               used?.Invoke();
+                                           });
+            return item;
+        }
+    }
 }

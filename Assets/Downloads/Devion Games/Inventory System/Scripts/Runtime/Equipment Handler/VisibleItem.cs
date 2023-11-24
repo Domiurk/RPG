@@ -26,35 +26,35 @@ namespace DevionGames.InventorySystem
         }
 
         protected virtual void Awake(){
-            this.m_Handler = GetComponent<EquipmentHandler>();
-            this.m_CharacterAnimator = GetComponentInParent<Animator>();
+            m_Handler = GetComponent<EquipmentHandler>();
+            m_CharacterAnimator = GetComponentInParent<Animator>();
             m_CharacterColliders = GetComponentsInChildren<Collider>(true);
-            this.m_Camera = Camera.main;
-            this.m_CameraTransform = this.m_Camera.transform;
+            m_Camera = Camera.main;
+            m_CameraTransform = m_Camera.transform;
         }
 
         protected virtual void Update() {}
 
         public virtual void OnItemEquip(Item item) {
             enabled = true;
-            this.m_CurrentEquipedItem = item;
-            foreach (Attachment att in this.attachments)
+            m_CurrentEquipedItem = item;
+            foreach (Attachment att in attachments)
             {
                 if (att.gameObject != null)
                 {
                     att.gameObject.SetActive(true);
                 }else {
-                    att.Instantiate(this.m_Handler);
+                    att.Instantiate(m_Handler);
                 }
             }
             CallbackEventData data = new CallbackEventData();
             data.AddData("Item", item);
-            data.AddData("Attachments", this.attachments);
+            data.AddData("Attachments", attachments);
             Execute("OnEquip", data);
         }
 
         public virtual void OnItemUnEquip(Item item) {
-            this.m_CurrentEquipedItem = null;
+            m_CurrentEquipedItem = null;
             enabled = false;
             foreach (Attachment att in attachments)
             {
@@ -65,14 +65,14 @@ namespace DevionGames.InventorySystem
             }
             CallbackEventData data = new CallbackEventData();
             data.AddData("Item", item);
-            data.AddData("Attachments", this.attachments);
+            data.AddData("Attachments", attachments);
             Execute("OnUnEquip", data);
         }
 
         protected void IgnoreCollision(GameObject gameObject) {
             Collider collider = gameObject.GetComponent<Collider>();
-            for (int i = 0; i < this.m_CharacterColliders.Length; i++) {
-                Physics.IgnoreCollision(this.m_CharacterColliders[i],collider);
+            for (int i = 0; i < m_CharacterColliders.Length; i++) {
+                Physics.IgnoreCollision(m_CharacterColliders[i],collider);
             }
             collider.enabled = true;
         }
@@ -90,9 +90,8 @@ namespace DevionGames.InventorySystem
             public GameObject gameObject;
 
             public GameObject Instantiate(EquipmentHandler handler) {
-                gameObject = GameObject.Instantiate(prefab, handler.GetBone(region));
+                gameObject = Object.Instantiate(prefab, handler.GetBone(region));
                 gameObject.SetActive(true);
-                //Calean prefab, not the best way, but keeps the project clean from duplicate prefabs.
                 Trigger trigger = gameObject.GetComponent<Trigger>();
                 if (trigger != null) {
                     Destroy(trigger);

@@ -6,7 +6,7 @@ namespace DevionGames
 {
     public class SingleInstance : MonoBehaviour
     {
-        private static readonly Dictionary<string, GameObject> m_Instances = new Dictionary<string, GameObject>();
+        private static readonly Dictionary<string, GameObject> m_Instances = new();
 
         void Awake()
         {
@@ -18,7 +18,6 @@ namespace DevionGames
             }
             else
             {
-                //Debug.Log("Multiple "+gameObject.name+" in scene. Destroying instance!");
                 DestroyImmediate(gameObject);
             }
         }

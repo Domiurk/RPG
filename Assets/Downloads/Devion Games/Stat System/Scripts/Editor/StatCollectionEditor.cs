@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using System.Linq;
 using System;
+using Object = UnityEngine.Object;
 
 namespace DevionGames.StatSystem
 {
-	[System.Serializable]
+	[Serializable]
 	public class StatCollectionEditor : ScriptableObjectCollectionEditor<Stat>
 	{
 		[SerializeField]
@@ -29,7 +30,7 @@ namespace DevionGames.StatSystem
 
 			this.searchFilters = searchFilters;
 			this.searchFilters.Insert(0, "All");
-			this.m_SearchString = "All";
+			m_SearchString = "All";
 		}
 
 		protected override void Create()
@@ -78,8 +79,7 @@ namespace DevionGames.StatSystem
 
 		protected override void Duplicate(Stat item)
 		{
-			Stat duplicate = (Stat)ScriptableObject.Instantiate(item);
-			//duplicate.Id = System.Guid.NewGuid().ToString();
+			Stat duplicate = (Stat)Object.Instantiate(item);
 			duplicate.hideFlags = HideFlags.HideInHierarchy;
 			AssetDatabase.AddObjectToAsset(duplicate, target);
 			AssetDatabase.SaveAssets();

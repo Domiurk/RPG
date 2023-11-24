@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DevionGames
 {
-    [System.Serializable]
+    [Serializable]
     public class ModuleItem
     {
 
@@ -25,26 +25,26 @@ namespace DevionGames
 
 
 
-        private bool m_IsDownloading=false;
+        private bool m_IsDownloading;
         public bool IsDownloading {
-            get => this.m_IsDownloading;
-            set => this.m_IsDownloading = value;
+            get => m_IsDownloading;
+            set => m_IsDownloading = value;
         }
 
-        private float m_DownloadProgress = 0f;
+        private float m_DownloadProgress;
         public float DownloadProgress {
-            get => this.m_DownloadProgress;
-            set => this.m_DownloadProgress = value;
+            get => m_DownloadProgress;
+            set => m_DownloadProgress = value;
         }
 
         private Texture2D m_Icon;
         public Texture2D Icon
         {
             get {
-                if (this.m_Icon == null) {
-                    this.m_Icon = Resources.Load<Texture2D>("ModuleIcon");
+                if (m_Icon == null) {
+                    m_Icon = Resources.Load<Texture2D>("ModuleIcon");
                 }
-                return this.m_Icon;
+                return m_Icon;
             }
         }
 
@@ -52,10 +52,10 @@ namespace DevionGames
 
         [SerializeField]
         private ModuleItem m_InstalledModule;
-        public ModuleItem InstalledModule => this.m_InstalledModule;
-        [System.NonSerialized]
+        public ModuleItem InstalledModule => m_InstalledModule;
+        [NonSerialized]
         private ModuleItem[] m_DependencyModules= new ModuleItem[0];
-        public ModuleItem[] DependencyModules => this.m_DependencyModules;
+        public ModuleItem[] DependencyModules => m_DependencyModules;
 
         public bool CanInstall {
             get {
@@ -64,7 +64,7 @@ namespace DevionGames
         }
 
         public void Initialize() {
-            if (this.m_InstalledModule == null)
+            if (m_InstalledModule == null)
             {
                 string[] guids = AssetDatabase.FindAssets(id);
                 if (guids.Length > 0)

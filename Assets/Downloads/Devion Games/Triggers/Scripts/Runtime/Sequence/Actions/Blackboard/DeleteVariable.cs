@@ -5,12 +5,11 @@ namespace DevionGames
     [ComponentMenu("Blackboard/Delete Variable")]
     public class DeleteVariable : Action
     {
-        [SerializeField]
-        private string m_VariableName = "";
+        [SerializeField] private readonly string m_VariableName = "";
 
         public override ActionStatus OnUpdate()
         {
-            blackboard.DeleteVariable(this.m_VariableName);
+            blackboard.DeleteVariable(m_VariableName);
             return ActionStatus.Success;
         }
     }

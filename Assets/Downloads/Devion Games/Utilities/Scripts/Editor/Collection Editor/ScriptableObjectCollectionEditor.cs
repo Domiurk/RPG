@@ -18,18 +18,18 @@ namespace DevionGames
 		protected override List<T> Items => items;
 
 		[SerializeField]
-		protected UnityEngine.Object target;
+		protected Object target;
 
 		protected Editor editor;
 
-		protected bool m_UseInspectorDefaultMargins = false;
+		protected bool m_UseInspectorDefaultMargins;
         protected override bool UseInspectorDefaultMargins  => m_UseInspectorDefaultMargins;
 
-		public ScriptableObjectCollectionEditor(UnityEngine.Object target, List<T> items, bool useInspectorDefaultMargins = true):this(string.Empty, target, items, useInspectorDefaultMargins)
+		public ScriptableObjectCollectionEditor(Object target, List<T> items, bool useInspectorDefaultMargins = true):this(string.Empty, target, items, useInspectorDefaultMargins)
 		{
 		}
 
-		public ScriptableObjectCollectionEditor (string title, UnityEngine.Object target, List<T> items, bool useInspectorDefaultMargins=true):base(title)
+		public ScriptableObjectCollectionEditor (string title, Object target, List<T> items, bool useInspectorDefaultMargins=true):base(title)
 		{
 			this.target = target;
 			this.items = items;

@@ -18,13 +18,13 @@ namespace DevionGames.InventorySystem
         private void Start()
         {
             m_Trigger = GetComponentInChildren<BaseTrigger>(true);
-            this.m_Tooltip = WidgetUtility.Find<TriggerTooltip>("Trigger Tooltip");
+            m_Tooltip = WidgetUtility.Find<TriggerTooltip>("Trigger Tooltip");
         }
 
         private void Update()
         {
 
-            if (!this.m_Trigger.InUse && this.m_Trigger.InRange && this.m_Trigger.IsBestTrigger())
+            if (!m_Trigger.InUse && m_Trigger.InRange && m_Trigger.IsBestTrigger())
             {
                 DoDisplayTooltip(true);
             }
@@ -32,15 +32,15 @@ namespace DevionGames.InventorySystem
 
         protected virtual void DoDisplayTooltip(bool state)
         {
-            if (this.m_Tooltip == null) return;
+            if (m_Tooltip == null) return;
 
             if (state)
             {
-                this.m_Tooltip.Show(this.m_Title, this.m_Instruction);
+                m_Tooltip.Show(m_Title, m_Instruction);
             }
             else
             {
-                this.m_Tooltip.Close();
+                m_Tooltip.Close();
             }
         }
    

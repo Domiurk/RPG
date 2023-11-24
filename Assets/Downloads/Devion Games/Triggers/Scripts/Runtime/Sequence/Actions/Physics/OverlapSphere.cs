@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace DevionGames
@@ -8,36 +9,30 @@ namespace DevionGames
     [ComponentMenu("Physics/Overlap Sphere")]
     public class OverlapSphere : Action
     {
+        [SerializeField] private readonly TargetType m_Target = TargetType.Camera;
+        [SerializeField] private readonly float m_Radius = 1f;
+        [SerializeField] private readonly LayerMask m_LayerMask = Physics.DefaultRaycastLayers;
+        [SerializeField] private readonly LayerMask m_HitSuccessLayer = Physics.DefaultRaycastLayers;
         [SerializeField]
-        private TargetType m_Target = TargetType.Camera;
-        [SerializeField]
-        private float m_Radius = 1f;
-        [SerializeField]
-        private LayerMask m_LayerMask = Physics.DefaultRaycastLayers;
-        [SerializeField]
-        private LayerMask m_HitSuccessLayer = Physics.DefaultRaycastLayers;
-        [SerializeField]
-        private QueryTriggerInteraction m_QueryTriggerInteraction = QueryTriggerInteraction.Collide;
+        private readonly QueryTriggerInteraction m_QueryTriggerInteraction = QueryTriggerInteraction.Collide;
 
         private Transform m_TargetTransform;
 
         public override void OnStart()
         {
-            this.m_TargetTransform = GetTarget(this.m_Target).transform;
+            m_TargetTransform = GetTarget(m_Target).transform;
         }
 
         public override ActionStatus OnUpdate()
         {
-            Vector3 startPosition = this.m_TargetTransform.position;
+            Vector3 startPosition = m_TargetTransform.position;
 
-            Collider[] colliders = Physics.OverlapSphere(startPosition, this.m_Radius, this.m_LayerMask, this.m_QueryTriggerInteraction);
-            for (int i = 0; i < colliders.Length; i++) {
-                if (this.m_HitSuccessLayer.Contains(colliders[i].gameObject.layer)) {
-                    return ActionStatus.Success;
-                }
-            }
-            return ActionStatus.Failure;
+            Collider[] colliders =
+                Physics.OverlapSphere(startPosition, m_Radius, m_LayerMask, m_QueryTriggerInteraction);
+
+            return colliders.Any(t => m_HitSuccessLayer.Contains(t.gameObject.layer))
+                       ? ActionStatus.Success
+                       : ActionStatus.Failure;
         }
-
     }
 }

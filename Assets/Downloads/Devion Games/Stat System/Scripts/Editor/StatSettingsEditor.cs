@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DevionGames.StatSystem.Configuration
 {
-    [System.Serializable]
+    [Serializable]
     public class StatSettingsEditor : ScriptableObjectCollectionEditor<Settings>
     {
 

@@ -13,13 +13,13 @@ namespace DevionGames.InventorySystem
 		[ItemPicker (true)]
 		[SerializeField]
         [FormerlySerializedAs("items")]
-        protected List<Item> m_Items = new List<Item> ();
+        protected List<Item> m_Items = new();
         [FormerlySerializedAs("amounts")]
         [SerializeField]
-        protected List<int> m_Amounts = new List<int>();
+        protected List<int> m_Amounts = new();
 
         [SerializeField]
-        protected List<ItemModifierList> m_Modifiers = new List<ItemModifierList>();
+        protected List<ItemModifierList> m_Modifiers = new();
 
         [HideInInspector]
 		public UnityEvent onChange;
@@ -35,30 +35,28 @@ namespace DevionGames.InventorySystem
 
         public void Initialize()
         {
-            if (this.m_Initialized) { return; }
+            if (m_Initialized) { return; }
 
-            //Used to sync old items
-            if (this.m_Modifiers.Count < this.m_Items.Count)
+            if (m_Modifiers.Count < m_Items.Count)
             {
-                for (int i = m_Modifiers.Count; i < this.m_Items.Count; i++)
+                for (int i = m_Modifiers.Count; i < m_Items.Count; i++)
                 {
                     m_Modifiers.Add(new ItemModifierList());
                 }
             }
 
-            if (this.m_Amounts.Count < this.m_Items.Count) {
-                for (int i = this.m_Amounts.Count; i < this.m_Items.Count; i++)
+            if (m_Amounts.Count < m_Items.Count) {
+                for (int i = m_Amounts.Count; i < m_Items.Count; i++)
                 {
-                    this.m_Amounts.Add(1);
+                    m_Amounts.Add(1);
                 }
             }
 
-            m_Items = InventoryManager.CreateInstances(m_Items.ToArray(),this.m_Amounts.ToArray(), this.m_Modifiers.ToArray()).ToList();
+            m_Items = InventoryManager.CreateInstances(m_Items.ToArray(),m_Amounts.ToArray(), m_Modifiers.ToArray()).ToList();
           
             for (int i = 0; i < m_Items.Count; i++) {
                 Item current = m_Items[i];
                 if (current.Stack > current.MaxStack) {
-                    //Split in smaller stacks
                     int maxStacks = Mathf.FloorToInt((float)current.Stack / (float)current.MaxStack);
                     int restStack = current.Stack - (current.MaxStack * maxStacks);
                     for (int j = 0; j < maxStacks; j++) {
@@ -76,21 +74,19 @@ namespace DevionGames.InventorySystem
                    
                 }
             }
-            
 
-            //Stack same currencies
             CombineCurrencies();
             ItemCollectionPopulator populator = GetComponent<ItemCollectionPopulator>();
             if (populator != null && populator.enabled) {
                 Item[] groupItems = InventoryManager.CreateInstances(populator.m_ItemGroup);
                 Add(groupItems);
             } 
-            this.m_Initialized = true;
+            m_Initialized = true;
 
 		}
 
 		public Item this [int index] {
-			get => this.m_Items [index];
+			get => m_Items [index];
             set {
 				Insert (index, value);
                 if (onChange != null)
@@ -104,12 +100,12 @@ namespace DevionGames.InventorySystem
 
         public IEnumerator<Item> GetEnumerator ()
 		{
-			return this.m_Items.GetEnumerator ();
+			return m_Items.GetEnumerator ();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
-			return this.GetEnumerator ();
+			return GetEnumerator ();
 		}
 
         public void Add(Item[] items)
@@ -122,11 +118,11 @@ namespace DevionGames.InventorySystem
 
         public void Add (Item item, bool allowStacking = false)
 		{
-            this.m_Items.Add (item);
+            m_Items.Add (item);
             int index = m_Items.IndexOf(item);
 
-            this.m_Amounts.Insert(index,item.Stack);
-            this.m_Modifiers.Insert(index,new ItemModifierList());
+            m_Amounts.Insert(index,item.Stack);
+            m_Modifiers.Insert(index,new ItemModifierList());
             if(onChange != null)
 			    onChange.Invoke ();
 
@@ -138,10 +134,10 @@ namespace DevionGames.InventorySystem
 		{
             int index = m_Items.IndexOf(item);
             
-            bool result = this.m_Items.Remove (item);
+            bool result = m_Items.Remove (item);
             if (result) {
-                this.m_Amounts.RemoveAt(index);
-                this.m_Modifiers.RemoveAt(index);
+                m_Amounts.RemoveAt(index);
+                m_Modifiers.RemoveAt(index);
                 if (onChange != null)
                     onChange.Invoke();
             }
@@ -150,18 +146,18 @@ namespace DevionGames.InventorySystem
 
 		public void Insert (int index, Item child)
 		{
-            this.m_Items.Insert (index, child);
-            this.m_Amounts.Insert(index, child.Stack);
-            this.m_Modifiers.Insert(index, new ItemModifierList());
+            m_Items.Insert (index, child);
+            m_Amounts.Insert(index, child.Stack);
+            m_Modifiers.Insert(index, new ItemModifierList());
             if (onChange != null)
                 onChange.Invoke();
         }
 
 		public void RemoveAt (int index)
 		{
-			this.m_Items.RemoveAt (index);
-            this.m_Amounts.RemoveAt(index);
-            this.m_Modifiers.RemoveAt(index);
+			m_Items.RemoveAt (index);
+            m_Amounts.RemoveAt(index);
+            m_Modifiers.RemoveAt(index);
             if (onChange != null)
                 onChange.Invoke();
         }
@@ -169,15 +165,15 @@ namespace DevionGames.InventorySystem
 		public void Clear ()
 		{
             
-            Item[] currencies = this.m_Items.Where(x => typeof(Currency).IsAssignableFrom(x.GetType())).ToArray();
+            Item[] currencies = m_Items.Where(x => typeof(Currency).IsAssignableFrom(x.GetType())).ToArray();
             for (int i = 0; i < currencies.Length; i++) {
                 currencies[i].Stack = 0;
                 if(currencies[i].Slot != null)
                     currencies[i].Slot.ObservedItem = currencies[i];
             }
-            this.m_Items.Clear();
-            this.m_Amounts.Clear();
-            this.m_Modifiers.Clear();
+            m_Items.Clear();
+            m_Amounts.Clear();
+            m_Modifiers.Clear();
             Add(currencies);
 
             if (onChange != null)
@@ -239,14 +235,14 @@ namespace DevionGames.InventorySystem
                         
                         if (item != null)
                         {
-                            Item mItem = (Item)ScriptableObject.Instantiate(item);
+                            Item mItem = (Item)Instantiate(item);
                             mItem.SetObjectData(itemData);
 
 
                             Add(mItem);
 
-                            this.m_Amounts[i] = 0;
-                            this.m_Modifiers[i].modifiers.Clear();
+                            m_Amounts[i] = 0;
+                            m_Modifiers[i].modifiers.Clear();
                         
                             if (itemData.ContainsKey("Slots") && container != null)
                             {

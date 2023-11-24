@@ -158,7 +158,7 @@ namespace DevionGames
                     }
                     else
                     {
-                        foreach (var child in element.EnumerateChildProperties())
+                        foreach (SerializedProperty child in element.EnumerateChildProperties())
                         {
 
                             EditorGUILayout.PropertyField(
@@ -342,14 +342,6 @@ namespace DevionGames
 
         public void OnBeforeAssemblyReload()
         {
-            /*this.m_ElementTypeName = this.m_ElementType.Name;
-            FieldInfo[] fields = this.m_Target.GetType().GetSerializedFields();
-            for (int i = 0; i < fields.Length; i++)
-            {
-                object temp = fields[i].GetValue(this.m_Target);
-                if (temp == this.m_List)
-                    this.m_FieldName = fields[i].Name;
-            }*/
             if (m_Target != null && m_Target is Component)
             {
                 m_GameObject = (m_Target as Component).gameObject;

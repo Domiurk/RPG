@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,19 +21,17 @@ namespace DevionGames.UIWidgets
                 return;
             }
 
-            foreach(KeyValuePair<Key, List<UIWidget>> keyBinding in m_WidgetKeyBindings){
-                if(keyboard[keyBinding.Key].wasPressedThisFrame){
-                    foreach(UIWidget widget in keyBinding.Value){
-                        widget.Toggle();
-                    }
-                }
+            foreach(UIWidget widget in m_WidgetKeyBindings
+                                       .Where(keyBinding => keyboard[keyBinding.Key].wasPressedThisFrame)
+                                       .SelectMany(keyBinding => keyBinding.Value)){
+                widget.Toggle();
             }
         }
 
         public static void RegisterInput(Key key, UIWidget widget)
         {
             if(m_WidgetKeyBindings == null){
-                WidgetInputHandler handler = GameObject.FindObjectOfType<WidgetInputHandler>();
+                WidgetInputHandler handler = FindObjectOfType<WidgetInputHandler>();
 
                 if(handler == null){
                     GameObject handlerObject = new GameObject("WidgetInputHandler");

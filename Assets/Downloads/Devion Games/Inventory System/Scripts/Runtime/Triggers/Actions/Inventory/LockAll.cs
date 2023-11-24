@@ -8,14 +8,14 @@ namespace DevionGames.InventorySystem
     public class LockAll : Action
     {
         [SerializeField]
-        private bool m_State = true;
+        private readonly bool m_State = true;
 
         public override ActionStatus OnUpdate()
         {
-            ItemContainer[] containers = GameObject.FindObjectsOfType<ItemContainer>();
+            ItemContainer[] containers = Object.FindObjectsOfType<ItemContainer>();
             for (int i = 0; i < containers.Length; i++)
             {
-                containers[i].Lock(this.m_State);
+                containers[i].Lock(m_State);
             }
 
             return ActionStatus.Success;

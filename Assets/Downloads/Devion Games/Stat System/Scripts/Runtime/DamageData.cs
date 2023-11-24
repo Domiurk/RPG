@@ -15,7 +15,7 @@ namespace DevionGames.StatSystem
         public float maxDistance = 2f;
         [Range(0f,360f)]
         public float maxAngle = 60f;
-        public bool displayDamage = false;
+        public bool displayDamage;
         [Compound("displayDamage")]
         public GameObject damagePrefab;
         [Compound("displayDamage")]
@@ -23,12 +23,12 @@ namespace DevionGames.StatSystem
         [Compound("displayDamage")]
         public Color criticalDamageColor = Color.red;
         [Compound("displayDamage")]
-        public Vector3 intensity = new Vector3(3f, 2f, 0f);
+        public Vector3 intensity = new(3f, 2f, 0f);
 
         [HeaderLine("Particles")]
         public GameObject particleEffect;
         public Vector3 offset = Vector3.up;
-        public Vector3 randomize = new Vector3(0.2f, 0.1f);
+        public Vector3 randomize = new(0.2f, 0.1f);
         public float lifeTime = 3f;
 
         [HeaderLine("Sounds")]
@@ -45,7 +45,7 @@ namespace DevionGames.StatSystem
         [Compound("enableShake")]
         public float speed = 5f;
         [Compound("enableShake")]
-        public Vector3 amount = new Vector3(0.4f,0.4f);
+        public Vector3 amount = new(0.4f,0.4f);
 
         [HeaderLine("Knockback")]
         [InspectorLabel("Enabled")]

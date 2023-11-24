@@ -7,14 +7,12 @@ namespace DevionGames.UIWidgets
 {
     public class MenuItem : Selectable, IPointerClickHandler
     {
-        [SerializeField] private UnityEvent m_Trigger = new ();
+        [SerializeField] private UnityEvent m_Trigger = new();
 
         public UnityEvent onTrigger
         {
-            get{
-                return this.m_Trigger ??= new UnityEvent();
-            }
-            set => this.m_Trigger = value;
+            get{ return m_Trigger ??= new UnityEvent(); }
+            set => m_Trigger = value;
         }
 
         private void Press()

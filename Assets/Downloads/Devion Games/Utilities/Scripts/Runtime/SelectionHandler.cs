@@ -65,7 +65,7 @@ namespace DevionGames
         private void Update()
         {
             bool selected = false;
-            //Selection
+
             if (Input.GetMouseButtonDown(0) && selectionType.HasFlag<SelectionInputType>(SelectionInputType.LeftClick) ||
                 Input.GetMouseButtonDown(1) && selectionType.HasFlag<SelectionInputType>(SelectionInputType.RightClick) || 
                 Input.GetMouseButtonDown(2) && selectionType.HasFlag<SelectionInputType>(SelectionInputType.MiddleClick)) {
@@ -81,7 +81,6 @@ namespace DevionGames
                 }
             }
 
-            //Deselection
             if (!UnityTools.IsPointerOverUI())
             {
                 if (!selected && (Input.GetMouseButtonDown(0) && deselectionType.HasFlag<DeselectionInputType>(DeselectionInputType.LeftClick) ||

@@ -29,7 +29,6 @@ namespace DevionGames
         void Update()
         {
             if(target != null){
-                //mTransform.LookAt (target.position);
                 mTransform.LookAt(mTransform.position + target.rotation * Vector3.back,
                                   target.rotation * Vector3.up);
             }

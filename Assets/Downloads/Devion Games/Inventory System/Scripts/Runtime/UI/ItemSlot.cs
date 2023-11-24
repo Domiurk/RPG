@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DevionGames.UIWidgets;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
@@ -70,12 +69,10 @@ namespace DevionGames.InventorySystem
             set{
                 m_DragObject = value;
 
-                //Set the dragging icon
                 if(m_DragObject != null && m_DragObject.item != null){
                     UICursor.Set(m_DragObject.item.Icon);
                 }
                 else{
-                    //if value is null, remove the dragging icon
                     UICursor.Clear();
                 }
             }
@@ -150,7 +147,6 @@ namespace DevionGames.InventorySystem
                     Currency price = Instantiate(ObservedItem.BuyCurrency);
                     price.Stack = Mathf.RoundToInt(ObservedItem.BuyPrice);
                     m_BuyPrice.StackOrAdd(price);
-                    //Debug.Log(" Price Update for "+ObservedItem.Name+" "+price.Name+" "+price.Stack);
                 }
             }
         }
@@ -219,10 +215,8 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        // In order to receive OnPointerUp callbacks, we need implement the IPointerDownHandler interface
         public virtual void OnPointerDown(PointerEventData eventData) { }
 
-        //Detects the release of the mouse button
         public virtual void OnPointerUp(PointerEventData eventData)
         {
             if(!eventData.dragging){
@@ -238,7 +232,6 @@ namespace DevionGames.InventorySystem
                         ObservedItem.Stack > 1:
                         Unstack();
                         return;
-                    //Check if we are currently unstacking the item
                     case true when Container.StackOrAdd(this, stack.item):
                         stack.item = null;
                         UICursor.Clear();
@@ -268,7 +261,7 @@ namespace DevionGames.InventorySystem
                             menu.AddMenuItem("Use", Use);
                         }
 
-                        if(ObservedItem.MaxStack > 1 || ObservedItem.MaxStack == 0){
+                        if(ObservedItem.MaxStack is > 1 or 0){
                             menu.AddMenuItem("Unstack", Unstack);
                         }
 
@@ -283,7 +276,6 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        //Called by a BaseInputModule before a drag is started.
         public virtual void OnBeginDrag(PointerEventData eventData)
         {
             if(Container.IsLocked){
@@ -294,17 +286,13 @@ namespace DevionGames.InventorySystem
             Key unstackedKey = InventoryManager.Input.unstackKeyCode;
             KeyControl unstackControl = m_Keyboard[unstackedKey];
 
-            //Check if we can start dragging
             if(ObservedItem != null && !IsCooldown && Container.CanDragOut){
-                //If key for unstacking items is pressed and if the stack is greater then 1, show the unstack ui.
                 if(InventoryManager.Input.unstackEvent.HasFlag<Configuration.Input.UnstackInput>(Configuration.Input
-                       .UnstackInput.OnDrag) && unstackedKey != Key.None && unstackControl.isPressed &&
+                                                                                                              .UnstackInput.OnDrag) && unstackedKey != Key.None && unstackControl.isPressed &&
                    ObservedItem.Stack > 1){
                     Unstack();
                 }
                 else{
-                    //Set the dragging slot
-                    // draggedSlot = this;
                     if(m_Ícon == null || !m_Ícon.raycastTarget ||
                        eventData.pointerCurrentRaycast.gameObject == m_Ícon.gameObject)
                         dragObject = new DragObject(this);
@@ -316,7 +304,6 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        //When draging is occuring this will be called every time the cursor is moved.
         public virtual void OnDrag(PointerEventData eventData)
         {
             if(m_ParentScrollRect != null){
@@ -324,7 +311,6 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        //Called by a BaseInputModule when a drag is ended.
         public virtual void OnEndDrag(PointerEventData eventData)
         {
             RaycastHit hit;
@@ -345,11 +331,9 @@ namespace DevionGames.InventorySystem
                 m_ParentScrollRect.OnEndDrag(eventData);
             }
 
-            //Repaint the slot
             Repaint();
         }
 
-        //Called by a BaseInputModule on a target that can accept a drop.
         public virtual void OnDrop(PointerEventData data)
         {
             if(dragObject != null && Container.CanDragIn){
@@ -357,7 +341,6 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        //Try to drop the item to ground
         private void DropItem()
         {
             if(Container.IsLocked){
@@ -368,12 +351,9 @@ namespace DevionGames.InventorySystem
             if(IsCooldown)
                 return;
 
-            //Get the item to drop
             Item item = dragObject != null ? dragObject.item : ObservedItem;
 
-            //Check if the item is droppable
             if(item != null && item.IsDroppable){
-                //Get item prefab
                 GameObject prefab = item.OverridePrefab != null ? item.OverridePrefab : item.Prefab;
                 RaycastHit hit;
                 Vector3 position = Vector3.zero;
@@ -384,15 +364,12 @@ namespace DevionGames.InventorySystem
                     forward = InventoryManager.current.PlayerInfo.transform.forward;
                 }
 
-                //Cast a ray from mouse postion to ground
                 if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit) &&
                    !UnityTools.IsPointerOverUI()){
-                    //Clamp the drop distance to max drop distance defined in setting.
                     Vector3 worldPos = hit.point;
                     Vector3 diff = worldPos - position;
                     float distance = diff.magnitude;
 
-                    //if player is null this does not work!
                     if(distance > (InventoryManager.DefaultSettings.maxDropDistance - (transform.localScale.x / 2))){
                         position = position + (diff / distance) * InventoryManager.DefaultSettings.maxDropDistance;
                     }
@@ -404,10 +381,8 @@ namespace DevionGames.InventorySystem
                     position = position + forward;
                 }
 
-                //Instantiate the prefab at position
                 GameObject go = InventoryManager.Instantiate(prefab, position + Vector3.up * 0.3f, Quaternion.identity);
                 go.name = go.name.Replace("(Clone)", "");
-                //Reset the item collection of the prefab with this item
                 ItemCollection collection = go.GetComponent<ItemCollection>();
 
                 if(collection != null){
@@ -424,7 +399,6 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        //Unstack items
         private void Unstack()
         {
             if(InventoryManager.UI.stack != null){
@@ -482,9 +456,7 @@ namespace DevionGames.InventorySystem
 
             Container.NotifyTryUseItem(ObservedItem, this);
 
-            //Check if the item can be used.
             if(CanUse()){
-                //Check if there is an override item behavior on trigger.
                 if((BaseTrigger.currentUsedTrigger as Trigger) != null &&
                    (BaseTrigger.currentUsedTrigger as Trigger).OverrideUse(this, ObservedItem)){
                     return;
@@ -495,7 +467,6 @@ namespace DevionGames.InventorySystem
                     return;
                 }
 
-                //Try to move item
                 if(!MoveItem()){
                     CloseTooltip();
                     ObservedItem.Use();
@@ -513,7 +484,6 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        //Can we use the item
         public override bool CanUse()
         {
             return !IsCooldown && ObservedItem != null;
@@ -522,8 +492,8 @@ namespace DevionGames.InventorySystem
         public class DragObject
         {
             public ItemContainer container;
-            public Slot slot;
-            public Item item;
+            public readonly Slot slot;
+            public readonly Item item;
 
             public DragObject(Slot slot)
             {

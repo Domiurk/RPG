@@ -24,7 +24,7 @@ namespace DevionGames.StatSystem
         }
 
         [SerializeField]
-        private StatDatabase m_Database = null;
+        private StatDatabase m_Database;
 
         /// <summary>
         /// Gets the item database. Configurate it inside the editor.
@@ -34,10 +34,10 @@ namespace DevionGames.StatSystem
         {
             get
             {
-                if (StatsManager.current != null)
+                if (current != null)
                 {
-                    Assert.IsNotNull(StatsManager.current.m_Database, "Please assign StatDatabase to the Stats Manager!");
-                    return StatsManager.current.m_Database;
+                    Assert.IsNotNull(current.m_Database, "Please assign StatDatabase to the Stats Manager!");
+                    return current.m_Database;
                 }
                 return null;
             }
@@ -95,11 +95,11 @@ namespace DevionGames.StatSystem
             }
         }
 
-        private static T GetSetting<T>() where T : Configuration.Settings
+        private static T GetSetting<T>() where T : Settings
         {
-            if (StatsManager.Database != null)
+            if (Database != null)
             {
-                return (T)StatsManager.Database.settings.Where(x => x.GetType() == typeof(T)).FirstOrDefault();
+                return (T)Database.settings.Where(x => x.GetType() == typeof(T)).FirstOrDefault();
             }
             return default(T);
         }
@@ -115,39 +115,36 @@ namespace DevionGames.StatSystem
         /// </summary>
         private void Awake()
         {
-            if (StatsManager.m_Current != null)
+            if (m_Current != null)
             {
-                // Debug.Log("Multiple Stat Manager in scene...this is not supported. Destroying instance!");
                 Destroy(gameObject);
                 return;
             }
-            else
-            {
-                StatsManager.m_Current = this;
-                if (dontDestroyOnLoad)
-                {
-                    if (transform.parent != null)
-                    {
-                        if (StatsManager.DefaultSettings.debugMessages)
-                            Debug.Log("Stats Manager with DontDestroyOnLoad can't be a child transform. Unparent!");
-                        transform.parent = null;
-                    }
-                    DontDestroyOnLoad(gameObject);
-                }
 
-                this.m_StatsHandler = new List<StatsHandler>();
-                if (StatsManager.SavingLoading.autoSave)
+            m_Current = this;
+            if (dontDestroyOnLoad)
+            {
+                if (transform.parent != null)
                 {
-                    StartCoroutine(RepeatSaving(StatsManager.SavingLoading.savingRate));
+                    if (DefaultSettings.debugMessages)
+                        Debug.Log("Stats Manager with DontDestroyOnLoad can't be a child transform. Unparent!");
+                    transform.parent = null;
                 }
-                if (StatsManager.DefaultSettings.debugMessages)
-                    Debug.Log("Stats Manager initialized.");
+                DontDestroyOnLoad(gameObject);
             }
+
+            m_StatsHandler = new List<StatsHandler>();
+            if (SavingLoading.autoSave)
+            {
+                StartCoroutine(RepeatSaving(SavingLoading.savingRate));
+            }
+            if (DefaultSettings.debugMessages)
+                Debug.Log("Stats Manager initialized.");
         }
 
         private void Start()
         {
-            if (StatsManager.SavingLoading.autoSave)
+            if (SavingLoading.autoSave)
             {
                 StartCoroutine(DelayedLoading(1f));
             }
@@ -156,19 +153,17 @@ namespace DevionGames.StatSystem
 
         public static void Save()
         {
-            string key = PlayerPrefs.GetString(StatsManager.SavingLoading.savingKey, StatsManager.SavingLoading.savingKey);
+            string key = PlayerPrefs.GetString(SavingLoading.savingKey, SavingLoading.savingKey);
             Save(key);
         }
 
         public static void Save(string key)
         {
-            StatsHandler[] results = Object.FindObjectsOfType<StatsHandler>().Where(x => x.saveable).ToArray();
+            StatsHandler[] results = FindObjectsOfType<StatsHandler>().Where(x => x.saveable).ToArray();
             if (results.Length > 0)
             {
                 string data = JsonSerializer.Serialize(results);
 
-              
-                //Required for Select Character Scene in RPG Kit, Workaound to display stats without StatsHandler
                 foreach (StatsHandler handler in results)
                 {
                     foreach (Stat stat in handler.m_Stats)
@@ -190,14 +185,14 @@ namespace DevionGames.StatSystem
                 PlayerPrefs.SetString("StatSystemSavedKeys", string.Join(";", keys));
 
     
-                if (StatsManager.DefaultSettings.debugMessages)
+                if (DefaultSettings.debugMessages)
                     Debug.Log("[Stat System] Stats saved: " + data);
             }
         }
 
         public static void Load()
         {
-            string key = PlayerPrefs.GetString(StatsManager.SavingLoading.savingKey, StatsManager.SavingLoading.savingKey);
+            string key = PlayerPrefs.GetString(SavingLoading.savingKey, SavingLoading.savingKey);
             Load(key);
         }
 
@@ -206,7 +201,7 @@ namespace DevionGames.StatSystem
             string data = PlayerPrefs.GetString(key+".Stats");
             if (string.IsNullOrEmpty(data)) { return; }
 
-            List<StatsHandler> results = Object.FindObjectsOfType<StatsHandler>().Where(x => x.saveable).ToList();
+            List<StatsHandler> results = FindObjectsOfType<StatsHandler>().Where(x => x.saveable).ToList();
             List<object> list = MiniJSON.Deserialize(data) as List<object>;
 
             for (int i = 0; i < list.Count; i++)
@@ -220,7 +215,7 @@ namespace DevionGames.StatSystem
                 }
             }
 
-            if (StatsManager.DefaultSettings.debugMessages)
+            if (DefaultSettings.debugMessages)
                 Debug.Log("[Stat System] Stats loaded: "+ data);
         }
 
@@ -243,15 +238,15 @@ namespace DevionGames.StatSystem
 
         public static void RegisterStatsHandler(StatsHandler handler)
         {
-            if (!StatsManager.current.m_StatsHandler.Contains(handler))
+            if (!current.m_StatsHandler.Contains(handler))
             {
-                StatsManager.current.m_StatsHandler.Add(handler);
+                current.m_StatsHandler.Add(handler);
             }
         }
 
         public static StatsHandler GetStatsHandler(string name)
         {
-            return StatsManager.current.m_StatsHandler.Find(x => x.HandlerName == name);
+            return current.m_StatsHandler.Find(x => x.HandlerName == name);
         }
 
     }

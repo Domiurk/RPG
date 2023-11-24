@@ -14,8 +14,8 @@ namespace DevionGames.InventorySystem
         protected override void OnAwake()
         {
             base.OnAwake();
-            this.canvas = GetComponentInParent<Canvas>();
-            this.spinner = GetComponent<Spinner>();
+            canvas = GetComponentInParent<Canvas>();
+            spinner = GetComponent<Spinner>();
         }
 
         public void SetItem(Item item)
@@ -23,9 +23,9 @@ namespace DevionGames.InventorySystem
             if (item != null)
             {
                 this.item = item;
-                this.spinner.min = 1;
-                this.spinner.max = item.Stack;
-                this.spinner.step = 1;
+                spinner.min = 1;
+                spinner.max = item.Stack;
+                spinner.step = 1;
 
                 Show();
                 UpdatePosition();

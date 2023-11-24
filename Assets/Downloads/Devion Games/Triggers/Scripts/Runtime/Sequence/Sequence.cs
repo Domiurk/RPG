@@ -6,7 +6,7 @@ namespace DevionGames
     public class Sequence
     {
         private ActionStatus m_Status;
-        public ActionStatus Status => this.m_Status;
+        public ActionStatus Status => m_Status;
 
         private int m_ActionIndex;
         private ActionStatus m_ActionStatus;
@@ -15,124 +15,70 @@ namespace DevionGames
 
         public Sequence(GameObject gameObject, PlayerInfo playerInfo, Blackboard blackboard, IAction[] actions)
         {
-            this.m_AllActions = actions;
+            m_AllActions = actions;
 
-            foreach(IAction iAction in this.m_AllActions)
+            foreach(IAction iAction in m_AllActions)
                 iAction.Initialize(gameObject, playerInfo, blackboard);
 
-            this.m_Status = ActionStatus.Inactive;
-            this.m_ActionStatus = ActionStatus.Inactive;
+            m_Status = ActionStatus.Inactive;
+            m_ActionStatus = ActionStatus.Inactive;
         }
 
-        //Starts the task behavior
         public void Start()
         {
-            this.m_Actions = this.m_AllActions.Where(x => x.isActiveAndEnabled).ToArray();
+            m_Actions = m_AllActions.Where(x => x.isActiveAndEnabled).ToArray();
 
-            for(int i = 0; i < this.m_Actions.Length; i++){
-                this.m_Actions[i].OnSequenceStart();
+            foreach(IAction action in m_Actions){
+                action.OnSequenceStart();
             }
 
-            this.m_ActionIndex = 0;
-            this.m_Status = ActionStatus.Running;
+            m_ActionIndex = 0;
+            m_Status = ActionStatus.Running;
         }
 
         public void Stop()
         {
-            for(int i = 0; i < this.m_Actions.Length; i++){
-                this.m_Actions[i].OnSequenceEnd();
+            foreach(IAction action in m_Actions){
+                action.OnSequenceEnd();
             }
 
-            this.m_Status = ActionStatus.Inactive;
+            m_Status = ActionStatus.Inactive;
         }
 
         public void Interrupt()
         {
-            for(int i = 0; i <= this.m_ActionIndex; i++){
-                if(i < this.m_Actions.Length)
-                    this.m_Actions[i].OnInterrupt();
+            for(int i = 0; i <= m_ActionIndex; i++){
+                if(i < m_Actions.Length)
+                    m_Actions[i].OnInterrupt();
             }
         }
 
         public void Update()
         {
-            for(int i = 0; i < this.m_Actions.Length; i++){
-                this.m_Actions[i].Update();
+            foreach(IAction action in m_Actions){
+                action.Update();
             }
         }
 
-        //Just a test, for discord support
-        /*  public bool Tick()
-          {
-              if (this.m_Status == ActionStatus.Running || this.m_Status== ActionStatus.SkipNext)
-              {
-                  if (this.m_ActionIndex >= this.m_Actions.Length)
-                  {
-                      this.m_ActionIndex = 0;
-                  }
-  
-                  while (this.m_ActionIndex < this.m_Actions.Length)
-                  {
-                      if (this.m_ActionStatus != ActionStatus.Running)
-                      {
-  
-                          this.m_Actions[m_ActionIndex].OnStart();
-                      }
-                      this.m_ActionStatus = this.m_Actions[this.m_ActionIndex].OnUpdate();
-  
-                      if (this.m_ActionStatus != ActionStatus.Running)
-                      {
-                          this.m_Actions[m_ActionIndex].OnEnd();
-                      }
-  
-  
-                      if (this.m_ActionStatus == ActionStatus.SkipNext)
-                      {
-                         m_ActionIndex+=2;
-  
-                      }
-                    
-                      if (this.m_ActionStatus == ActionStatus.Success)
-                      {
-                          ++m_ActionIndex;
-  
-                      }
-                      else
-                      {
-                          break;
-                      }
-                  }
-                  this.m_Status = this.m_ActionStatus;
-                  if (this.m_Status != ActionStatus.Running) {
-                      
-                      for (int i = 0; i < this.m_Actions.Length; i++)
-                      {
-                          this.m_Actions[i].OnSequenceEnd();
-                      }
-                  }
-              }
-              return this.m_Status == ActionStatus.Running || this.m_Status== ActionStatus.SkipNext;
-          }*/
-
         public bool Tick()
         {
-            if(this.m_Status == ActionStatus.Running){
-                if(this.m_ActionIndex >= this.m_Actions.Length){
-                    this.m_ActionIndex = 0;
+            if(m_Status == ActionStatus.Running){
+                if(m_ActionIndex >= m_Actions.Length){
+                    m_ActionIndex = 0;
                 }
 
-                while(this.m_ActionIndex < this.m_Actions.Length){
-                    if(this.m_ActionStatus != ActionStatus.Running){
-                        this.m_Actions[m_ActionIndex].OnStart();
+                while(m_ActionIndex < m_Actions.Length){
+                    if(m_ActionStatus != ActionStatus.Running){
+                        m_Actions[m_ActionIndex].OnStart();
                     }
 
-                    this.m_ActionStatus = this.m_Actions[this.m_ActionIndex].OnUpdate();
+                    m_ActionStatus = m_Actions[m_ActionIndex].OnUpdate();
 
-                    if(this.m_ActionStatus != ActionStatus.Running){
-                        this.m_Actions[m_ActionIndex].OnEnd();
+                    if(m_ActionStatus != ActionStatus.Running){
+                        m_Actions[m_ActionIndex].OnEnd();
                     }
 
-                    if(this.m_ActionStatus == ActionStatus.Success){
+                    if(m_ActionStatus == ActionStatus.Success){
                         ++m_ActionIndex;
                     }
                     else{
@@ -140,16 +86,16 @@ namespace DevionGames
                     }
                 }
 
-                this.m_Status = this.m_ActionStatus;
+                m_Status = m_ActionStatus;
 
-                if(this.m_Status != ActionStatus.Running){
-                    for(int i = 0; i < this.m_Actions.Length; i++){
-                        this.m_Actions[i].OnSequenceEnd();
+                if(m_Status != ActionStatus.Running){
+                    foreach(IAction action in m_Actions){
+                        action.OnSequenceEnd();
                     }
                 }
             }
 
-            return this.m_Status == ActionStatus.Running;
+            return m_Status == ActionStatus.Running;
         }
     }
 }

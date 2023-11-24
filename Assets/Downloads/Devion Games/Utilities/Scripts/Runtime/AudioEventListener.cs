@@ -8,7 +8,7 @@ namespace DevionGames
 {
     public class AudioEventListener : MonoBehaviour
     {
-        [SerializeField] private List<AudioGroup> m_AudioGroups = new List<AudioGroup>();
+        [SerializeField] private List<AudioGroup> m_AudioGroups = new();
 
         private void Awake()
         {

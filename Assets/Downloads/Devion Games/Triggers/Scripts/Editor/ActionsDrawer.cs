@@ -15,11 +15,11 @@ namespace DevionGames
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
 
-            this.m_Actions = property.FindPropertyRelative("actions");
+            m_Actions = property.FindPropertyRelative("actions");
             GUILayout.BeginHorizontal();
             GUILayout.Space(20);
             GUILayout.BeginVertical();
-            DoGUI(this.m_Actions);
+            DoGUI(m_Actions);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
@@ -57,7 +57,7 @@ namespace DevionGames
                     }
                     else
                     {
-                        foreach (var child in action.EnumerateChildProperties())
+                        foreach (SerializedProperty child in action.EnumerateChildProperties())
                         {
                             EditorGUILayout.PropertyField(
                                 child,
@@ -76,11 +76,11 @@ namespace DevionGames
 
         private void Add(Type type)
         {
-            object value = System.Activator.CreateInstance(type);
-            this.m_Add.serializedObject.Update();
-            this.m_Add.arraySize++;
-            this.m_Add.GetArrayElementAtIndex(this.m_Add.arraySize - 1).managedReferenceValue = value;
-            this.m_Add.serializedObject.ApplyModifiedProperties();
+            object value = Activator.CreateInstance(type);
+            m_Add.serializedObject.Update();
+            m_Add.arraySize++;
+            m_Add.GetArrayElementAtIndex(m_Add.arraySize - 1).managedReferenceValue = value;
+            m_Add.serializedObject.ApplyModifiedProperties();
         }
 
 
@@ -98,7 +98,7 @@ namespace DevionGames
             buttonRect.width = buttonStyle.fixedWidth;
             if (GUI.Button(buttonRect, buttonContent, buttonStyle))
             {
-                this.m_Add = this.m_Actions;
+                m_Add = m_Actions;
                 AddObjectWindow.ShowWindow(buttonRect, type, Add, CreateScript);
             }
         }
@@ -114,14 +114,14 @@ namespace DevionGames
             Type elementType = list[index].GetType();
             menu.AddItem(new GUIContent("Reset"), false, delegate {
 
-                object value = System.Activator.CreateInstance(list[index].GetType());
+                object value = Activator.CreateInstance(list[index].GetType());
                 list[index] = value;
-                EditorUtility.SetDirty(this.m_Actions.serializedObject.targetObject);
+                EditorUtility.SetDirty(m_Actions.serializedObject.targetObject);
             });
             menu.AddSeparator(string.Empty);
             menu.AddItem(new GUIContent("Remove"), false, delegate {
                 list.RemoveAt(index);
-                EditorUtility.SetDirty(this.m_Actions.serializedObject.targetObject);
+                EditorUtility.SetDirty(m_Actions.serializedObject.targetObject);
             });
 
             if (index > 0)
@@ -130,7 +130,7 @@ namespace DevionGames
                     object value = list[index];
                     list.RemoveAt(index);
                     list.Insert(index - 1, value);
-                    EditorUtility.SetDirty(this.m_Actions.serializedObject.targetObject);
+                    EditorUtility.SetDirty(m_Actions.serializedObject.targetObject);
                 });
             }
             else
@@ -145,7 +145,7 @@ namespace DevionGames
                     object value = list[index];
                     list.RemoveAt(index);
                     list.Insert(index + 1, value);
-                    EditorUtility.SetDirty(this.m_Actions.serializedObject.targetObject);
+                    EditorUtility.SetDirty(m_Actions.serializedObject.targetObject);
                 });
             }
             else

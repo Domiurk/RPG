@@ -29,13 +29,13 @@ namespace DevionGames.InventorySystem
 
         public void OnEnable()
         {
-            this.m_Database = AssetDatabase.LoadAssetAtPath<ItemDatabase>(EditorPrefs.GetString("ItemDatabasePath"));
-            if (this.m_Database == null) {
+            m_Database = AssetDatabase.LoadAssetAtPath<ItemDatabase>(EditorPrefs.GetString("ItemDatabasePath"));
+            if (m_Database == null) {
                 string[] guids = AssetDatabase.FindAssets("t:ItemDatabase");
                 if (guids.Length > 0)
                 {
                     string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                    this.m_Database = AssetDatabase.LoadAssetAtPath<ItemDatabase>(path);
+                    m_Database = AssetDatabase.LoadAssetAtPath<ItemDatabase>(path);
                 }
             }
             toolbarIndex = EditorPrefs.GetInt("InventoryToolbarIndex");
@@ -46,8 +46,8 @@ namespace DevionGames.InventorySystem
 
         public void OnDisable()
         {
-            if (this.m_Database != null) {
-                EditorPrefs.SetString("ItemDatabasePath",AssetDatabase.GetAssetPath(this.m_Database));
+            if (m_Database != null) {
+                EditorPrefs.SetString("ItemDatabasePath",AssetDatabase.GetAssetPath(m_Database));
             }
             EditorPrefs.SetInt("InventoryToolbarIndex",toolbarIndex);
 
@@ -89,7 +89,7 @@ namespace DevionGames.InventorySystem
 
             SelectDatabaseButton();
            
-            if (this.m_ChildEditors != null)
+            if (m_ChildEditors != null)
                 toolbarIndex = GUILayout.Toolbar(toolbarIndex, toolbarNames, GUILayout.MinWidth(200));
 
             GUILayout.FlexibleSpace();
@@ -98,13 +98,13 @@ namespace DevionGames.InventorySystem
 
         private void SelectDatabaseButton() {
             GUIStyle buttonStyle = EditorStyles.objectField;
-            GUIContent buttonContent = new GUIContent(this.m_Database != null ? this.m_Database.name : "Null");
+            GUIContent buttonContent = new GUIContent(m_Database != null ? m_Database.name : "Null");
             Rect buttonRect = GUILayoutUtility.GetRect(180f,18f);
             if (GUI.Button(buttonRect, buttonContent, buttonStyle))
             {
                 ObjectPickerWindow.ShowWindow(buttonRect, typeof(ItemDatabase), 
-                    (UnityEngine.Object obj)=> { 
-                        this.m_Database = obj as ItemDatabase;
+                    (Object obj)=> { 
+                        m_Database = obj as ItemDatabase;
                         ResetChildEditors();
                     }, 
                     ()=> {
@@ -112,7 +112,7 @@ namespace DevionGames.InventorySystem
                         if (db != null)
                         {
                             CreateDefaultCategory(db);
-                            this.m_Database = db;
+                            m_Database = db;
                             ResetChildEditors();
                         }
                     });
@@ -133,22 +133,24 @@ namespace DevionGames.InventorySystem
 
         private void ResetChildEditors() {
 
-            if (this.m_Database != null)
+            if (m_Database != null)
             {
-                this.m_Database.items.RemoveAll(x => x == null);
-                EditorUtility.SetDirty(this.m_Database);
-                this.m_ChildEditors = new List<ICollectionEditor>();
-                this.m_ChildEditors.Add(new ItemCollectionEditor(this.m_Database, this.m_Database.items, this.m_Database.categories.Select(x => x.Name).ToList()));
-                this.m_ChildEditors.Add(new ScriptableObjectCollectionEditor<Currency>(this.m_Database, this.m_Database.currencies));
-                this.m_ChildEditors.Add(new ScriptableObjectCollectionEditor<Rarity>(this.m_Database, this.m_Database.raritys));
-                this.m_ChildEditors.Add(new ScriptableObjectCollectionEditor<Category>(this.m_Database, this.m_Database.categories));
-                this.m_ChildEditors.Add(new ScriptableObjectCollectionEditor<EquipmentRegion>(this.m_Database, this.m_Database.equipments));
-                this.m_ChildEditors.Add(new ScriptableObjectCollectionEditor<ItemGroup>(this.m_Database, this.m_Database.itemGroups));
-                this.m_ChildEditors.Add(new Configuration.ItemSettingsEditor(this.m_Database, this.m_Database.settings));
+                m_Database.items.RemoveAll(x => x == null);
+                EditorUtility.SetDirty(m_Database);
+                m_ChildEditors = new List<ICollectionEditor>{
+                    new ItemCollectionEditor(m_Database, m_Database.items,
+                                             m_Database.categories.Select(x => x.Name).ToList()),
+                    new ScriptableObjectCollectionEditor<Currency>(m_Database, m_Database.currencies),
+                    new ScriptableObjectCollectionEditor<Rarity>(m_Database, m_Database.raritys),
+                    new ScriptableObjectCollectionEditor<Category>(m_Database, m_Database.categories),
+                    new ScriptableObjectCollectionEditor<EquipmentRegion>(m_Database, m_Database.equipments),
+                    new ScriptableObjectCollectionEditor<ItemGroup>(m_Database, m_Database.itemGroups),
+                    new Configuration.ItemSettingsEditor(m_Database, m_Database.settings)
+                };
 
-                for (int i = 0; i < this.m_ChildEditors.Count; i++)
+                for (int i = 0; i < m_ChildEditors.Count; i++)
                 {
-                    this.m_ChildEditors[i].OnEnable();
+                    m_ChildEditors[i].OnEnable();
                 }
             }
         }

@@ -14,17 +14,17 @@ namespace DevionGames.StatSystem
         protected virtual void OnEnable()
         {
             if (target == null) return;
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_Callbacks = serializedObject.FindProperty("m_Callbacks");
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_Callbacks = serializedObject.FindProperty("m_Callbacks");
         }
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.m_Script);
+            EditorGUILayout.PropertyField(m_Script);
             EditorGUI.EndDisabledGroup();
 
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject, this.m_Script.propertyPath, this.m_Callbacks.propertyPath);
+            DrawPropertiesExcluding(serializedObject, m_Script.propertyPath, m_Callbacks.propertyPath);
             GUILayout.Space(5f);
             CallbackGUI();
             serializedObject.ApplyModifiedProperties();
@@ -33,14 +33,14 @@ namespace DevionGames.StatSystem
         protected void CallbackGUI()
         {
             EditorGUIUtility.wideMode = true;
-            for (int i = 0; i < this.m_Callbacks.arraySize; i++)
+            for (int i = 0; i < m_Callbacks.arraySize; i++)
             {
-                SerializedProperty action = this.m_Callbacks.GetArrayElementAtIndex(i);
+                SerializedProperty action = m_Callbacks.GetArrayElementAtIndex(i);
 
                 object value = action.GetValue();
                 EditorGUI.BeginChangeCheck();
                 Undo.RecordObject(target, "Callback");
-                if (EditorTools.Titlebar(value, ElementContextMenu(this.m_Callbacks.GetValue() as IList, i)))
+                if (EditorTools.Titlebar(value, ElementContextMenu(m_Callbacks.GetValue() as IList, i)))
                 {
                     EditorGUI.indentLevel += 1;
                     EditorGUI.BeginDisabledGroup(true);
@@ -57,7 +57,7 @@ namespace DevionGames.StatSystem
                     }
                     else
                     {
-                        foreach (var child in action.EnumerateChildProperties())
+                        foreach (SerializedProperty child in action.EnumerateChildProperties())
                         {
                             EditorGUILayout.PropertyField(
                                 child,
@@ -78,11 +78,11 @@ namespace DevionGames.StatSystem
 
         private void AddCallback(Type type)
         {
-            object value = System.Activator.CreateInstance(type);
-            this.m_Callbacks.serializedObject.Update();
-            this.m_Callbacks.arraySize++;
-            this.m_Callbacks.GetArrayElementAtIndex(this.m_Callbacks.arraySize - 1).managedReferenceValue = value;
-            this.m_Callbacks.serializedObject.ApplyModifiedProperties();
+            object value = Activator.CreateInstance(type);
+            m_Callbacks.serializedObject.Update();
+            m_Callbacks.arraySize++;
+            m_Callbacks.GetArrayElementAtIndex(m_Callbacks.arraySize - 1).managedReferenceValue = value;
+            m_Callbacks.serializedObject.ApplyModifiedProperties();
         }
 
         private void CreateCallbackScript(string scriptName)
@@ -114,7 +114,7 @@ namespace DevionGames.StatSystem
             Type elementType = list[index].GetType();
             menu.AddItem(new GUIContent("Reset"), false, delegate {
 
-                object value = System.Activator.CreateInstance(list[index].GetType());
+                object value = Activator.CreateInstance(list[index].GetType());
                 list[index] = value;
                 EditorUtility.SetDirty(target);
             });

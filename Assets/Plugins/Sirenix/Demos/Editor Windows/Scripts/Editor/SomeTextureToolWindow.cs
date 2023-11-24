@@ -3,10 +3,10 @@ namespace Sirenix.OdinInspector.Demos
 {
     using UnityEngine;
     using UnityEditor;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.OdinInspector;
+    using Editor;
+    using OdinInspector;
     using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
+    using Utilities;
 
     public class SomeTextureToolWindow : OdinEditorWindow
     {
@@ -22,7 +22,6 @@ namespace Sirenix.OdinInspector.Demos
         [FolderPath(RequireExistingPath = true)]
         public string OutputPath
         {
-            // Use EditorPrefs to hold persisntent user-variables.
             get => EditorPrefs.GetString("SomeTextureToolWindow.OutputPath");
             set => EditorPrefs.SetString("SomeTextureToolWindow.OutputPath", value);
         }

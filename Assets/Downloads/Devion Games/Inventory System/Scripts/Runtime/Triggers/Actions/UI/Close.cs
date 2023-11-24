@@ -15,10 +15,10 @@ namespace DevionGames.InventorySystem
 
         public override ActionStatus OnUpdate()
         {
-            UIWidget widget = WidgetUtility.Find<UIWidget>(this.m_WidgetName);
+            UIWidget widget = WidgetUtility.Find<UIWidget>(m_WidgetName);
             if (widget == null)
             {
-                Debug.LogWarning("Missing notification widget " + this.m_WidgetName + " in scene!");
+                Debug.LogWarning("Missing notification widget " + m_WidgetName + " in scene!");
                 return ActionStatus.Failure;
             }
             widget.Close();

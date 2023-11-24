@@ -7,12 +7,11 @@ namespace DevionGames
     [System.Serializable]
     public class Log : Action
     {
-        [SerializeField]
-        private string m_Message = string.Empty;
+        [SerializeField] private string m_Message = string.Empty;
 
         public override ActionStatus OnUpdate()
         {
-            Debug.Log(this.m_Message);
+            Debug.Log(m_Message);
             return ActionStatus.Success;
         }
     }

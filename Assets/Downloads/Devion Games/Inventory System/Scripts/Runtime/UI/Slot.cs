@@ -16,7 +16,7 @@ namespace DevionGames.InventorySystem
         /// Should the name be colored?
         /// </summary>
         [SerializeField]
-        protected bool m_UseRarityColor=false;
+        protected bool m_UseRarityColor;
 
         /// <summary>
         /// The Image to display item icon.
@@ -29,9 +29,8 @@ namespace DevionGames.InventorySystem
 		[SerializeField]
         protected Text m_Stack;
 
-        //Actions to run when the trigger is used.
         [HideInInspector]
-        public List<Restriction> restrictions = new List<Restriction>();
+        public List<Restriction> restrictions = new();
 
         private Item m_Item;
         /// <summary>
@@ -39,9 +38,9 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public Item ObservedItem
         {
-            get => this.m_Item;
+            get => m_Item;
             set {
-                this.m_Item = value;
+                m_Item = value;
                 Repaint();
             }
         }
@@ -56,8 +55,8 @@ namespace DevionGames.InventorySystem
         /// The item container that holds this slot
         /// </summary>
         public ItemContainer Container {
-            get => this.m_Container;
-            set => this.m_Container = value;
+            get => m_Container;
+            set => m_Container = value;
         }
 
         private int m_Index = -1;
@@ -65,17 +64,18 @@ namespace DevionGames.InventorySystem
         /// Index of item container
         /// </summary>
         public int Index {
-            get => this.m_Index;
-            set => this.m_Index = value;
+            get => m_Index;
+            set => m_Index = value;
         }
 
         public override string[] Callbacks {
             get
             {
-                List<string> callbacks = new List<string>();
-                callbacks.Add("OnAddItem");
-                callbacks.Add("OnRemoveItem");
-                callbacks.Add("OnUseItem");
+                List<string> callbacks = new List<string>{
+                    "OnAddItem",
+                    "OnRemoveItem",
+                    "OnUseItem"
+                };
                 return callbacks.ToArray();
             }
         }
@@ -91,7 +91,7 @@ namespace DevionGames.InventorySystem
                 }
 
             };
-            Container.OnRemoveItem += (Item item, int amount, Slot slot) => {
+            Container.OnRemoveItem += (Item item, int _, Slot slot) => {
                 if (slot == this)
                 {
                     ItemEventData eventData = new ItemEventData(item);
@@ -109,8 +109,8 @@ namespace DevionGames.InventorySystem
                 }
             };
 
-            if (this.m_Stack != null)
-                this.m_Stack.raycastTarget = false;
+            if (m_Stack != null)
+                m_Stack.raycastTarget = false;
         }
 
         /// <summary>
@@ -118,42 +118,35 @@ namespace DevionGames.InventorySystem
         /// </summary>
         public virtual void Repaint()
         {
-            if (this.m_ItemName != null){
-                //Updates the text with item name and rarity color. If this slot is empty, sets the text to empty.
-                this.m_ItemName.text = (!IsEmpty ? (this.m_UseRarityColor?UnityTools.ColorString(ObservedItem.DisplayName, ObservedItem.Rarity.Color):ObservedItem.DisplayName) : string.Empty);
+            if (m_ItemName != null){
+                m_ItemName.text = (!IsEmpty ? (m_UseRarityColor?UnityTools.ColorString(ObservedItem.DisplayName, ObservedItem.Rarity.Color):ObservedItem.DisplayName) : string.Empty);
             }
 
-            if (this.m_Ícon != null){
+            if (m_Ícon != null){
                 if (!IsEmpty){
-                    //Updates the icon and enables it.
-                    this.m_Ícon.overrideSprite = ObservedItem.Icon;
-                    this.m_Ícon.enabled = true;
+                    m_Ícon.overrideSprite = ObservedItem.Icon;
+                    m_Ícon.enabled = true;
                 }else {
-                    //If there is no item in this slot, disable icon
-                    this.m_Ícon.enabled = false;
+                    m_Ícon.enabled = false;
                 }
             }
 
-            if (this.m_Stack != null) {
+            if (m_Stack != null) {
                 if (!IsEmpty && ObservedItem.MaxStack > 1 ){
-                    //Updates the stack and enables it.
-                    this.m_Stack.text = ObservedItem.Stack.ToString();
-                    this.m_Stack.enabled = true;
+                    m_Stack.text = ObservedItem.Stack.ToString();
+                    m_Stack.enabled = true;
                 }else{
-                    //If there is no item in this slot, disable stack field
-                    this.m_Stack.enabled = false;
+                    m_Stack.enabled = false;
                 }
             }
         }
 
-        //Use the item
         public virtual void Use() {
             Container.NotifyTryUseItem(ObservedItem, this);
-            //Check if the item can be used.
+
             if (CanUse())
             {
-                //Check if there is an override item behavior on trigger.
-                if ((Trigger.currentUsedTrigger as Trigger) != null && (Trigger.currentUsedTrigger as Trigger).OverrideUse(this, ObservedItem))
+                if ((BaseTrigger.currentUsedTrigger as Trigger) != null && (BaseTrigger.currentUsedTrigger as Trigger).OverrideUse(this, ObservedItem))
                 {
                     return;
                 }
@@ -162,7 +155,7 @@ namespace DevionGames.InventorySystem
                     ObservedItem.Slot.Use();
                     return;
                 }
-                //Try to move item
+
                 if (!MoveItem())
                 {
                     Debug.Log("use");
@@ -172,7 +165,6 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        //Checks if we can use the item in this slot
         public virtual bool CanUse() {
             return true;
         }
@@ -201,8 +193,6 @@ namespace DevionGames.InventorySystem
                     if (moveToContainer.CanAddItem(ObservedItem) && moveToContainer.StackOrAdd(ObservedItem))
                     {
                         if (!moveToContainer.UseReferences || !Container.CanReferenceItems){
-                           // Debug.Log("Move Item from "+Container.Name+" to "+moveToContainer.Name);
-
                             if (!moveToContainer.CanReferenceItems)
                             {
                                 ItemContainer.RemoveItemReferences(ObservedItem);

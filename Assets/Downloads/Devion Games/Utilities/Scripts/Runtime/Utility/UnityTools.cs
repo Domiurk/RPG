@@ -136,14 +136,11 @@ namespace DevionGames
         {
             int index = source.IndexOf(oldString, StringComparison.CurrentCultureIgnoreCase);
 
-            // Determine if we found a match
             bool MatchFound = index >= 0;
 
             if(MatchFound){
-                // Remove the old text
                 source = source.Remove(index, oldString.Length);
 
-                // Add the replacemenet text
                 source = source.Insert(index, newString);
             }
 

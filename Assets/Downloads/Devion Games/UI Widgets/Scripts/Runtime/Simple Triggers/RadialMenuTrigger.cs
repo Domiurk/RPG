@@ -10,11 +10,11 @@ public class RadialMenuTrigger : MonoBehaviour, IPointerDownHandler
 
     private void Start()
     {
-        this.m_RadialMenu = WidgetUtility.Find<RadialMenu>("RadialMenu");
+        m_RadialMenu = WidgetUtility.Find<RadialMenu>("RadialMenu");
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        this.m_RadialMenu.Show(gameObject, menuIcons, index => { Debug.Log($"Used index{index}"); });
+        m_RadialMenu.Show(gameObject, menuIcons, index => { Debug.Log($"Used index{index}"); });
     }
 }

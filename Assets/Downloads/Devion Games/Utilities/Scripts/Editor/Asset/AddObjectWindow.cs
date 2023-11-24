@@ -124,7 +124,7 @@ namespace DevionGames
                                            : new Color(0, 0, 0, 0.0f));
                 m_Styles.elementButton.normal.textColor =
                     (rect.Contains(Event.current.mousePosition) ? Color.white : textColor);
-                Texture2D icon = null; //(Texture2D)EditorGUIUtility.ObjectContent(null, element.type).image;
+                Texture2D icon = null;
 
                 if(element.type != null){
                     icon = EditorGUIUtility.FindTexture("cs Script Icon");
@@ -183,9 +183,9 @@ namespace DevionGames
 
         public static bool IsAssignableToGenericType(Type givenType, Type genericType)
         {
-            var interfaceTypes = givenType.GetInterfaces();
+            Type[] interfaceTypes = givenType.GetInterfaces();
 
-            foreach(var it in interfaceTypes){
+            foreach(Type it in interfaceTypes){
                 if(it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
                     return true;
             }
@@ -210,7 +210,6 @@ namespace DevionGames
                                                     m_Type.IsAssignableFrom(type)) && !type.IsAbstract &&
                                                    !type.HasAttribute(typeof(ExcludeFromCreation)))
                                     .ToArray();
-            // Type[] types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).Where(c => c.GetType().GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == this.m_Type)).ToArray();
             types = types.OrderBy(x => x.BaseType.Name).ToArray();
 
             foreach(Type type in types){
@@ -361,7 +360,7 @@ namespace DevionGames
             public Element parent;
             public System.Action onGUI;
 
-            private string m_Path;
+            private readonly string m_Path;
 
             public string path => m_Path;
 
@@ -430,11 +429,11 @@ namespace DevionGames
 
         private class Styles
         {
-            public GUIStyle header = new GUIStyle("DD HeaderStyle");
-            public GUIStyle rightArrow = "AC RightArrow";
-            public GUIStyle leftArrow = "AC LeftArrow";
-            public GUIStyle elementButton = new GUIStyle("MeTransitionSelectHead");
-            public GUIStyle background = "grey_border";
+            public readonly GUIStyle header = new("DD HeaderStyle");
+            public readonly GUIStyle rightArrow = "AC RightArrow";
+            public readonly GUIStyle leftArrow = "AC LeftArrow";
+            public readonly GUIStyle elementButton = new("MeTransitionSelectHead");
+            public readonly GUIStyle background = "grey_border";
 
             public Styles()
             {

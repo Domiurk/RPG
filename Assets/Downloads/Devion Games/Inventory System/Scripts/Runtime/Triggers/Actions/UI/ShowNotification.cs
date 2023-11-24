@@ -12,17 +12,17 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         private string m_WidgetName = "Notification";
         [SerializeField]
-        private NotificationOptions m_Notification = null;
+        private NotificationOptions m_Notification;
 
         public override ActionStatus OnUpdate()
         {
-            Notification widget = WidgetUtility.Find<Notification>(this.m_WidgetName);
+            Notification widget = WidgetUtility.Find<Notification>(m_WidgetName);
             if (widget == null)
             {
-                Debug.LogWarning("Missing notification widget " + this.m_WidgetName + " in scene!");
+                Debug.LogWarning("Missing notification widget " + m_WidgetName + " in scene!");
                 return ActionStatus.Failure;
             }
-            return widget.AddItem(this.m_Notification)?ActionStatus.Success:ActionStatus.Failure;
+            return widget.AddItem(m_Notification)?ActionStatus.Success:ActionStatus.Failure;
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿#if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.OdinInspector.Editor.ActionResolvers;
-    using Sirenix.OdinInspector.Editor.ValueResolvers;
+    using Editor;
+    using Editor.ActionResolvers;
+    using Editor.ValueResolvers;
     using Sirenix.Utilities.Editor;
     using System;
     using UnityEngine;
@@ -11,11 +11,11 @@ namespace Sirenix.OdinInspector.Demos
 #if UNITY_EDITOR
 
 #endif
-    // Example demonstrating how reflection can be used to enhance custom drawers.
+
     [TypeInfoBox(
-            "This example demonstrates how resolved strings can be used to extend the behaviour of drawers.\n\n" +
-            "In this case, a user can use a resolved string to pass a value to a drawer or specify an action to be invoked from the drawer. Note how little drawer code this needs, compared to the Reflection Example.\n\n" +
-            "Resolved strings can be hardcoded (if the resolved type is a string), or member references, or expressions, and are globally extendable, so users can add their own string resolution behaviour.")]
+                    "This example demonstrates how resolved strings can be used to extend the behaviour of drawers.\n\n" +
+                    "In this case, a user can use a resolved string to pass a value to a drawer or specify an action to be invoked from the drawer. Note how little drawer code this needs, compared to the Reflection Example.\n\n" +
+                    "Resolved strings can be hardcoded (if the resolved type is a string), or member references, or expressions, and are globally extendable, so users can add their own string resolution behaviour.")]
     public class ValueAndActionResolversExample : MonoBehaviour
     {
         [Title("Action resolvers")]
@@ -49,7 +49,6 @@ namespace Sirenix.OdinInspector.Demos
 #endif
     }
 
-    // Attribute with resolved action string.
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class OnClickActionAttribute : Attribute
     {
@@ -57,11 +56,10 @@ namespace Sirenix.OdinInspector.Demos
 
         public OnClickActionAttribute(string actionString)
         {
-            this.ActionString = actionString;
+            ActionString = actionString;
         }
     }
 
-    // Attribute with resolved value string.
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class DisplayValueAsStringAttribute : Attribute
     {
@@ -69,7 +67,7 @@ namespace Sirenix.OdinInspector.Demos
 
         public DisplayValueAsStringAttribute(string valueString)
         {
-            this.ValueString = valueString;
+            ValueString = valueString;
         }
     }
 
@@ -81,23 +79,22 @@ namespace Sirenix.OdinInspector.Demos
 
         protected override void Initialize()
         {
-            this.action = ActionResolver.Get(this.Property, this.Attribute.ActionString);
+            action = ActionResolver.Get(Property, Attribute.ActionString);
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            if (this.action.HasError)
+            if (action.HasError)
             {
-                this.action.DrawError();
+                action.DrawError();
             }
 
-            if (GUILayout.Button("Execute Action '" + this.Attribute.ActionString + "'"))
+            if (GUILayout.Button("Execute Action '" + Attribute.ActionString + "'"))
             {
-                // If there is an error, this does nothing
-                this.action.DoActionForAllSelectionIndices();
+                action.DoActionForAllSelectionIndices();
             }
 
-            this.CallNextDrawer(label);
+            CallNextDrawer(label);
         }
     }
 
@@ -107,23 +104,23 @@ namespace Sirenix.OdinInspector.Demos
 
         protected override void Initialize()
         {
-            this.valueResolver = ValueResolver.Get<object>(this.Property, this.Attribute.ValueString);
+            valueResolver = ValueResolver.Get<object>(Property, Attribute.ValueString);
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            if (this.valueResolver.HasError)
+            if (valueResolver.HasError)
             {
-                this.valueResolver.DrawError();
+                valueResolver.DrawError();
             }
             else
             {
-                var value = this.valueResolver.GetValue();
+                object value = valueResolver.GetValue();
                 string valueStr = value == null ? "Null" : value.ToString();
-                GUILayout.Label("Value of '" + this.Attribute.ValueString + "': " + valueStr);
+                GUILayout.Label("Value of '" + Attribute.ValueString + "': " + valueStr);
             }
 
-            this.CallNextDrawer(label);
+            CallNextDrawer(label);
         }
     }
 #endif

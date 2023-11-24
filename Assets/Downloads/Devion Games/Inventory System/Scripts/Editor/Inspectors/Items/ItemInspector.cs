@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.AnimatedValues;
 using System;
 using UnityEditorInternal;
-using UnityEngine.Events;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
@@ -20,8 +19,6 @@ namespace DevionGames.InventorySystem
         protected SerializedProperty m_Icon;
         protected SerializedProperty m_Prefab;
         protected SerializedProperty m_Description;
-       // protected SerializedProperty m_Rarity;
-        //protected SerializedProperty m_PossibleRarity;
         protected SerializedProperty m_Category;
         protected SerializedProperty m_BuyPrice;
         protected SerializedProperty m_BuyCurrency;
@@ -55,7 +52,7 @@ namespace DevionGames.InventorySystem
 
         protected ReorderableList m_PropertyList;
         protected ReorderableList m_IngredientList;
-        protected static List<ObjectProperty> copy = new List<ObjectProperty> ();
+        protected static readonly List<ObjectProperty> copy = new();
 
 
         protected SerializedProperty m_Script;
@@ -70,53 +67,50 @@ namespace DevionGames.InventorySystem
             if (target == null)
                 return;
 
-            this.m_DrawInspectors = new List<System.Action>();
+            m_DrawInspectors = new List<System.Action>();
             m_ClassProperties = new Dictionary<Type, string[]>();
 
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_ItemName = serializedObject.FindProperty("m_ItemName");
-            this.m_ItemDisplayName = serializedObject.FindProperty("m_DisplayName");
-            this.m_UseItemNameAsDisplayName = serializedObject.FindProperty("m_UseItemNameAsDisplayName");
-            this.m_ShowItemDisplayNameOptions = new AnimBool(!this.m_UseItemNameAsDisplayName.boolValue);
-            this.m_ShowItemDisplayNameOptions.valueChanged.AddListener(new UnityAction(Repaint));
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_ItemName = serializedObject.FindProperty("m_ItemName");
+            m_ItemDisplayName = serializedObject.FindProperty("m_DisplayName");
+            m_UseItemNameAsDisplayName = serializedObject.FindProperty("m_UseItemNameAsDisplayName");
+            m_ShowItemDisplayNameOptions = new AnimBool(!m_UseItemNameAsDisplayName.boolValue);
+            m_ShowItemDisplayNameOptions.valueChanged.AddListener(Repaint);
 
-            this.m_Icon = serializedObject.FindProperty("m_Icon");
-            this.m_Prefab = serializedObject.FindProperty("m_Prefab");
-            this.m_Description = serializedObject.FindProperty("m_Description");
+            m_Icon = serializedObject.FindProperty("m_Icon");
+            m_Prefab = serializedObject.FindProperty("m_Prefab");
+            m_Description = serializedObject.FindProperty("m_Description");
 
-            //this.m_Rarity = serializedObject.FindProperty("m_Rarity");
-            //this.m_PossibleRarity = serializedObject.FindProperty("m_PossibleRarity");
-
-            this.m_Category = serializedObject.FindProperty("m_Category");
+            m_Category = serializedObject.FindProperty("m_Category");
 
             #region BuySell
-            this.m_IsSellable = serializedObject.FindProperty("m_IsSellable");
-            this.m_ShowSellOptions = new AnimBool(this.m_IsSellable.boolValue);
-            this.m_ShowSellOptions.valueChanged.AddListener(new UnityAction(Repaint));
-            this.m_CanBuyBack = serializedObject.FindProperty("m_CanBuyBack");
-            this.m_BuyPrice = serializedObject.FindProperty("m_BuyPrice");
-            this.m_BuyCurrency = serializedObject.FindProperty("m_BuyCurrency");
-            this.m_SellPrice = serializedObject.FindProperty("m_SellPrice");
-            this.m_SellCurrency = serializedObject.FindProperty("m_SellCurrency");
+            m_IsSellable = serializedObject.FindProperty("m_IsSellable");
+            m_ShowSellOptions = new AnimBool(m_IsSellable.boolValue);
+            m_ShowSellOptions.valueChanged.AddListener(Repaint);
+            m_CanBuyBack = serializedObject.FindProperty("m_CanBuyBack");
+            m_BuyPrice = serializedObject.FindProperty("m_BuyPrice");
+            m_BuyCurrency = serializedObject.FindProperty("m_BuyCurrency");
+            m_SellPrice = serializedObject.FindProperty("m_SellPrice");
+            m_SellCurrency = serializedObject.FindProperty("m_SellCurrency");
             #endregion
 
-            this.m_Stack = serializedObject.FindProperty("m_Stack");
-            this.m_MaxStack = serializedObject.FindProperty("m_MaxStack");
+            m_Stack = serializedObject.FindProperty("m_Stack");
+            m_MaxStack = serializedObject.FindProperty("m_MaxStack");
 
             #region Drop
-            this.m_IsDroppable = serializedObject.FindProperty("m_IsDroppable");
-            this.m_DropSound = serializedObject.FindProperty("m_DropSound");
-            this.m_OverridePrefab = serializedObject.FindProperty("m_OverridePrefab");
-            this.m_IsDroppable = serializedObject.FindProperty("m_IsDroppable");
-            this.m_ShowDropOptions = new AnimBool(this.m_IsDroppable.boolValue);
-            this.m_ShowDropOptions.valueChanged.AddListener(new UnityAction(Repaint));
+            m_IsDroppable = serializedObject.FindProperty("m_IsDroppable");
+            m_DropSound = serializedObject.FindProperty("m_DropSound");
+            m_OverridePrefab = serializedObject.FindProperty("m_OverridePrefab");
+            m_IsDroppable = serializedObject.FindProperty("m_IsDroppable");
+            m_ShowDropOptions = new AnimBool(m_IsDroppable.boolValue);
+            m_ShowDropOptions.valueChanged.AddListener(Repaint);
             #endregion
 
-            this.m_Properties = serializedObject.FindProperty("properties");
+            m_Properties = serializedObject.FindProperty("properties");
 
-            this.m_PropertyList = new ReorderableList (serializedObject,this.m_Properties, true, true, true, true);
-			this.m_PropertyList.elementHeight = (EditorGUIUtility.singleLineHeight + 4f) * 3;
-			this.m_PropertyList.drawHeaderCallback = (Rect rect) => {  
+            m_PropertyList = new ReorderableList (serializedObject,m_Properties, true, true, true, true);
+			m_PropertyList.elementHeight = (EditorGUIUtility.singleLineHeight + 4f) * 3;
+			m_PropertyList.drawHeaderCallback = (Rect rect) => {  
 				EditorGUI.LabelField (rect, "Item Properties");
 				Event ev = Event.current;
 				if (ev.type == EventType.MouseDown && ev.button == 1 && rect.Contains (ev.mousePosition)) {
@@ -144,9 +138,9 @@ namespace DevionGames.InventorySystem
 				}
 			};
 			
-			this.m_PropertyList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+			m_PropertyList.drawElementCallback = (Rect rect, int index, bool _, bool _) => {
 				Rect mRect = new Rect (rect);
-				var element = m_PropertyList.serializedProperty.GetArrayElementAtIndex (index);
+				SerializedProperty element = m_PropertyList.serializedProperty.GetArrayElementAtIndex (index);
 				rect.y += 2;
 				rect.height = EditorGUIUtility.singleLineHeight;
 				rect.width -= 17;
@@ -159,7 +153,7 @@ namespace DevionGames.InventorySystem
 				rect.width += 17;
 				rect.y += EditorGUIUtility.singleLineHeight + 2;
 				float width = rect.width;
-				rect.width = EditorGUIUtility.labelWidth - 2f;//148f;
+				rect.width = EditorGUIUtility.labelWidth - 2f;
 				SerializedProperty typeIndex = element.FindPropertyRelative ("typeIndex");
 				typeIndex.intValue = EditorGUI.Popup (rect, typeIndex.intValue, ObjectProperty.DisplayNames);
 				rect.x += rect.width + 2f;
@@ -174,27 +168,27 @@ namespace DevionGames.InventorySystem
 
 
             #region Crafting
-            this.m_IsCraftable = serializedObject.FindProperty("m_IsCraftable");
-            this.m_CraftingDuration = serializedObject.FindProperty("m_CraftingDuration");
-            this.m_CraftingAnimatorState = serializedObject.FindProperty("m_CraftingAnimatorState");
+            m_IsCraftable = serializedObject.FindProperty("m_IsCraftable");
+            m_CraftingDuration = serializedObject.FindProperty("m_CraftingDuration");
+            m_CraftingAnimatorState = serializedObject.FindProperty("m_CraftingAnimatorState");
  
-            this.m_ShowCraftOptions = new AnimBool(this.m_IsCraftable.boolValue);
-            this.m_ShowCraftOptions.valueChanged.AddListener(new UnityAction(Repaint));
+            m_ShowCraftOptions = new AnimBool(m_IsCraftable.boolValue);
+            m_ShowCraftOptions.valueChanged.AddListener(Repaint);
 
-            this.m_UseCraftingSkill = serializedObject.FindProperty("m_UseCraftingSkill");
-            this.m_ShowSkillOptions = new AnimBool(this.m_UseCraftingSkill.boolValue);
-            this.m_SkillWindow = serializedObject.FindProperty("m_SkillWindow");
-            this.m_CraftingSkill = serializedObject.FindProperty("m_CraftingSkill");
-            this.m_MinCraftingSkillValue = serializedObject.FindProperty("m_MinCraftingSkillValue");
-            this.m_RemoveIngredientsWhenFailed = serializedObject.FindProperty("m_RemoveIngredientsWhenFailed");
+            m_UseCraftingSkill = serializedObject.FindProperty("m_UseCraftingSkill");
+            m_ShowSkillOptions = new AnimBool(m_UseCraftingSkill.boolValue);
+            m_SkillWindow = serializedObject.FindProperty("m_SkillWindow");
+            m_CraftingSkill = serializedObject.FindProperty("m_CraftingSkill");
+            m_MinCraftingSkillValue = serializedObject.FindProperty("m_MinCraftingSkillValue");
+            m_RemoveIngredientsWhenFailed = serializedObject.FindProperty("m_RemoveIngredientsWhenFailed");
 
-            this.m_CraftingModifier = serializedObject.FindProperty("m_CraftingModifier");
-            CreateModifierList("Crafting Item Modifers", serializedObject, this.m_CraftingModifier);
+            m_CraftingModifier = serializedObject.FindProperty("m_CraftingModifier");
+            CreateModifierList("Crafting Item Modifers", serializedObject, m_CraftingModifier);
 
-            this.m_Ingredients = serializedObject.FindProperty("ingredients");
-            this.m_IngredientList = new ReorderableList(serializedObject, this.m_Ingredients, true, true, true, true);
-            this.m_IngredientList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
-                var element = this.m_IngredientList.serializedProperty.GetArrayElementAtIndex(index);
+            m_Ingredients = serializedObject.FindProperty("ingredients");
+            m_IngredientList = new ReorderableList(serializedObject, m_Ingredients, true, true, true, true);
+            m_IngredientList.drawElementCallback = (Rect rect, int index, bool _, bool _) => {
+                SerializedProperty element = m_IngredientList.serializedProperty.GetArrayElementAtIndex(index);
                 SerializedProperty itemProperty = element.FindPropertyRelative("item");
                 rect.y += 2;
                 rect.height = EditorGUIUtility.singleLineHeight;
@@ -206,42 +200,42 @@ namespace DevionGames.InventorySystem
                 EditorGUI.PropertyField(rect, amount, GUIContent.none);
                 amount.intValue = Mathf.Clamp(amount.intValue, 1, int.MaxValue);
             };
-            this.m_IngredientList.drawHeaderCallback = (Rect rect) => {
+            m_IngredientList.drawHeaderCallback = (Rect rect) => {
                 EditorGUI.LabelField(rect, "Ingredients (Item, Amount)");
             };
             #endregion
 
             List<string> propertiesToExclude = new List<string>() {
-                this.m_Script.propertyPath,
-                this.m_ItemName.propertyPath,
-                this.m_ItemDisplayName.propertyPath,
-                this.m_UseItemNameAsDisplayName.propertyPath,
-                this.m_Icon.propertyPath,
-                this.m_Prefab.propertyPath,
-                this.m_Description.propertyPath,
-                this.m_Category.propertyPath,
-                this.m_BuyPrice.propertyPath,
-                this.m_BuyCurrency.propertyPath,
-                this.m_SellPrice.propertyPath,
-                this.m_SellCurrency.propertyPath,
-                this.m_Stack.propertyPath,
-                this.m_MaxStack.propertyPath,
-                this.m_IsDroppable.propertyPath,
-                this.m_DropSound.propertyPath,
-                this.m_OverridePrefab.propertyPath,
-                this.m_IsCraftable.propertyPath,
-                this.m_CraftingDuration.propertyPath,
-                this.m_CraftingAnimatorState.propertyPath,
-                this.m_Ingredients.propertyPath,
-                this.m_Properties.propertyPath,
-                this.m_IsSellable.propertyPath,
-                this.m_CraftingModifier.propertyPath,
-                this.m_CraftingSkill.propertyPath,
-                this.m_UseCraftingSkill.propertyPath,
-                this.m_SkillWindow.propertyPath,
-                this.m_RemoveIngredientsWhenFailed.propertyPath,
-                this.m_MinCraftingSkillValue.propertyPath,
-                this.m_CanBuyBack.propertyPath,
+                m_Script.propertyPath,
+                m_ItemName.propertyPath,
+                m_ItemDisplayName.propertyPath,
+                m_UseItemNameAsDisplayName.propertyPath,
+                m_Icon.propertyPath,
+                m_Prefab.propertyPath,
+                m_Description.propertyPath,
+                m_Category.propertyPath,
+                m_BuyPrice.propertyPath,
+                m_BuyCurrency.propertyPath,
+                m_SellPrice.propertyPath,
+                m_SellCurrency.propertyPath,
+                m_Stack.propertyPath,
+                m_MaxStack.propertyPath,
+                m_IsDroppable.propertyPath,
+                m_DropSound.propertyPath,
+                m_OverridePrefab.propertyPath,
+                m_IsCraftable.propertyPath,
+                m_CraftingDuration.propertyPath,
+                m_CraftingAnimatorState.propertyPath,
+                m_Ingredients.propertyPath,
+                m_Properties.propertyPath,
+                m_IsSellable.propertyPath,
+                m_CraftingModifier.propertyPath,
+                m_CraftingSkill.propertyPath,
+                m_UseCraftingSkill.propertyPath,
+                m_SkillWindow.propertyPath,
+                m_RemoveIngredientsWhenFailed.propertyPath,
+                m_MinCraftingSkillValue.propertyPath,
+                m_CanBuyBack.propertyPath,
             };
 
 
@@ -253,9 +247,9 @@ namespace DevionGames.InventorySystem
                 Type inspectedType = typeof(CustomEditor).GetField("m_InspectedType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(subInspectors[i].GetCustomAttribute<CustomEditor>()) as Type;
                 FieldInfo[] fields = inspectedType.GetAllSerializedFields().Where(x => !x.HasAttribute(typeof(HideInInspector))).ToArray();
                 string[] classProperties = fields.Where(x => x.DeclaringType == inspectedType).Select(x => x.Name).ToArray();
-                if (!this.m_ClassProperties.ContainsKey(inspectedType))
+                if (!m_ClassProperties.ContainsKey(inspectedType))
                 {
-                    this.m_ClassProperties.Add(inspectedType, classProperties);
+                    m_ClassProperties.Add(inspectedType, classProperties);
                 }
                 propertiesToExclude.AddRange(classProperties);
                 if (method != null)
@@ -275,7 +269,7 @@ namespace DevionGames.InventorySystem
                 }
             }
             
-            this.m_PropertiesToExcludeForChildClasses = propertiesToExclude.ToArray();
+            m_PropertiesToExcludeForChildClasses = propertiesToExclude.ToArray();
         }
 
         protected virtual void OnDisable() { }
@@ -287,96 +281,96 @@ namespace DevionGames.InventorySystem
             DrawBaseInspector();
             for (int i = 0; i < m_DrawInspectors.Count; i++)
             {
-               this.m_DrawInspectors[i].Invoke();
+               m_DrawInspectors[i].Invoke();
             }
-            DrawPropertiesExcluding(serializedObject, this.m_PropertiesToExcludeForChildClasses);
+            DrawPropertiesExcluding(serializedObject, m_PropertiesToExcludeForChildClasses);
             serializedObject.ApplyModifiedProperties();
         }
 
         protected void DrawBaseInspector() {
-            EditorGUILayout.PropertyField(this.m_ItemName, new GUIContent("Name"));
+            EditorGUILayout.PropertyField(m_ItemName, new GUIContent("Name"));
 
-            EditorGUILayout.PropertyField(this.m_UseItemNameAsDisplayName, new GUIContent("Use name as display name"));
-            this.m_ShowItemDisplayNameOptions.target = !this.m_UseItemNameAsDisplayName.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowItemDisplayNameOptions.faded))
+            EditorGUILayout.PropertyField(m_UseItemNameAsDisplayName, new GUIContent("Use name as display name"));
+            m_ShowItemDisplayNameOptions.target = !m_UseItemNameAsDisplayName.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowItemDisplayNameOptions.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_ItemDisplayName);
+                EditorGUILayout.PropertyField(m_ItemDisplayName);
                 EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
             }
             EditorGUILayout.EndFadeGroup();
 
-            EditorGUILayout.PropertyField(this.m_Icon);
+            EditorGUILayout.PropertyField(m_Icon);
             GUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(this.m_Prefab);
-            SetupPrefab(this.m_Prefab);
+            EditorGUILayout.PropertyField(m_Prefab);
+            SetupPrefab(m_Prefab);
             GUILayout.EndHorizontal();
-            EditorGUILayout.PropertyField(this.m_Description);
+            EditorGUILayout.PropertyField(m_Description);
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Properties:", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox("Properties can be used to define item specific information like stats or any custom information you want to change and save at runtime.", MessageType.Info);
-            this.m_PropertyList.elementHeight = this.m_PropertyList.count == 0 ? (EditorGUIUtility.singleLineHeight + 4f) : (EditorGUIUtility.singleLineHeight + 4f) * 3;
-            this.m_PropertyList.DoLayoutList();
+            m_PropertyList.elementHeight = m_PropertyList.count == 0 ? (EditorGUIUtility.singleLineHeight + 4f) : (EditorGUIUtility.singleLineHeight + 4f) * 3;
+            m_PropertyList.DoLayoutList();
 
-            EditorGUILayout.PropertyField(this.m_Category);
+            EditorGUILayout.PropertyField(m_Category);
 
 
-            EditorGUILayout.PropertyField(this.m_IsSellable);
-            this.m_ShowSellOptions.target = this.m_IsSellable.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowSellOptions.faded))
+            EditorGUILayout.PropertyField(m_IsSellable);
+            m_ShowSellOptions.target = m_IsSellable.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowSellOptions.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_CanBuyBack);
+                EditorGUILayout.PropertyField(m_CanBuyBack);
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(this.m_BuyPrice);
-                EditorGUILayout.PropertyField(this.m_BuyCurrency, GUIContent.none);
+                EditorGUILayout.PropertyField(m_BuyPrice);
+                EditorGUILayout.PropertyField(m_BuyCurrency, GUIContent.none);
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(this.m_SellPrice);
-                EditorGUILayout.PropertyField(this.m_SellCurrency, GUIContent.none);
+                EditorGUILayout.PropertyField(m_SellPrice);
+                EditorGUILayout.PropertyField(m_SellCurrency, GUIContent.none);
                 EditorGUILayout.EndHorizontal();
                 EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
             }
             EditorGUILayout.EndFadeGroup();
 
-            EditorGUILayout.PropertyField(this.m_Stack);
-            if (this.m_MaxStack.intValue == 0)
+            EditorGUILayout.PropertyField(m_Stack);
+            if (m_MaxStack.intValue == 0)
             {
                 EditorGUILayout.HelpBox("Maximum stack of 0 ~ unlimited", MessageType.Info);
             }
-            EditorGUILayout.PropertyField(this.m_MaxStack);
+            EditorGUILayout.PropertyField(m_MaxStack);
 
 
-            EditorGUILayout.PropertyField(this.m_IsDroppable);
-            this.m_ShowDropOptions.target = this.m_IsDroppable.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowDropOptions.faded))
+            EditorGUILayout.PropertyField(m_IsDroppable);
+            m_ShowDropOptions.target = m_IsDroppable.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowDropOptions.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_OverridePrefab);
-                EditorGUILayout.PropertyField(this.m_DropSound);
+                EditorGUILayout.PropertyField(m_OverridePrefab);
+                EditorGUILayout.PropertyField(m_DropSound);
                 EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
             }
             EditorGUILayout.EndFadeGroup();
 
-            EditorGUILayout.PropertyField(this.m_IsCraftable);
-            this.m_ShowCraftOptions.target = this.m_IsCraftable.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowCraftOptions.faded))
+            EditorGUILayout.PropertyField(m_IsCraftable);
+            m_ShowCraftOptions.target = m_IsCraftable.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowCraftOptions.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_CraftingDuration);
-                EditorGUILayout.PropertyField(this.m_CraftingAnimatorState);
+                EditorGUILayout.PropertyField(m_CraftingDuration);
+                EditorGUILayout.PropertyField(m_CraftingAnimatorState);
 
-                EditorGUILayout.PropertyField(this.m_UseCraftingSkill);
-                this.m_ShowSkillOptions.target = this.m_UseCraftingSkill.boolValue;
-                if (EditorGUILayout.BeginFadeGroup(this.m_ShowSkillOptions.faded))
+                EditorGUILayout.PropertyField(m_UseCraftingSkill);
+                m_ShowSkillOptions.target = m_UseCraftingSkill.boolValue;
+                if (EditorGUILayout.BeginFadeGroup(m_ShowSkillOptions.faded))
                 {
                     EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                    EditorGUILayout.PropertyField(this.m_SkillWindow);
-                    EditorGUILayout.PropertyField(this.m_CraftingSkill, new GUIContent("Skill"));
-                    EditorGUILayout.PropertyField(this.m_MinCraftingSkillValue, new GUIContent("Min Skill Value"));
-                    EditorGUILayout.PropertyField(this.m_RemoveIngredientsWhenFailed);
+                    EditorGUILayout.PropertyField(m_SkillWindow);
+                    EditorGUILayout.PropertyField(m_CraftingSkill, new GUIContent("Skill"));
+                    EditorGUILayout.PropertyField(m_MinCraftingSkillValue, new GUIContent("Min Skill Value"));
+                    EditorGUILayout.PropertyField(m_RemoveIngredientsWhenFailed);
                     EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
                 }
                 EditorGUILayout.EndFadeGroup();
@@ -387,10 +381,10 @@ namespace DevionGames.InventorySystem
                 GUILayout.Space(16f);
                 GUILayout.BeginVertical();
                 EditorGUILayout.HelpBox("Crafting item modifiers can be used to randomize the item when crafting.", MessageType.Info);
-                this.m_CraftingModifierList.DoLayoutList();
+                m_CraftingModifierList.DoLayoutList();
                 EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("Required ingredients to craft this item.", MessageType.Info);
-                this.m_IngredientList.DoLayoutList();
+                m_IngredientList.DoLayoutList();
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
             }
@@ -399,19 +393,19 @@ namespace DevionGames.InventorySystem
 
 
         protected virtual void DrawBuySellGUI() {
-            EditorGUILayout.PropertyField(this.m_IsSellable);
-            this.m_ShowSellOptions.target = this.m_IsSellable.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowSellOptions.faded))
+            EditorGUILayout.PropertyField(m_IsSellable);
+            m_ShowSellOptions.target = m_IsSellable.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowSellOptions.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(this.m_BuyPrice);
-                EditorGUILayout.PropertyField(this.m_BuyCurrency, GUIContent.none);
+                EditorGUILayout.PropertyField(m_BuyPrice);
+                EditorGUILayout.PropertyField(m_BuyCurrency, GUIContent.none);
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(this.m_SellPrice);
-                EditorGUILayout.PropertyField(this.m_SellCurrency, GUIContent.none);
+                EditorGUILayout.PropertyField(m_SellPrice);
+                EditorGUILayout.PropertyField(m_SellCurrency, GUIContent.none);
                 EditorGUILayout.EndHorizontal();
                 EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
             }
@@ -421,112 +415,30 @@ namespace DevionGames.InventorySystem
         private void CreateModifierList(string title, SerializedObject serializedObject, SerializedProperty property)
         {
 
-            this.m_CraftingModifierList = new ReorderableList(serializedObject, property.FindPropertyRelative("modifiers"), true, true, true, true);
-            this.m_CraftingModifierList.drawHeaderCallback = (Rect rect) => {
+            m_CraftingModifierList = new ReorderableList(serializedObject, property.FindPropertyRelative("modifiers"), true, true, true, true);
+            m_CraftingModifierList.drawHeaderCallback = (Rect rect) => {
                 EditorGUI.LabelField(rect, title);
             };
-            this.m_CraftingModifierList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_CraftingModifierList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 float verticalOffset = (rect.height - EditorGUIUtility.singleLineHeight) * 0.5f;
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;
-                SerializedProperty element = this.m_CraftingModifierList.serializedProperty.GetArrayElementAtIndex(index);
+                SerializedProperty element = m_CraftingModifierList.serializedProperty.GetArrayElementAtIndex(index);
                 EditorGUI.PropertyField(rect, element, GUIContent.none, true);
             };
 
-            this.m_CraftingModifierList.onRemoveCallback = (ReorderableList list) =>
+            m_CraftingModifierList.onRemoveCallback = (ReorderableList list) =>
             {
                 list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue = null;
                 ReorderableList.defaultBehaviours.DoRemoveButton(list);
             };
         }
 
-        /*private List<int> selectedRarity;
-
-        void OnRaritySelected(object index)
-        {
-            var intIndex = (int)index;
-
-            if (selectedRarity.Contains(intIndex))
-            {
-                selectedRarity.Remove(intIndex);
-            }
-            else
-            {
-                selectedRarity.Add(intIndex);
-            }     
-        }
-
-        private Rarity[] DrawRaritySelector(Rarity[] current, Rarity[] options)
-        {
-
-            if (selectedRarity == null)
-            {
-                selectedRarity = new List<int>();
-                for (int i = 0; i < current.Length; i++)
-                {
-                    int index = Array.IndexOf(options,current[i]);
-                    if (index != -1)
-                    {
-                        selectedRarity.Add(index);
-                    }
-                }
-            }
-
-
-            string selectedButton= string.Empty;
-
-            if (selectedRarity.Count == 0) {
-                selectedButton = "None";
-            }
-            else{
-                selectedButton=string.Join("; ", current.Select(x => x.Name));
-            }
-
-            if (GUILayout.Button(selectedButton, EditorStyles.popup))
-            {
-                var selectedMenu = new GenericMenu();
-
-                for (var i = 0; i < options.Length; i++)
-                {
-                    var menuString = options[i].Name;
-                    var isSelected = selectedRarity.Contains(i);
-                    selectedMenu.AddItem(new GUIContent(menuString), isSelected, OnRaritySelected, i);
-                }
-
-                selectedMenu.ShowAsContext();
-            }
-
-            List<Rarity> selected = new List<Rarity>();
-            for (int i = 0; i < selectedRarity.Count; i++)
-            {
-                selected.Add(InventorySystemEditor.Database.raritys[selectedRarity[i]]);
-            }
-            return selected.ToArray();
-        }*/
-
-        /*protected void DrawClassPropertiesExcluding(params string[] propertyToExclude)
-        {
-            string[] propertiesToDraw = new string[0];
-            if (this.m_ClassProperties.TryGetValue(target.GetType(), out propertiesToDraw))
-            {
-
-                for (int i = 0; i < propertiesToDraw.Length; i++)
-                {
-                    if (!propertyToExclude.Contains(propertiesToDraw[i]))
-                    {
-                        SerializedProperty property = serializedObject.FindProperty(propertiesToDraw[i]);
-                        EditorGUILayout.PropertyField(property);
-                    }
-
-                }
-            }
-        }*/
-
         protected void ScriptGUI()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.m_Script);
+            EditorGUILayout.PropertyField(m_Script);
             EditorGUI.EndDisabledGroup();
         }
 
@@ -547,26 +459,6 @@ namespace DevionGames.InventorySystem
                         if (prefab.GetComponent<Trigger>() == null)
                         {
                             Trigger trigger=prefab.AddComponent<Trigger>();
-                            //trigger.actions.Add(prefab.AddComponent<CanPickup>());
-                            /*SetEnabled setEnabled = prefab.AddComponent<SetEnabled>();
-                            SerializedObject setEnabledObject = new SerializedObject(setEnabled);
-                            setEnabledObject.Update();
-                            setEnabledObject.FindProperty("m_ComponentName").stringValue = "ThirdPersonController";
-                            setEnabledObject.FindProperty("m_Enable").boolValue = false;
-                            setEnabledObject.ApplyModifiedProperties();
-                            trigger.actions.Add(setEnabled);
-                            trigger.actions.Add(prefab.AddComponent<LookAtTrigger>());
-                            trigger.actions.Add(prefab.AddComponent<CrossFade>());
-                            trigger.actions.Add(prefab.AddComponent<Wait>());
-                            trigger.actions.Add(prefab.AddComponent<Pickup>());
-                            setEnabled = prefab.AddComponent<SetEnabled>();
-                            setEnabledObject = new SerializedObject(setEnabled);
-                            setEnabledObject.Update();
-                            setEnabledObject.FindProperty("m_ComponentName").stringValue = "ThirdPersonController";
-                            setEnabledObject.FindProperty("m_Enable").boolValue = true;
-                            setEnabledObject.ApplyModifiedProperties();
-                            trigger.actions.Add(setEnabled);*/
-
                         }
 
                         if (prefab.GetComponent<ItemCollection>() == null) {

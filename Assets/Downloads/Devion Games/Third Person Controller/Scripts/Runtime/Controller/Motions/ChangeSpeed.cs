@@ -11,20 +11,20 @@ namespace DevionGames
 
 		public override void OnStart ()
 		{
-			this.m_PrevSpeedMutiplier = this.m_Controller.SpeedMultiplier;
-			this.m_Controller.SpeedMultiplier = this.m_SpeedMultiplier;
+			m_PrevSpeedMutiplier = m_Controller.SpeedMultiplier;
+			m_Controller.SpeedMultiplier = m_SpeedMultiplier;
 		}
 
 		public override void OnStop ()
 		{
-			this.m_Controller.SpeedMultiplier = this.m_PrevSpeedMutiplier;
+			m_Controller.SpeedMultiplier = m_PrevSpeedMutiplier;
 
 
 		}
 
 		public override bool CanStop ()
 		{
-			return this.StopType != StopType.Automatic;
+			return StopType != StopType.Automatic;
 		}
 	}
 }

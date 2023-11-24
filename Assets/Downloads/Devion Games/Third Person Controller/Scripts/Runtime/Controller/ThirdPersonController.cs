@@ -25,7 +25,7 @@ namespace DevionGames
         [HeaderLine("Movement")]
         [SerializeField] private float m_AimRotation = 20f;
         [SerializeField] private float m_RotationSpeed = 10f;
-        [SerializeField] private Vector3 m_AirSpeed = new Vector3(0.3f, 0f, 0.3f);
+        [SerializeField] private Vector3 m_AirSpeed = new(0.3f, 0f, 0.3f);
         [SerializeField] private float m_AirDampening = 0.15f;
         [SerializeField] private float m_GroundDampening;
         [SerializeField] private float m_StepOffset = 0.2f;
@@ -41,7 +41,7 @@ namespace DevionGames
 
         [HeaderLine("Footsteps")]
         [SerializeField] private AudioMixerGroup m_AudioMixerGroup;
-        [SerializeField] private List<AudioClip> m_FootstepClips = new List<AudioClip>();
+        [SerializeField] private List<AudioClip> m_FootstepClips = new();
 
         [HeaderLine("Animator")]
         [SerializeField] private bool m_UseChildAnimator;
@@ -100,7 +100,6 @@ namespace DevionGames
             }
         }
 
-        //Check if we should execute the event on that handler
         protected bool ShouldSendEvent<T>(IControllerEventHandler handler, bool includeDisabled)
         {
             bool valid = handler is T;
@@ -489,10 +488,7 @@ namespace DevionGames
 
                     if(!active && m_Animator.GetCurrentAnimatorStateInfo(j).shortNameHash !=
                        m_LayerStateMap[j].shortNameHash && !m_Animator.IsInTransition(j)){
-                        //Debug.Log("Current: "+this.m_Animator.GetCurrentAnimatorClipInfo(j)[0].clip.name);
                         m_Animator.CrossFadeInFixedTime(m_LayerStateMap[j].shortNameHash, 0.3f);
-                        //this.m_Animator.Update(0f);
-                        //Debug.Log("Next: " + this.m_Animator.GetNextAnimatorClipInfo(j)[0].clip.name);
                     }
                 }
             }

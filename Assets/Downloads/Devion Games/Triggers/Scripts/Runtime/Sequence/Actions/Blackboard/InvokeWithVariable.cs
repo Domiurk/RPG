@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace DevionGames
@@ -8,35 +9,31 @@ namespace DevionGames
     [ComponentMenu("Blackboard/Invoke With Variable")]
     public class InvokeWithVariable : Action
     {
-        [SerializeField]
-        private TargetType m_Target = TargetType.Player;
+        [SerializeField] private readonly TargetType m_Target = TargetType.Player;
         [Tooltip("The component to invoke the method on")]
-        [SerializeField]
-        private string m_ComponentName = string.Empty;
+        [SerializeField]        private readonly string m_ComponentName = string.Empty;
         [Tooltip("The name of the field")]
-        [SerializeField]
-        private string m_MethodName = string.Empty;
-        [SerializeField]
-        private List<string> m_VariableArguments=new List<string>();
+        [SerializeField] private readonly string m_MethodName = string.Empty;
+        [SerializeField] private readonly List<string> m_VariableArguments=new();
 
         private GameObject m_TargetObject;
 
         public override void OnStart()
         {
-            this.m_TargetObject = GetTarget(this.m_Target);
+            m_TargetObject = GetTarget(m_Target);
         }
 
         public override ActionStatus OnUpdate()
         {
 
-            var type = Utility.GetType(m_ComponentName);
+            Type type = Utility.GetType(m_ComponentName);
             if (type == null)
             {
                 Debug.LogWarning("Unable to invoke - type is null");
                 return ActionStatus.Failure;
             }
 
-            var component = this.m_TargetObject.GetComponent(type);
+            Component component = m_TargetObject.GetComponent(type);
             if (component == null)
             {
                 Debug.LogWarning("Unable to invoke with component " + m_ComponentName);
@@ -45,9 +42,9 @@ namespace DevionGames
 
             List<object> parameterList = new List<object>();
             List<Type> typeList = new List<Type>();
-            for (int i = 0; i < this.m_VariableArguments.Count; i++)
+            for (int i = 0; i < m_VariableArguments.Count; i++)
             {
-                string argument = this.m_VariableArguments[i];
+                string argument = m_VariableArguments[i];
 
                 object value = blackboard.GetVariable(argument).RawValue;
                 parameterList.Add(value);
@@ -55,11 +52,11 @@ namespace DevionGames
 
             }
 
-            var methodInfo = component.GetType().GetMethod(this.m_MethodName, typeList.ToArray());
+            MethodInfo methodInfo = component.GetType().GetMethod(m_MethodName, typeList.ToArray());
 
             if (methodInfo == null)
             {
-                Debug.LogWarning("Unable to invoke method " + this.m_MethodName + " on component " + this.m_ComponentName);
+                Debug.LogWarning("Unable to invoke method " + m_MethodName + " on component " + m_ComponentName);
                 return ActionStatus.Failure;
             }
             bool? result = methodInfo.Invoke(component, parameterList.ToArray()) as bool?;

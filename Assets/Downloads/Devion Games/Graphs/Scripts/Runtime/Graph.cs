@@ -9,18 +9,16 @@ namespace DevionGames.Graphs
     {
         public string serializationData;
         [HideInInspector]
-        public List<Object> serializedObjects = new List<Object>();
+        public List<Object> serializedObjects = new();
         [System.NonSerialized]
-        public List<Node> nodes = new List<Node>();
+        public List<Node> nodes = new();
 
         public List<T> FindNodesOfType<T>() where T: Node {
            return nodes.Where(x => typeof(T).IsAssignableFrom(x.GetType())).Cast<T>().ToList();
         }
 
         public void OnBeforeSerialize()
-        {
-          //  GraphUtility.Save(this);
-        }
+        { }
 
         public void OnAfterDeserialize()
         {

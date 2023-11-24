@@ -7,9 +7,9 @@ namespace Text_Renaming.Scripts.Runtime
     public class AddPrefix : MonoBehaviour
     {
 #if UNITY_EDITOR
-        public static string PrefabField = nameof(prefab);
+        public static readonly string PrefabField = nameof(prefab);
         public static string PrefixField = nameof(prefix);
-        public static string SuffixField = nameof(suffix);
+        public static readonly string SuffixField = nameof(suffix);
 #endif
 
         [SerializeField] private GameObject prefab;

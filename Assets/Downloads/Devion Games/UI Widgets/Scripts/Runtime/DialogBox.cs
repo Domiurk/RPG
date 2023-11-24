@@ -5,44 +5,44 @@ using UnityEngine.UI;
 
 namespace DevionGames.UIWidgets
 {
-    public class DialogBox : UIWidget
+    public sealed class DialogBox : UIWidget
     {
         /// <summary>
-		/// Closes the window when a button is clicked.
-		/// </summary>
-		public bool autoClose = true;
-        [Header("Reference")]
+        /// Closes the window when a button is clicked.
+        /// </summary>
+        public bool autoClose = true;
         /// <summary>
         /// The title component reference
         /// </summary>
-        public Text title;
+        [Header("Reference")]
+        public Text Title;
         /// <summary>
         /// The text component reference
         /// </summary>
-        public Text text;
+        public Text Text;
         /// <summary>
         /// The icon sprite reference
         /// </summary>
-        public Image icon;
+        public Image Icon;
         /// <summary>
         /// The button prefab reference
         /// </summary>
-        public Button button;
+        public Button Button;
 
-        protected List<Button> buttonCache = new List<Button>();
-        protected GameObject m_IconParent;
+        private readonly List<Button> buttonCache = new();
+        private GameObject m_IconParent;
 
         protected override void OnAwake()
         {
             base.OnAwake();
-            if(icon != null)
-                m_IconParent = icon.GetComponentInParent<LayoutElement>().gameObject;
-
+            if(Icon != null)
+                m_IconParent = Icon.GetComponentInParent<LayoutElement>().gameObject;
         }
 
-        public virtual void Show(NotificationOptions settings, UnityAction<int> result, params string[] buttons)
+        public void Show(NotificationOptions settings, UnityAction<int> result, params string[] buttons)
         {
-            Show(settings.title, WidgetUtility.ColorString(settings.text, settings.color), settings.icon, result, buttons);
+            Show(settings.title, WidgetUtility.ColorString(settings.text, settings.color), settings.icon, result,
+                 buttons);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace DevionGames.UIWidgets
         /// <param name="title">Title.</param>
         /// <param name="text">Text.</param>
         /// <param name="buttons">Buttons.</param>
-        public virtual void Show(string title, string text, params string[] buttons)
+        public void Show(string title, string text, params string[] buttons)
         {
             Show(title, text, null, null, buttons);
         }
@@ -63,7 +63,7 @@ namespace DevionGames.UIWidgets
         /// <param name="text">Text.</param>
         /// <param name="result">Result.</param>
         /// <param name="buttons">Buttons.</param>
-        public virtual void Show(string title, string text, UnityAction<int> result, params string[] buttons)
+        public void Show(string title, string text, UnityAction<int> result, params string[] buttons)
         {
             Show(title, text, null, result, buttons);
         }
@@ -76,77 +76,75 @@ namespace DevionGames.UIWidgets
         /// <param name="icon">Icon.</param>
         /// <param name="result">Result.</param>
         /// <param name="buttons">Buttons.</param>
-        public virtual void Show(string title, string text, Sprite icon, UnityAction<int> result, params string[] buttons)
+        public void Show(string title,
+                         string text,
+                         Sprite icon,
+                         UnityAction<int> result,
+                         params string[] buttons)
         {
-            for (int i = 0; i < buttonCache.Count; i++)
-            {
-                buttonCache[i].onClick.RemoveAllListeners();
-                buttonCache[i].gameObject.SetActive(false);
-            }
-            if (this.title != null)
-            {
-                if (!string.IsNullOrEmpty(title))
-                {
-                    this.title.text = title;
-                    this.title.gameObject.SetActive(true);
-                }
-                else
-                {
-                    this.title.gameObject.SetActive(false);
-                }
-            }
-            if (this.text != null)
-            {
-                this.text.text = text;
+            foreach(Button button in buttonCache){
+                button.onClick.RemoveAllListeners();
+                button.gameObject.SetActive(false);
             }
 
-            if (this.icon != null)
-            {
-                if (icon != null)
-                {
-                    this.icon.overrideSprite = icon;
-                    this.m_IconParent.SetActive(true);
+            if(Title != null){
+                if(!string.IsNullOrEmpty(title)){
+                    Title.text = title;
+                    Title.gameObject.SetActive(true);
                 }
-                else
-                {
-                    this.m_IconParent.SetActive(false);
+                else{
+                    Title.gameObject.SetActive(false);
                 }
             }
+
+            if(Text != null){
+                Text.text = text;
+            }
+
+            if(Icon != null){
+                if(icon != null){
+                    Icon.overrideSprite = icon;
+                    m_IconParent.SetActive(true);
+                }
+                else{
+                    m_IconParent.SetActive(false);
+                }
+            }
+
             base.Show();
-            button.gameObject.SetActive(false);
-            for (int i = 0; i < buttons.Length; i++)
-            {
+            Button.gameObject.SetActive(false);
+
+            for(int i = 0; i < buttons.Length; i++){
                 string caption = buttons[i];
                 int index = i;
-                AddButton(caption).onClick.AddListener(delegate () {
-                    if (this.autoClose)
-                    {
-                        base.Close();
-                    }
-                    if (result != null)
-                    {
-                        result.Invoke(index);
-                    }
-                });
+                AddButton(caption)
+                    .onClick.AddListener(delegate
+                                             {
+                                                 if(autoClose)
+                                                     Close();
+                                                 result?.Invoke(index);
+                                             });
             }
         }
 
         private Button AddButton(string text)
         {
             Button mButton = buttonCache.Find(x => !x.isActiveAndEnabled);
-            if (mButton == null)
-            {
-                mButton = Instantiate(button) as Button;
+
+            if(mButton == null){
+                mButton = Instantiate(Button);
                 buttonCache.Add(mButton);
             }
+
             mButton.gameObject.SetActive(true);
             mButton.onClick.RemoveAllListeners();
-            mButton.transform.SetParent(button.transform.parent, false);
+            mButton.transform.SetParent(Button.transform.parent, false);
             Text[] buttonTexts = mButton.GetComponentsInChildren<Text>(true);
-            if (buttonTexts.Length > 0)
-            {
+
+            if(buttonTexts.Length > 0){
                 buttonTexts[0].text = text;
             }
+
             return mButton;
         }
     }

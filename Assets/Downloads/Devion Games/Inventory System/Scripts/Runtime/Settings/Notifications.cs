@@ -23,97 +23,97 @@ namespace DevionGames.InventorySystem.Configuration
 
         public override string Name => "Notification";
         [Header("Container:")]
-        public NotificationOptions containerFull = new NotificationOptions()
+        public NotificationOptions containerFull = new()
         {
             text = "{0} is full!"
         };
 
-        public NotificationOptions failedRestriction = new NotificationOptions()
+        public NotificationOptions failedRestriction = new()
         {
             text = "{0} can't be added to {1}."
         };
 
-        public NotificationOptions missingItem = new NotificationOptions()
+        public NotificationOptions missingItem = new()
         {
             text = "This action requires {0}."
         };
 
-        public NotificationOptions missingCategoryItem = new NotificationOptions()
+        public NotificationOptions missingCategoryItem = new()
         {
             text = "This action requires {0}."
         };
 
-        public NotificationOptions inCooldown = new NotificationOptions()
+        public NotificationOptions inCooldown = new()
         {
             text = "{0} is in cooldown for {1} seconds!"
         };
 
         [Header("Crafting:")]
-        public NotificationOptions selectItem = new NotificationOptions()
+        public NotificationOptions selectItem = new()
         {
             text = "Select an item you would like to craft."
         };
-        public NotificationOptions alreadyCrafting = new NotificationOptions()
+        public NotificationOptions alreadyCrafting = new()
         {
             text = "You are already crafting."
         };
-        public NotificationOptions craftedItem = new NotificationOptions()
+        public NotificationOptions craftedItem = new()
         {
             text = "Successfully crafted {0}"
         };
-        public NotificationOptions missingIngredient = new NotificationOptions()
+        public NotificationOptions missingIngredient = new()
         {
             text = "You don't have all ingredients to craft this item!"
         };
-        public NotificationOptions failedToCraft = new NotificationOptions()
+        public NotificationOptions failedToCraft = new()
         {
             text = "You failed to craft {0}."
         };
-        public NotificationOptions missingSkillToCraft = new NotificationOptions()
+        public NotificationOptions missingSkillToCraft = new()
         {
             text = "You don't have the skill to craft this item!"
         };
-        public NotificationOptions requiresHigherSkill = new NotificationOptions()
+        public NotificationOptions requiresHigherSkill = new()
         {
             text = "Your {0} is to low to craft {1}."
         };
 
 
         [Header("Vendor:")]
-        public NotificationOptions soldItem = new NotificationOptions()
+        public NotificationOptions soldItem = new()
         {
             text = "Sold {0} for {1}."
         };
-        public NotificationOptions boughtItem = new NotificationOptions()
+        public NotificationOptions boughtItem = new()
         {
             text = "Bought {0} for {1}."
         };
-        public NotificationOptions noCurrencyToBuy = new NotificationOptions()
+        public NotificationOptions noCurrencyToBuy = new()
         {
             text = "You don't have enough coins."
         };
 
-        public NotificationOptions cantSellItem = new NotificationOptions()
+        public NotificationOptions cantSellItem = new()
         {
             text = "You can't sell this {0}!"
         };
 
         [Header("Trigger:")]
-        public NotificationOptions toFarAway = new NotificationOptions()
+        public NotificationOptions toFarAway = new()
         {
             text = "This is to far away!"
         };
-        public NotificationOptions inUse = new NotificationOptions()
+        public NotificationOptions inUse = new()
         {
             text = "My life is already fairly busy."
         };
-        public NotificationOptions empty = new NotificationOptions()
+        public NotificationOptions empty = new()
         {
             text = "There is nothing to be found here."
         };
 
         [Header("Skills:")]
-        public NotificationOptions skillGain = new NotificationOptions()
+        public NotificationOptions skillGain = new()
         {
             text = "Your {0} increased by {1}% to {2}%."
         };

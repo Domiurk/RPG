@@ -17,13 +17,13 @@ namespace DevionGames.StatSystem
 
         public override void OnStart()
         {
-            this.m_Handler = this.m_Target == TargetType.Self ? gameObject.GetComponent<StatsHandler>() : playerInfo.gameObject.GetComponent<StatsHandler>();
+            m_Handler = m_Target == TargetType.Self ? gameObject.GetComponent<StatsHandler>() : playerInfo.gameObject.GetComponent<StatsHandler>();
         }
 
         public override ActionStatus OnUpdate()
         {
 
-            this.m_Handler.AddEffect(this.m_Effect);
+            m_Handler.AddEffect(m_Effect);
             return ActionStatus.Success;
         }
 

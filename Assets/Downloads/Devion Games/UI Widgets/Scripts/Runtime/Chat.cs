@@ -1,61 +1,58 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace DevionGames.UIWidgets
 {
-	public class Chat : UIWidget
-	{
-		[Header ("Behaviour")]
-		[SerializeField]
-		protected string filterMask = "*";
-		[SerializeField]
-		[TextArea]
-		protected string filter = "fuck, ass, piss, cunt, shit";
+    public sealed class Chat : UIWidget
+    {
+        [Header("Behaviour")]
+        [SerializeField] private string filterMask = "*";
+        [TextArea(1, 5)]
+        [SerializeField] private string filter = "fuck, ass, piss, cunt, shit";
 
-		[Header ("Reference")]
-		[SerializeField]
-		protected Text text;
-		[SerializeField]
-		protected InputField input;
-		[SerializeField]
-		protected Button submit;
+        [Header("Reference")]
+        [SerializeField] private Text text;
+        [SerializeField] private InputField input;
+        [SerializeField] private Button submit;
 
-		private string[] filterWords;
+        private string[] filterWords;
 
-		protected override void OnStart ()
-		{
-			base.OnStart ();
-			input.onEndEdit.AddListener (Submit);
-			if (this.submit != null) {
-				submit.onClick.AddListener (delegate {
-					Submit (input.text);
-				});
-			}
-			filterWords = filter.Replace (" ", "").Split (',');
-		}
+        protected override void OnStart()
+        {
+            base.OnStart();
+            input.onEndEdit.AddListener(Submit);
 
-		private void Submit (string text)
-		{
-			if (!string.IsNullOrEmpty (text)) {
-				text = ApplyFilter (text);
-				OnSubmit (text);
-			}
-			this.input.text = "";
-		}
+            if(submit != null){
+                submit.onClick.AddListener(delegate { Submit(input.text); });
+            }
 
-		protected virtual void OnSubmit (string text)
-		{
-			this.text.text += "\n" + text;
-		}
+            filterWords = filter.Replace(" ", "").Split(',');
+        }
 
-		protected virtual string ApplyFilter (string text)
-		{
-			string result = text;
-			for (int i = 0; i < this.filterWords.Length; i++) {
-				string filter = this.filterWords [i];
-				result = result.Replace (filter, new System.Text.StringBuilder ().Insert (0, filterMask, filter.Length).ToString ());
-			}
-			return result;
-		}
-	}
+        private void Submit(string textSubmit)
+        {
+            if(!string.IsNullOrEmpty(textSubmit)){
+                textSubmit = ApplyFilter(textSubmit);
+                OnSubmit(textSubmit);
+            }
+
+            input.text = "";
+        }
+
+        private void OnSubmit(string textSubmit)
+        {
+            text.text += "\n" + textSubmit;
+        }
+
+        private string ApplyFilter(string textSubmit)
+        {
+            return filterWords.Aggregate(textSubmit,
+                                         (current, _)
+                                             => current.Replace(filter,
+                                                                new System.Text.StringBuilder()
+                                                                    .Insert(0, filterMask, filter.Length)
+                                                                    .ToString()));
+        }
+    }
 }

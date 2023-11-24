@@ -29,7 +29,6 @@ namespace Character
         private void FixedUpdate()
         {
             controller.Move(position);
-            // stateMachine.StateUpdate();
         }
 
         public void Moving(Vector3 direction)
@@ -47,7 +46,7 @@ namespace Character
         private float GetGravity()
         {
             gravityVelocity = CharacterControlData.Gravity * Time.fixedDeltaTime;
-            return 0; //gravityVelocity * ;
+            return 0;
         }
     }
 }

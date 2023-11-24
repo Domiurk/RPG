@@ -5,14 +5,11 @@ namespace DevionGames.InventorySystem
 {
     public class DisplayName : MonoBehaviour, ITriggerCameInRange, ITriggerUsedHandler, ITriggerUnUsedHandler, ITriggerWentOutOfRange
     {
-        //When to display name?
         [SerializeField]
         [EnumFlags]
         protected DisplayNameType m_DisplayType = DisplayNameType.Raycast;
-        //Color to display name
         [SerializeField]
         protected Color m_Color = Color.white;
-        //Name label offset
         [SerializeField]
         protected Vector3 m_Offset = Vector3.zero;
 
@@ -22,7 +19,7 @@ namespace DevionGames.InventorySystem
         {
             if (state)
             {
-                FloatingTextManager.Add(gameObject, gameObject.name.Replace("(Clone)", ""), this.m_Color, this.m_Offset);
+                FloatingTextManager.Add(gameObject, gameObject.name.Replace("(Clone)", ""), m_Color, m_Offset);
             }
             else
             {
@@ -37,7 +34,7 @@ namespace DevionGames.InventorySystem
             EventHandler.Register(gameObject, "OnPointerExitTrigger", OnPointerExitTrigger);
 
 
-            if (this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always))
+            if (m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always))
                 DoDisplayName(true);
         }
 
@@ -48,10 +45,10 @@ namespace DevionGames.InventorySystem
 
         public void OnPointerEnterTrigger()
         {
-            if (this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Raycast) &&   
-                !(this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange) && this.m_Trigger != null && this.m_Trigger.InRange ||
-                this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always) ||   
-                this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse) && this.m_Trigger != null && this.m_Trigger.InUse))
+            if (m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Raycast) &&   
+                !(m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange) && m_Trigger != null && m_Trigger.InRange ||
+                m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always) ||   
+                m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse) && m_Trigger != null && m_Trigger.InUse))
             {
                 DoDisplayName(true);
             }
@@ -59,10 +56,10 @@ namespace DevionGames.InventorySystem
 
         public void OnPointerExitTrigger()
         {
-            if (this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Raycast) &&
-                !(this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange) && this.m_Trigger != null && this.m_Trigger.InRange || 
-                this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always) ||   
-                this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse) && this.m_Trigger != null && this.m_Trigger.InUse))
+            if (m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Raycast) &&
+                !(m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange) && m_Trigger != null && m_Trigger.InRange || 
+                m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always) ||   
+                m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse) && m_Trigger != null && m_Trigger.InUse))
             {
                 DoDisplayName(false);
             }
@@ -70,20 +67,20 @@ namespace DevionGames.InventorySystem
 
         public void OnCameInRange(GameObject player)
         {
-            if (this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange))
+            if (m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange))
                 DoDisplayName(true);
         }
 
         public void OnTriggerUsed(GameObject player)
         {
-            if (this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse))
+            if (m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse))
                 DoDisplayName(true);
         }
 
         public void OnTriggerUnUsed(GameObject player)
         {
-            if (this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse) &&
-               !(this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always)))
+            if (m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InUse) &&
+               !(m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always)))
             {
                 DoDisplayName(false);
             }
@@ -91,8 +88,8 @@ namespace DevionGames.InventorySystem
 
         public void OnWentOutOfRange(GameObject player)
         {
-            if (this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange) &&
-                 !(this.m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always)))
+            if (m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.InRange) &&
+                 !(m_DisplayType.HasFlag<DisplayNameType>(DisplayNameType.Always)))
             {
                 DoDisplayName(false);
             }

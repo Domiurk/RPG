@@ -5,11 +5,11 @@ using System;
 
 namespace DevionGames.Graphs
 {
-    [System.Serializable]
+    [Serializable]
     public abstract class FlowNode : Node
     {
         [SerializeField]
-        private List<Port> m_Ports= new List<Port>();
+        private List<Port> m_Ports= new();
         public List<Port> Ports => m_Ports;
 
         public List<Port> InputPorts
@@ -79,7 +79,7 @@ namespace DevionGames.Graphs
 
         public void DisconnectAllPorts()
         {
-            foreach (var port in this.m_Ports)
+            foreach (Port port in m_Ports)
             {
                 port.DisconnectAll();
             }
@@ -87,19 +87,18 @@ namespace DevionGames.Graphs
 
         public override void OnAfterDeserialize()
         {
-            for (int i = 0; i < this.m_Ports.Count; i++)
+            for (int i = 0; i < m_Ports.Count; i++)
             {
-                //Dirty fix for existing serialized graphs.
-                if (this.m_Ports[i].m_FieldTypeName == "String")
-                    this.m_Ports[i].m_FieldTypeName = "System.String";
+                if (m_Ports[i].m_FieldTypeName == "String")
+                    m_Ports[i].m_FieldTypeName = "System.String";
 
-                this.m_Ports[i].node = this;
-                for (var j = 0; j < this.m_Ports[i].Connections.Count; j++)
+                m_Ports[i].node = this;
+                for (int j = 0; j < m_Ports[i].Connections.Count; j++)
                 {
-                    Edge edge = this.m_Ports[i].Connections[j];
+                    Edge edge = m_Ports[i].Connections[j];
                     FlowNode connected = graph.nodes.Find(x => x.id == edge.nodeId) as FlowNode;
                     edge.port = connected.Ports.Find(x => x.fieldName == edge.fieldName);
-                    this.m_Ports[i].Connections[j] = edge;
+                    m_Ports[i].Connections[j] = edge;
                 }
             }
         }

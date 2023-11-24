@@ -4,7 +4,7 @@ namespace Sirenix.OdinInspector.Demos
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEngine;
 
     [TypeInfoBox(
@@ -21,14 +21,12 @@ namespace Sirenix.OdinInspector.Demos
         {
             if (member is FieldInfo)
             {
-                //attributes.Add(new IndentAttribute(-1));
                 attributes.Add(new LabelWidthAttribute(30));
                 attributes.Add(new HorizontalGroupAttribute(member.Name.Substring(0, 2)));
             }
 
             if (member.Name == "determinant")
             {
-                //attributes.Add(new IndentAttribute(-1));
                 attributes.Add(new ShowInInspectorAttribute());
             }
         }

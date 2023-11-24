@@ -7,84 +7,78 @@ namespace DevionGames
     public class BehaviorTrigger : BaseTrigger
     {
         public ActionTemplate actionTemplate;
-        //Actions to run when the trigger is used.
 
         [SerializeReference] public List<Action> actions = new();
         [SerializeField] protected bool m_Interruptable;
 
-        //Task behavior that runs custom actions
         private Sequence m_ActionBehavior;
-
+        private PlayerInfo m_PlayerInfo;
         protected AnimatorStateInfo[] m_LayerStateMap;
 
-        private PlayerInfo m_PlayerInfo;
-
-        public override PlayerInfo PlayerInfo => this.m_PlayerInfo ??= new PlayerInfo("Player");
+        public override PlayerInfo PlayerInfo => m_PlayerInfo ??= new PlayerInfo("Player");
 
         protected override void Start()
         {
             base.Start();
-            List<ITriggerEventHandler> list = new List<ITriggerEventHandler>(this.m_TriggerEvents);
+            List<ITriggerEventHandler> list = new List<ITriggerEventHandler>(m_TriggerEvents);
             list.AddRange(actions.Where(x => x is ITriggerEventHandler).Cast<ITriggerEventHandler>());
-            this.m_TriggerEvents = list.ToArray();
+            m_TriggerEvents = list.ToArray();
             if(actionTemplate != null)
                 actionTemplate = Instantiate(actionTemplate);
-            this.m_ActionBehavior = new Sequence(gameObject, PlayerInfo, GetComponent<Blackboard>(),
-                                                 actionTemplate != null
-                                                     ? actionTemplate.actions.Cast<IAction>().ToArray()
-                                                     : actions.Cast<IAction>().ToArray());
+            m_ActionBehavior = new Sequence(gameObject, PlayerInfo, GetComponent<Blackboard>(),
+                                            actionTemplate != null
+                                                ? actionTemplate.actions.Cast<IAction>().ToArray()
+                                                : actions.Cast<IAction>().ToArray());
         }
 
-        //Called once per frame
         protected override void Update()
         {
             if(!InRange)
                 return;
 
-            //Check for key down and if trigger input type supports key.
-            if(key != null && key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange &&
+            if(key != null && key.action.triggered && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) &&
+               InRange &&
                IsBestTrigger())
                 Use();
 
-            if(this.m_Interruptable && this.InUse && (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f ||
-                                                      Mathf.Abs(Input.GetAxis("Vertical")) > 0.5f)){
+            //TODO : check if this is the best way to do this
+            if(m_Interruptable && InUse && (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f ||
+                                            Mathf.Abs(Input.GetAxis("Vertical")) > 0.5f)){
                 NotifyInterrupted();
-                this.m_ActionBehavior.Interrupt();
+                m_ActionBehavior.Interrupt();
                 return;
             }
 
-            //Update task behavior, set in use if it is running
-            this.InUse = this.m_ActionBehavior.Tick();
+            InUse = m_ActionBehavior.Tick();
         }
 
         protected override void OnDisable()
         {
             if(Time.frameCount > 0){
-                if(this.m_Interruptable && this.InUse){
+                if(m_Interruptable && InUse){
                     NotifyInterrupted();
-                    this.m_ActionBehavior.Interrupt();
+                    m_ActionBehavior.Interrupt();
                 }
 
-                this.InRange = false;
+                InRange = false;
             }
         }
 
         protected override void OnDestroy()
         {
             if(Time.frameCount > 0){
-                if(this.m_Interruptable && this.InUse){
+                if(m_Interruptable && InUse){
                     NotifyInterrupted();
-                    this.m_ActionBehavior.Interrupt();
+                    m_ActionBehavior.Interrupt();
                 }
 
-                this.InRange = false;
+                InRange = false;
             }
         }
 
         protected void NotifyInterrupted()
         {
-            this.InUse = false;
-            //  NotifyUnUsed();
+            InUse = false;
             OnTriggerInterrupted();
         }
 
@@ -97,21 +91,18 @@ namespace DevionGames
 
         protected override void OnTriggerUnUsed()
         {
-            this.m_ActionBehavior.Stop();
+            m_ActionBehavior.Stop();
             LoadCachedAnimatorStates();
         }
 
-        //Use the trigger
         public override bool Use()
         {
-            //Can the trigger be used?
             if(!CanUse()){
                 return false;
             }
 
-            //Set the trigger in use
-            this.InUse = true;
-            this.m_ActionBehavior.Start();
+            InUse = true;
+            m_ActionBehavior.Start();
             return true;
         }
 
@@ -123,11 +114,11 @@ namespace DevionGames
             Animator animator = PlayerInfo.animator;
 
             if(animator != null){
-                this.m_LayerStateMap = new AnimatorStateInfo[animator.layerCount];
+                m_LayerStateMap = new AnimatorStateInfo[animator.layerCount];
 
                 for(int j = 0; j < animator.layerCount; j++){
                     AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(j);
-                    this.m_LayerStateMap[j] = stateInfo;
+                    m_LayerStateMap[j] = stateInfo;
                 }
             }
         }
@@ -140,10 +131,10 @@ namespace DevionGames
             Animator animator = PlayerInfo.animator;
 
             if(animator != null){
-                for(int j = 0; j < this.m_LayerStateMap.Length; j++){
-                    if(animator.GetCurrentAnimatorStateInfo(j).shortNameHash != this.m_LayerStateMap[j].shortNameHash &&
+                for(int j = 0; j < m_LayerStateMap.Length; j++){
+                    if(animator.GetCurrentAnimatorStateInfo(j).shortNameHash != m_LayerStateMap[j].shortNameHash &&
                        !animator.IsInTransition(j)){
-                        animator.CrossFadeInFixedTime(this.m_LayerStateMap[j].shortNameHash, 0.15f);
+                        animator.CrossFadeInFixedTime(m_LayerStateMap[j].shortNameHash, 0.15f);
                     }
                 }
             }

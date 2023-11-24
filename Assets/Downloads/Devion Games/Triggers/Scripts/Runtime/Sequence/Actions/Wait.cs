@@ -7,24 +7,19 @@ namespace DevionGames
     [Icon("Time")]
     public class Wait : Action
     {
-        [SerializeField]
-        private float duration = 1f;
+        [SerializeField] private readonly float duration = 1f;
 
-        private float m_Time = 0f;
+        private float m_Time;
 
         public override void OnStart()
         {
-            this.m_Time = 0f;
+            m_Time = 0f;
         }
 
         public override ActionStatus OnUpdate()
         {
-            this.m_Time += Time.deltaTime;
-            if (this.m_Time > duration)
-            {
-                return ActionStatus.Success;
-            }
-            return ActionStatus.Running;
+            m_Time += Time.deltaTime;
+            return m_Time > duration ? ActionStatus.Success : ActionStatus.Running;
         }
     }
 }

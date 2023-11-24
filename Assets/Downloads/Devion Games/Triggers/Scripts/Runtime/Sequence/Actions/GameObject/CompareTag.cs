@@ -7,15 +7,13 @@ namespace DevionGames
     [ComponentMenu("GameObject/Compare Tag")]
     public class CompareTag : Action, ICondition
     {
-        [SerializeField]
-        private TargetType m_Target = TargetType.Self;
-        [SerializeField]
-        private string m_Tag = "Player";
+        [SerializeField] private readonly TargetType m_Target = TargetType.Self;
+        [SerializeField] private readonly string m_Tag = "Player";
 
         public override ActionStatus OnUpdate()
         {
-            GameObject target = GetTarget(this.m_Target);
-            return target.CompareTag(this.m_Tag) ? ActionStatus.Success : ActionStatus.Failure;
+            GameObject target = GetTarget(m_Target);
+            return target.CompareTag(m_Tag) ? ActionStatus.Success : ActionStatus.Failure;
         }
     }
 }

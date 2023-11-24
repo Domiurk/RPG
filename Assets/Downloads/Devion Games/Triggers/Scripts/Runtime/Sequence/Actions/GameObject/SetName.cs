@@ -7,17 +7,14 @@ namespace DevionGames
     [ComponentMenu("GameObject/Set Name")]
     public class SetName : Action
     {
-        [SerializeField]
-        private TargetType m_Target = TargetType.Self;
+        [SerializeField] private readonly TargetType m_Target = TargetType.Self;
         [InspectorLabel("Name")]
-        [SerializeField]
-        private string m_Value = string.Empty;
+        [SerializeField] private readonly string m_Value = string.Empty;
 
         public override ActionStatus OnUpdate()
         {
-            GameObject target = GetTarget(this.m_Target);
-            target.name = this.m_Value;
-            Debug.Log("Executed");
+            GameObject target = GetTarget(m_Target);
+            target.name = m_Value;
             return ActionStatus.Success;
         }
     }

@@ -8,7 +8,7 @@ namespace DevionGames
 		public object declaringObject;
 		public FieldInfo fieldInfo;
 		public object value;
-		public bool dirty = false;
+		public bool dirty;
 
 		public virtual void OnGUI(GUIContent label)
 		{

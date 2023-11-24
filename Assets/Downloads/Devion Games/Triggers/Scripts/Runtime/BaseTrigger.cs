@@ -12,7 +12,6 @@ namespace DevionGames
 
         public abstract PlayerInfo PlayerInfo { get; }
 
-        //Callbacks for scene reference use.
         public override string[] Callbacks => new[]{
             "OnTriggerUsed",
             "OnTriggerUnUsed",
@@ -20,21 +19,15 @@ namespace DevionGames
             "OnWentOutOfRange",
         };
 
-        //The maximum distance for trigger usage
         public float useDistance = 1.2f;
         [EnumFlags]
         public TriggerInputType triggerType = TriggerInputType.LeftClick | TriggerInputType.Key;
-        //If in range and trigger input type includes key, the key to use the trigger.
         public InputActionReference key;
 
-        //Custom Trigger callbacks
         protected ITriggerEventHandler[] m_TriggerEvents;
-        //Current trigger used by the player
         public static BaseTrigger currentUsedTrigger;
 
-        //All triggers in range
-        private static List<BaseTrigger> m_TriggerInRange = new List<BaseTrigger>();
-        //Dictionary of callbacks
+        private static readonly List<BaseTrigger> m_TriggerInRange = new();
         protected Dictionary<Type, string> m_CallbackHandlers;
 
         protected delegate void EventFunction<T>(T handler, GameObject player);
@@ -44,16 +37,15 @@ namespace DevionGames
         protected bool m_CheckBlocking = true;
         protected bool m_Started;
 
-        //Is the player in range, set by OnTriggerEnter/OnTriggerExit or if trigger is attached to player in Start?
         private bool m_InRange;
         public bool InRange
         {
-            get => this.m_InRange;
+            get => m_InRange;
             protected set{
-                if(this.m_InRange != value){
-                    this.m_InRange = value;
+                if(m_InRange != value){
+                    m_InRange = value;
 
-                    if(this.m_InRange){
+                    if(m_InRange){
                         NotifyCameInRange();
                     }
                     else{
@@ -63,16 +55,15 @@ namespace DevionGames
             }
         }
 
-        //Is the trigger currently in use?
         private bool m_InUse;
         public bool InUse
         {
-            get => this.m_InUse;
+            get => m_InUse;
             set{
-                if(this.m_InUse != value){
-                    this.m_InUse = value;
+                if(m_InUse != value){
+                    m_InUse = value;
 
-                    if(!this.m_InUse){
+                    if(!m_InUse){
                         NotifyUnUsed();
                     }
                     else{
@@ -84,8 +75,8 @@ namespace DevionGames
 
         protected virtual void Start()
         {
-            this.RegisterCallbacks();
-            this.m_TriggerEvents = GetComponentsInChildren<ITriggerEventHandler>();
+            RegisterCallbacks();
+            m_TriggerEvents = GetComponentsInChildren<ITriggerEventHandler>();
 
             if(PlayerInfo.gameObject == null && useDistance != -1){
                 useDistance = -1;
@@ -101,15 +92,14 @@ namespace DevionGames
 
             EventHandler.Register<int>(gameObject, "OnPointerClickTrigger", OnPointerTriggerClick);
 
-            if(gameObject == PlayerInfo.gameObject || this.useDistance == -1 ){
+            if(gameObject == PlayerInfo.gameObject || useDistance == -1){
                 InRange = true;
             }
             else{
-                //Create trigger collider
                 CreateTriggerCollider();
             }
 
-            this.m_Started = true;
+            m_Started = true;
         }
 
         protected virtual void OnDisable()
@@ -117,15 +107,15 @@ namespace DevionGames
             key?.action.Disable();
 
             if(Time.frameCount > 0){
-                this.InRange = false;
+                InRange = false;
             }
         }
 
         protected virtual void OnEnable()
         {
             key?.action.Enable();
-            if(Time.frameCount > 0 && this.m_Started && PlayerInfo.transform != null)
-                InRange = Vector3.Distance(transform.position, PlayerInfo.transform.position) <= this.useDistance;
+            if(Time.frameCount > 0 && m_Started && PlayerInfo.transform != null)
+                InRange = Vector3.Distance(transform.position, PlayerInfo.transform.position) <= useDistance;
         }
 
         protected virtual void Update()
@@ -134,7 +124,6 @@ namespace DevionGames
                 return;
             }
 
-            //Check for key down and if trigger input type supports key.
             if(key != null && key.action.WasPressedThisFrame() &&
                triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange && IsBestTrigger()){
                 Use();
@@ -143,29 +132,21 @@ namespace DevionGames
 
         protected virtual void OnDestroy()
         {
-            //Check if the user quits the game
             if(Time.frameCount > 0){
-                //Set in range to false when the game object gets destroyed to invoke OnTriggerUnUsed events
                 InRange = false;
             }
         }
 
-        //OnTriggerEnter is called when the Collider other enters the trigger.
         protected virtual void OnTriggerEnter(Collider other)
         {
-            //Check if the collider other is player 
             if(isActiveAndEnabled && PlayerInfo.gameObject != null && other.tag == PlayerInfo.gameObject.tag){
-                //Set that player is in range
                 InRange = true;
             }
         }
 
-        //OnTriggerExit is called when the Collider other has stopped touching the trigger.
         protected virtual void OnTriggerExit(Collider other)
         {
-            //Check if the collider other is player
             if(isActiveAndEnabled && PlayerInfo.gameObject != null && other.tag == PlayerInfo.gameObject.tag){
-                //Set that player is out of range
                 InRange = false;
             }
         }
@@ -180,58 +161,31 @@ namespace DevionGames
             }
         }
 
-        //Use the trigger
         public virtual bool Use()
         {
-            //Can the trigger be used?
             if(!CanUse()){
                 return false;
             }
 
-            //  BaseTrigger.currentUsedTrigger = this;
-            //Set the trigger in use
-            this.InUse = true;
+            InUse = true;
             return true;
         }
 
-        //Can the trigger be used?
         public virtual bool CanUse()
         {
-            //Return false if the trigger is already used
-            if(InUse || (BaseTrigger.currentUsedTrigger != null && BaseTrigger.currentUsedTrigger.InUse)){
+            if(InUse || (currentUsedTrigger != null && currentUsedTrigger.InUse)){
                 DisplayInUse();
                 return false;
             }
 
-            if(Math.Abs(this.useDistance - (-1)) < TOLERANCE){
+            if(Math.Abs(useDistance - (-1)) < TOLERANCE){
                 return true;
             }
 
-            //Return false if the player is not in range
             if(!InRange){
                 DisplayOutOfRange();
                 return false;
             }
-
-            /* if (this.m_CheckBlocking)
-             {
-                 Vector3 targetPosition = UnityTools.GetBounds(gameObject).center;
-                 Vector3 playerPosition = PlayerInfo.transform.position;
-                 Bounds bounds = PlayerInfo.bounds;
-                 playerPosition.y += bounds.center.y + bounds.extents.y;
-                 Vector3 direction = targetPosition - playerPosition;
-                 Collider collider = PlayerInfo.collider;
-                 collider.enabled = false;
-                 RaycastHit hit;
- 
-                 LayerMask layerMask = Physics.DefaultRaycastLayers;
-                 bool raycast = Physics.Raycast(playerPosition, direction,out hit, float.PositiveInfinity, layerMask, QueryTriggerInteraction.Collide);
-                 collider.enabled = true;
-                 if (raycast && !UnityEngine.Object.ReferenceEquals(hit.transform, transform))
-                 {
-                     return false;
-                 }
-             }*/
 
             Animator animator = PlayerInfo.animator;
 
@@ -242,7 +196,6 @@ namespace DevionGames
                 }
             }
 
-            //Trigger can be used  
             return true;
         }
 
@@ -251,8 +204,8 @@ namespace DevionGames
         protected void NotifyWentOutOfRange()
         {
             ExecuteEvent<ITriggerWentOutOfRange>(Execute, true);
-            BaseTrigger.m_TriggerInRange.Remove(this);
-            this.InUse = false;
+            m_TriggerInRange.Remove(this);
+            InUse = false;
             OnWentOutOfRange();
         }
 
@@ -261,13 +214,12 @@ namespace DevionGames
         protected void NotifyCameInRange()
         {
             ExecuteEvent<ITriggerCameInRange>(Execute, true);
-            BaseTrigger.m_TriggerInRange.Add(this);
+            m_TriggerInRange.Add(this);
 
-            //InputTriggerType.OnTriggerEnter is supported
             if(triggerType.HasFlag<TriggerInputType>(TriggerInputType.OnTriggerEnter) && IsBestTrigger()){
-                this.m_CheckBlocking = false;
+                m_CheckBlocking = false;
                 Use();
-                this.m_CheckBlocking = true;
+                m_CheckBlocking = true;
             }
 
             OnCameInRange();
@@ -277,7 +229,7 @@ namespace DevionGames
 
         private void NotifyUsed()
         {
-            BaseTrigger.currentUsedTrigger = this;
+            currentUsedTrigger = this;
             ExecuteEvent<ITriggerUsedHandler>(Execute);
             OnTriggerUsed();
         }
@@ -287,17 +239,14 @@ namespace DevionGames
         protected void NotifyUnUsed()
         {
             ExecuteEvent<ITriggerUnUsedHandler>(Execute, true);
-            BaseTrigger.currentUsedTrigger = null;
+            currentUsedTrigger = null;
             OnTriggerUnUsed();
         }
 
-        //Notify player that he is already using a trigger.
         protected virtual void DisplayInUse() { }
 
-        //Notify player that he is out of range
         protected virtual void DisplayOutOfRange() { }
 
-        //Creates a sphere collider so OnTriggerEnter/OnTriggerExit gets called
         protected virtual void CreateTriggerCollider()
         {
             Vector3 position = Vector3.zero;
@@ -327,8 +276,6 @@ namespace DevionGames
             }
         }
 
-        /*Returns true if this is the best trigger. Used for TriggerInputType.Key and TriggerInputType.OnTriggerEnter
-          Calculated based on distance and rotation of the player to the trigger.*/
         public virtual bool IsBestTrigger()
         {
             if(gameObject == PlayerInfo.gameObject){
@@ -339,7 +286,7 @@ namespace DevionGames
             float minDist = Mathf.Infinity;
             Vector3 currentPos = PlayerInfo.transform.position;
 
-            foreach(BaseTrigger t in BaseTrigger.m_TriggerInRange){
+            foreach(BaseTrigger t in m_TriggerInRange){
                 if(t.key != key)
                     continue;
                 Vector3 dir = t.transform.position - currentPos;
@@ -347,11 +294,6 @@ namespace DevionGames
                 if(dir != Vector3.zero)
                     angle = Quaternion.Angle(PlayerInfo.transform.rotation, Quaternion.LookRotation(dir));
 
-                //Pickup items only in front
-                /*if (angle > 90) {
-                    continue;
-                 }
-                 Debug.Log(Vector3.Angle(t.transform.position - PlayerInfo.transform.position, PlayerInfo.transform.forward)+" != "+angle);*/
                 float dist = Vector3.Distance(t.transform.position, currentPos) * angle;
 
                 if(dist < minDist){
@@ -383,17 +325,16 @@ namespace DevionGames
             handler.OnWentOutOfRange(player);
         }
 
-        //Execute event
         protected void ExecuteEvent<T>(EventFunction<T> func, bool includeDisabled = false)
             where T : ITriggerEventHandler
         {
-            foreach(ITriggerEventHandler handler in this.m_TriggerEvents){
+            foreach(ITriggerEventHandler handler in m_TriggerEvents){
                 if(ShouldSendEvent<T>(handler, includeDisabled)){
                     func.Invoke((T)handler, PlayerInfo.gameObject);
                 }
             }
 
-            if(this.m_CallbackHandlers.TryGetValue(typeof(T), out string eventID)){
+            if(m_CallbackHandlers.TryGetValue(typeof(T), out string eventID)){
                 CallbackEventData triggerEventData = new CallbackEventData();
                 triggerEventData.AddData("Trigger", this);
                 triggerEventData.AddData("Player", PlayerInfo.gameObject);
@@ -406,15 +347,13 @@ namespace DevionGames
                                        PointerEventData eventData,
                                        bool includeDisabled = false) where T : ITriggerEventHandler
         {
-            for(int i = 0; i < this.m_TriggerEvents.Length; i++){
-                ITriggerEventHandler handler = this.m_TriggerEvents[i];
-
+            foreach(ITriggerEventHandler handler in m_TriggerEvents){
                 if(ShouldSendEvent<T>(handler, includeDisabled)){
                     func.Invoke((T)handler, eventData);
                 }
             }
 
-            if(this.m_CallbackHandlers.TryGetValue(typeof(T), out string eventID)){
+            if(m_CallbackHandlers.TryGetValue(typeof(T), out string eventID)){
                 CallbackEventData triggerEventData = new CallbackEventData();
                 triggerEventData.AddData("Trigger", this);
                 triggerEventData.AddData("Player", PlayerInfo.gameObject);
@@ -423,10 +362,9 @@ namespace DevionGames
             }
         }
 
-        //Check if we should execute the event on that handler
         protected bool ShouldSendEvent<T>(ITriggerEventHandler handler, bool includeDisabled)
         {
-            var valid = handler is T;
+            bool valid = handler is T;
             if(!valid)
                 return false;
             var behaviour = handler as Behaviour;
@@ -436,14 +374,14 @@ namespace DevionGames
             return true;
         }
 
-        //TODO: Auto registration
         protected virtual void RegisterCallbacks()
         {
-            this.m_CallbackHandlers = new Dictionary<Type, string>();
-            this.m_CallbackHandlers.Add(typeof(ITriggerUsedHandler), "OnTriggerUsed");
-            this.m_CallbackHandlers.Add(typeof(ITriggerUnUsedHandler), "OnTriggerUnUsed");
-            this.m_CallbackHandlers.Add(typeof(ITriggerCameInRange), "OnCameInRange");
-            this.m_CallbackHandlers.Add(typeof(ITriggerWentOutOfRange), "OnWentOutOfRange");
+            m_CallbackHandlers = new Dictionary<Type, string>{
+                { typeof(ITriggerUsedHandler), "OnTriggerUsed" },
+                { typeof(ITriggerUnUsedHandler), "OnTriggerUnUsed" },
+                { typeof(ITriggerCameInRange), "OnCameInRange" },
+                { typeof(ITriggerWentOutOfRange), "OnWentOutOfRange" }
+            };
         }
 
         [Flags]

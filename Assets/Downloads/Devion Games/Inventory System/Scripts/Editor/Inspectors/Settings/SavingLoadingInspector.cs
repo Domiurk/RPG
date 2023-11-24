@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
-using UnityEngine.Events;
 using System.Linq;
 
 namespace DevionGames.InventorySystem.Configuration
@@ -26,50 +25,48 @@ namespace DevionGames.InventorySystem.Configuration
         {
             if (target == null) return;
 
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_AutoSave = serializedObject.FindProperty("autoSave");
-            this.m_ShowSave = new AnimBool(this.m_AutoSave.boolValue);
-            this.m_ShowSave.valueChanged.AddListener(new UnityAction(Repaint));
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_AutoSave = serializedObject.FindProperty("autoSave");
+            m_ShowSave = new AnimBool(m_AutoSave.boolValue);
+            m_ShowSave.valueChanged.AddListener(Repaint);
 
-            this.m_Provider = serializedObject.FindProperty("provider");
-            this.m_ShowMySQL = new AnimBool(this.m_Provider.enumValueIndex == 1);
-            this.m_ShowMySQL.valueChanged.AddListener(new UnityAction(Repaint));
+            m_Provider = serializedObject.FindProperty("provider");
+            m_ShowMySQL = new AnimBool(m_Provider.enumValueIndex == 1);
+            m_ShowMySQL.valueChanged.AddListener(Repaint);
             
 
-            this.m_SavingKey = serializedObject.FindProperty("savingKey");
-            this.m_SavingRate = serializedObject.FindProperty("savingRate");
-            this.m_ServerAdress = serializedObject.FindProperty("serverAdress");
-            this.m_SaveScript = serializedObject.FindProperty("saveScript");
-            this.m_LoadScript = serializedObject.FindProperty("loadScript");
-
-           // this.m_SavedData = JsonSerializer.Deserialize<InventoryManager.SaveData>(PlayerPrefs.GetString("InventorySystemData"), new List<UnityEngine.Object>());
+            m_SavingKey = serializedObject.FindProperty("savingKey");
+            m_SavingRate = serializedObject.FindProperty("savingRate");
+            m_ServerAdress = serializedObject.FindProperty("serverAdress");
+            m_SaveScript = serializedObject.FindProperty("saveScript");
+            m_LoadScript = serializedObject.FindProperty("loadScript");
         }
 
         public override void OnInspectorGUI()
         {
             if (target == null) return;
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.m_Script);
+            EditorGUILayout.PropertyField(m_Script);
             EditorGUI.EndDisabledGroup();
 
             serializedObject.Update();
-            EditorGUILayout.PropertyField(this.m_AutoSave);
-            this.m_ShowSave.target = this.m_AutoSave.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowSave.faded))
+            EditorGUILayout.PropertyField(m_AutoSave);
+            m_ShowSave.target = m_AutoSave.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowSave.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_SavingKey);
-                EditorGUILayout.PropertyField(this.m_SavingRate);
+                EditorGUILayout.PropertyField(m_SavingKey);
+                EditorGUILayout.PropertyField(m_SavingRate);
 
                 EditorGUILayout.PropertyField(m_Provider);
-                this.m_ShowMySQL.target = m_Provider.enumValueIndex == 1;
-                if (EditorGUILayout.BeginFadeGroup(this.m_ShowMySQL.faded))
+                m_ShowMySQL.target = m_Provider.enumValueIndex == 1;
+                if (EditorGUILayout.BeginFadeGroup(m_ShowMySQL.faded))
                 {
 
            
-                    EditorGUILayout.PropertyField(this.m_ServerAdress);
-                    EditorGUILayout.PropertyField(this.m_SaveScript);
-                    EditorGUILayout.PropertyField(this.m_LoadScript);
+                    EditorGUILayout.PropertyField(m_ServerAdress);
+                    EditorGUILayout.PropertyField(m_SaveScript);
+                    EditorGUILayout.PropertyField(m_LoadScript);
                 }
                 EditorGUILayout.EndFadeGroup();
 

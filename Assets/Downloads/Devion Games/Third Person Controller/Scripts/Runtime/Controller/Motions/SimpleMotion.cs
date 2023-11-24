@@ -17,25 +17,13 @@ namespace DevionGames
 
         public override void OnStart()
         {
-			this.m_Animator.CrossFade("Empty",0.15f);
+			m_Animator.CrossFade("Empty",0.15f);
         }
 
         public override bool CanStart ()
 		{
 			
-			return (Time.time > lastUsedTime + this.m_RecurrenceDelay);
+			return (Time.time > lastUsedTime + m_RecurrenceDelay);
 		}
-
-
-
-       /* public override bool UpdateAnimatorIK(int layer)
-        {
-            return true;
-        }*/
-
-       /* private void OnEndUse() {
-			Debug.Log("OnEndUse!");
-            this.StopMotion(true);
-        }*/
 	}
 }

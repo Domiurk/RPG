@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace DevionGames.InventorySystem.Configuration
 {
-    [System.Serializable]
+    [Serializable]
     public class Input : Settings
     {
         public override string Name => "Input";

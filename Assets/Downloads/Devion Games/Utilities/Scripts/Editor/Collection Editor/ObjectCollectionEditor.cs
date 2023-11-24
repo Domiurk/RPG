@@ -56,7 +56,7 @@ namespace DevionGames
             EditorGUILayout.ObjectField("Script", value != null ? EditorTools.FindMonoScript(value.GetType()) : null, typeof(MonoScript), true);
             EditorGUI.EndDisabledGroup();
          
-            foreach (var child in element.EnumerateChildProperties())
+            foreach (SerializedProperty child in element.EnumerateChildProperties())
             {
                 EditorGUILayout.PropertyField(
                     child,

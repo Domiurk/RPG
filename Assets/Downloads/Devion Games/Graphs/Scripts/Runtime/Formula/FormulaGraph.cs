@@ -11,7 +11,7 @@ namespace DevionGames.Graphs
         public static implicit operator float(FormulaGraph graph)
         {
             FormulaOutput output = graph.nodes.Find(x => x.GetType() == typeof(FormulaOutput)) as FormulaOutput;
-            return output.GetInputValue<float>("result", output.result);
+            return output.GetInputValue("result", output.result);
         }
     }
 }

@@ -9,23 +9,23 @@
 
     public class StatModifier
     {
-        public object source;
+        public readonly object source;
 
-        private float m_Value;
+        private readonly float m_Value;
         public float Value
         {
             get
             {
-                return this.m_Value;
+                return m_Value;
             }
         }
 
-        private StatModType m_Type;
+        private readonly StatModType m_Type;
         public StatModType Type
         {
             get
             {
-                return this.m_Type;
+                return m_Type;
             }
         }
 
@@ -35,8 +35,8 @@
 
         public StatModifier(float value, StatModType type, object source)
         {
-            this.m_Value = value;
-            this.m_Type = type;
+            m_Value = value;
+            m_Type = type;
             this.source = source;
         }
     }

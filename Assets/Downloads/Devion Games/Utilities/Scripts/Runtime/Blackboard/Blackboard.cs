@@ -9,7 +9,7 @@ namespace DevionGames
 {
     public class Blackboard : MonoBehaviour
     {
-        [SerializeReference] protected List<Variable> m_Variables = new List<Variable>();
+        [SerializeReference] protected List<Variable> m_Variables = new();
 
         public T GetValue<T>(string name)
         {

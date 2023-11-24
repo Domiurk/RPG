@@ -106,7 +106,7 @@ namespace DevionGames
             float verticalOffset = (defaultHeight - EditorGUIUtility.singleLineHeight) * 0.5f;
 
             m_VariableList.elementHeight = (defaultHeight+verticalOffset)*2;
-            m_VariableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_VariableList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;
@@ -129,7 +129,7 @@ namespace DevionGames
                 }
     
             };
-            m_VariableList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            m_VariableList.drawElementBackgroundCallback = (Rect rect, int _, bool isActive, bool isFocused) => {
 
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -141,7 +141,7 @@ namespace DevionGames
                 }
             };
 
-            m_VariableList.onAddCallback = (ReorderableList list) => {
+            m_VariableList.onAddCallback = (ReorderableList _) => {
 
                 Type[] types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).Where(x => typeof(Variable).IsAssignableFrom(x) && !x.IsAbstract && !x.HasAttribute(typeof(ExcludeFromCreation))).ToArray();
                 types = types.OrderBy(x => x.BaseType.Name).ToArray();

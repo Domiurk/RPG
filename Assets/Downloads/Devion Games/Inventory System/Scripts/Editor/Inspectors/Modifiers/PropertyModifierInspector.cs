@@ -2,7 +2,6 @@
 using UnityEditor.AnimatedValues;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace DevionGames.InventorySystem
 {
@@ -20,40 +19,40 @@ namespace DevionGames.InventorySystem
 
         protected virtual void OnEnable()
         {
-            this.m_ApplyToAll = serializedObject.FindProperty("m_ApplyToAll");
-            this.m_ApplyToAllOptions = new AnimBool(!this.m_ApplyToAll.boolValue);
-            this.m_ApplyToAllOptions.valueChanged.AddListener(new UnityAction(Repaint));
+            m_ApplyToAll = serializedObject.FindProperty("m_ApplyToAll");
+            m_ApplyToAllOptions = new AnimBool(!m_ApplyToAll.boolValue);
+            m_ApplyToAllOptions.valueChanged.AddListener(Repaint);
 
-            this.m_Properties = serializedObject.FindProperty("m_Properties");
-            this.m_PropertyList = new ReorderableList(serializedObject, this.m_Properties, true, true, true, true);
-            this.m_PropertyList.drawHeaderCallback = (Rect rect) =>
+            m_Properties = serializedObject.FindProperty("m_Properties");
+            m_PropertyList = new ReorderableList(serializedObject, m_Properties, true, true, true, true);
+            m_PropertyList.drawHeaderCallback = (Rect rect) =>
             {
                 EditorGUI.LabelField(rect, "Properties");
             };
-            this.m_PropertyList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_PropertyList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 float verticalOffset = (rect.height - EditorGUIUtility.singleLineHeight) * 0.5f;
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;
-                SerializedProperty element = this.m_PropertyList.serializedProperty.GetArrayElementAtIndex(index);
+                SerializedProperty element = m_PropertyList.serializedProperty.GetArrayElementAtIndex(index);
                 EditorGUI.PropertyField(rect, element, GUIContent.none, true);
             };
-            this.m_ModifierType = serializedObject.FindProperty("m_ModifierType");
-            this.m_Range = serializedObject.FindProperty("m_Range");
+            m_ModifierType = serializedObject.FindProperty("m_ModifierType");
+            m_Range = serializedObject.FindProperty("m_Range");
 
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            EditorGUILayout.PropertyField(this.m_ModifierType);
-            EditorGUILayout.PropertyField(this.m_Range);
+            EditorGUILayout.PropertyField(m_ModifierType);
+            EditorGUILayout.PropertyField(m_Range);
 
-            EditorGUILayout.PropertyField(this.m_ApplyToAll);
-            this.m_ApplyToAllOptions.target = !this.m_ApplyToAll.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ApplyToAllOptions.faded))
+            EditorGUILayout.PropertyField(m_ApplyToAll);
+            m_ApplyToAllOptions.target = !m_ApplyToAll.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ApplyToAllOptions.faded))
             {
-                this.m_PropertyList.DoLayoutList();
+                m_PropertyList.DoLayoutList();
             }
             EditorGUILayout.EndFadeGroup();
      

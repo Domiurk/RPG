@@ -11,19 +11,19 @@ namespace DevionGames.InventorySystem
         public GameObject EquipPrefab
         {
             get{
-                if(this.m_OverrideEquipPrefab != null)
-                    return this.m_OverrideEquipPrefab;
-                return this.Prefab;
+                if(m_OverrideEquipPrefab != null)
+                    return m_OverrideEquipPrefab;
+                return Prefab;
             }
         }
 
         [EquipmentPicker(true)]
         [SerializeField]
-        private List<EquipmentRegion> m_Region = new List<EquipmentRegion>();
+        private List<EquipmentRegion> m_Region = new();
         public List<EquipmentRegion> Region
         {
-            get => this.m_Region;
-            set => this.m_Region = value;
+            get => m_Region;
+            set => m_Region = value;
         }
     }
 }

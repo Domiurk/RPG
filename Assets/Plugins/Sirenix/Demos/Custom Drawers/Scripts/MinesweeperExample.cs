@@ -3,12 +3,12 @@ namespace Sirenix.OdinInspector.Demos
 {
     using System;
     using UnityEngine;
-    using Sirenix.Utilities;
+    using Utilities;
 
 #if UNITY_EDITOR
 
     using Sirenix.Utilities.Editor;
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEditor;
 
 #endif
@@ -32,9 +32,7 @@ namespace Sirenix.OdinInspector.Demos
     {
         private enum Tile
         {
-            Empty = 0, // Empty tile.
-
-            // 1-8.
+            Empty = 0,
 
             Open = 9,
             Bomb = 10,
@@ -43,20 +41,13 @@ namespace Sirenix.OdinInspector.Demos
 
         private readonly Color[] NumberColors = new Color[8]
         {
-            new Color32(42, 135, 238, 255),		// 1
-			new Color32(57, 233, 48, 255),		// 2
-			new Color32(253, 0, 0, 255),		// 3
-			new Color32(31, 23, 173, 255),		// 4
-			new Color32(36, 30, 155, 255),		// 5
-			new Color32(131, 29, 29, 255),		// 6
-			new Color32(40, 40, 40, 255),		// 7
-			new Color32(132, 132, 132, 255),    // 8
-		};
+            new Color32(42, 135, 238, 255), new Color32(57, 233, 48, 255), new Color32(253, 0, 0, 255), new Color32(31, 23, 173, 255), new Color32(36, 30, 155, 255), new Color32(131, 29, 29, 255), new Color32(40, 40, 40, 255), new Color32(132, 132, 132, 255),
+        };
 
         private const float TileSize = 20;
         private const int BoardSize = 25;
 
-        private readonly object Key = new object();
+        private readonly object Key = new();
 
         private bool isRunning;
         private bool gameOver;
@@ -69,77 +60,76 @@ namespace Sirenix.OdinInspector.Demos
 
         protected override void Initialize()
         {
-            this.isRunning = false;
-            this.visibleTiles = new Tile[BoardSize, BoardSize];
-            this.tiles = new Tile[BoardSize, BoardSize];
+            isRunning = false;
+            visibleTiles = new Tile[BoardSize, BoardSize];
+            tiles = new Tile[BoardSize, BoardSize];
         }
         
         private void StartGame(int bombs)
         {
-            this.numberOfBombs = bombs;
+            numberOfBombs = bombs;
 
             for (int x = 0; x < BoardSize; x++)
             {
                 for (int y = 0; y < BoardSize; y++)
                 {
-                    this.visibleTiles[x, y] = Tile.Empty;
-                    this.tiles[x, y] = Tile.Empty;
+                    visibleTiles[x, y] = Tile.Empty;
+                    tiles[x, y] = Tile.Empty;
                 }
             }
 
-            // Spawn bombs.
-            for (int count = 0; count < this.numberOfBombs;)
+            for (int count = 0; count < numberOfBombs;)
             {
                 int x = UnityEngine.Random.Range(0, BoardSize);
                 int y = UnityEngine.Random.Range(0, BoardSize);
 
-                if (this.tiles[x, y] != Tile.Bomb)
+                if (tiles[x, y] != Tile.Bomb)
                 {
-                    this.tiles[x, y] = Tile.Bomb;
+                    tiles[x, y] = Tile.Bomb;
 
-                    if (x + 1 < BoardSize && this.tiles[x + 1, y] != Tile.Bomb)
+                    if (x + 1 < BoardSize && tiles[x + 1, y] != Tile.Bomb)
                     {
-                        this.tiles[x + 1, y] = (Tile)((int)this.tiles[x + 1, y] + 1);
+                        tiles[x + 1, y] = (Tile)((int)tiles[x + 1, y] + 1);
                     }
-                    if (x + 1 < BoardSize && y + 1 < BoardSize && this.tiles[x + 1, y + 1] != Tile.Bomb)
+                    if (x + 1 < BoardSize && y + 1 < BoardSize && tiles[x + 1, y + 1] != Tile.Bomb)
                     {
-                        this.tiles[x + 1, y + 1] = (Tile)((int)this.tiles[x + 1, y + 1] + 1);
+                        tiles[x + 1, y + 1] = (Tile)((int)tiles[x + 1, y + 1] + 1);
                     }
-                    if (y + 1 < BoardSize && this.tiles[x, y + 1] != Tile.Bomb)
+                    if (y + 1 < BoardSize && tiles[x, y + 1] != Tile.Bomb)
                     {
-                        this.tiles[x, y + 1] = (Tile)((int)this.tiles[x, y + 1] + 1);
+                        tiles[x, y + 1] = (Tile)((int)tiles[x, y + 1] + 1);
                     }
-                    if (x - 1 >= 0 && y + 1 < BoardSize && this.tiles[x - 1, y + 1] != Tile.Bomb)
+                    if (x - 1 >= 0 && y + 1 < BoardSize && tiles[x - 1, y + 1] != Tile.Bomb)
                     {
-                        this.tiles[x - 1, y + 1] = (Tile)((int)this.tiles[x - 1, y + 1] + 1);
+                        tiles[x - 1, y + 1] = (Tile)((int)tiles[x - 1, y + 1] + 1);
                     }
 
-                    if (x - 1 >= 0 && this.tiles[x - 1, y] != Tile.Bomb)
+                    if (x - 1 >= 0 && tiles[x - 1, y] != Tile.Bomb)
                     {
-                        this.tiles[x - 1, y] = (Tile)((int)this.tiles[x - 1, y] + 1);
+                        tiles[x - 1, y] = (Tile)((int)tiles[x - 1, y] + 1);
                     }
-                    if (x - 1 >= 0 && y - 1 >= 0 && this.tiles[x - 1, y - 1] != Tile.Bomb)
+                    if (x - 1 >= 0 && y - 1 >= 0 && tiles[x - 1, y - 1] != Tile.Bomb)
                     {
-                        this.tiles[x - 1, y - 1] = (Tile)((int)this.tiles[x - 1, y - 1] + 1);
+                        tiles[x - 1, y - 1] = (Tile)((int)tiles[x - 1, y - 1] + 1);
                     }
-                    if (y - 1 >= 0 && this.tiles[x, y - 1] != Tile.Bomb)
+                    if (y - 1 >= 0 && tiles[x, y - 1] != Tile.Bomb)
                     {
-                        this.tiles[x, y - 1] = (Tile)((int)this.tiles[x, y - 1] + 1);
+                        tiles[x, y - 1] = (Tile)((int)tiles[x, y - 1] + 1);
                     }
-                    if (x + 1 < BoardSize && y - 1 >= 0 && this.tiles[x + 1, y - 1] != Tile.Bomb)
+                    if (x + 1 < BoardSize && y - 1 >= 0 && tiles[x + 1, y - 1] != Tile.Bomb)
                     {
-                        this.tiles[x + 1, y - 1] = (Tile)((int)this.tiles[x + 1, y - 1] + 1);
+                        tiles[x + 1, y - 1] = (Tile)((int)tiles[x + 1, y - 1] + 1);
                     }
 
                     count++;
                 }
             }
 
-            this.gameOver = false;
-            this.isRunning = true;
-            this.flaggedBombs = 0;
-            this.prevTime = EditorApplication.timeSinceStartup;
-            this.time = 0.0;
+            gameOver = false;
+            isRunning = true;
+            flaggedBombs = 0;
+            prevTime = EditorApplication.timeSinceStartup;
+            time = 0.0;
         }
 
         /// <summary>
@@ -148,21 +138,19 @@ namespace Sirenix.OdinInspector.Demos
         protected override void DrawPropertyLayout(GUIContent label)
         {
             Rect rect = EditorGUILayout.GetControlRect();
-            this.ValueEntry.SmartValue = Mathf.Clamp(SirenixEditorFields.IntField(rect.AlignLeft(rect.width - 80 - 4), "Number of Bombs", this.ValueEntry.SmartValue), 1, (BoardSize * BoardSize) / 4);
+            ValueEntry.SmartValue = Mathf.Clamp(SirenixEditorFields.IntField(rect.AlignLeft(rect.width - 80 - 4), "Number of Bombs", ValueEntry.SmartValue), 1, (BoardSize * BoardSize) / 4);
 
-            // Start game
             if (GUI.Button(rect.AlignRight(80), "Start"))
             {
-                this.StartGame(this.ValueEntry.SmartValue);
+                StartGame(ValueEntry.SmartValue);
             }
 
-            // Game
-            SirenixEditorGUI.BeginShakeableGroup(this.Key);
-            if (this.isRunning)
+            SirenixEditorGUI.BeginShakeableGroup(Key);
+            if (isRunning)
             {
-                this.Game();
+                Game();
             }
-            SirenixEditorGUI.EndShakeableGroup(this.Key);
+            SirenixEditorGUI.EndShakeableGroup(Key);
         }
 
         private void Game()
@@ -170,19 +158,18 @@ namespace Sirenix.OdinInspector.Demos
             Rect rect = EditorGUILayout.GetControlRect(true, TileSize * BoardSize + 20);
             rect = rect.AlignCenter(TileSize * BoardSize);
 
-            // Toolbar
             {
                 SirenixEditorGUI.DrawSolidRect(rect.AlignTop(20), new Color(0.5f, 0.5f, 0.5f, 1f));
                 SirenixEditorGUI.DrawBorders(rect.AlignTop(20).SetHeight(21).SetWidth(rect.width + 1), 1);
 
-                if (Event.current.type == EventType.Repaint && !this.gameOver)
+                if (Event.current.type == EventType.Repaint && !gameOver)
                 {
                     double t = EditorApplication.timeSinceStartup;
-                    this.time += t - this.prevTime;
-                    this.prevTime = t;
+                    this.time += t - prevTime;
+                    prevTime = t;
                 }
 
-                var time = GUIHelper.TempContent(((int)this.time).ToString());
+                GUIContent time = GUIHelper.TempContent(((int)this.time).ToString());
                 GUIHelper.PushContentColor(Color.black);
                 GUI.Label(rect.AlignTop(20).HorizontalPadding(4).AlignMiddle(18).AlignRight(EditorStyles.label.CalcSize(time).x), time);
                 GUIHelper.PopContentColor();
@@ -191,10 +178,10 @@ namespace Sirenix.OdinInspector.Demos
                 GUI.Label(rect.AlignTop(20).AlignCenter(20), EditorIcons.PacmanGhost.Raw);
                 GUIHelper.PopColor();
 
-                if (this.gameOver)
+                if (gameOver)
                 {
-                    GUIHelper.PushContentColor(this.flaggedBombs == this.numberOfBombs ? Color.green : Color.red);
-                    GUI.Label(rect.AlignTop(20).HorizontalPadding(4).AlignMiddle(18), this.flaggedBombs == this.numberOfBombs ? "You win!" : "Game over!");
+                    GUIHelper.PushContentColor(flaggedBombs == numberOfBombs ? Color.green : Color.red);
+                    GUI.Label(rect.AlignTop(20).HorizontalPadding(4).AlignMiddle(18), flaggedBombs == numberOfBombs ? "You win!" : "Game over!");
                     GUIHelper.PopContentColor();
                 }
             }
@@ -209,15 +196,15 @@ namespace Sirenix.OdinInspector.Demos
 
                 int x = i % BoardSize;
                 int y = i / BoardSize;
-                var tile = this.tiles[x, y];
-                var visible = this.visibleTiles[x, y];
+                Tile tile = tiles[x, y];
+                Tile visible = visibleTiles[x, y];
 
-                if (this.gameOver || visible == Tile.Open)
+                if (gameOver || visible == Tile.Open)
                 {
                     SirenixEditorGUI.DrawSolidRect(new Rect(tileRect.x + 1, tileRect.y + 1, tileRect.width - 1, tileRect.height - 1), new Color(0.3f, 0.3f, 0.3f, 1f));
                 }
 
-                if ((this.gameOver || visible == Tile.Open) && tile == Tile.Bomb)
+                if ((gameOver || visible == Tile.Open) && tile == Tile.Bomb)
                 {
                     GUIHelper.PushColor(visible == Tile.Flag ? Color.black : Color.white);
                     GUI.Label(tileRect.AlignCenter(18).AlignMiddle(18), EditorIcons.SettingsCog.ActiveGUIContent);
@@ -231,61 +218,57 @@ namespace Sirenix.OdinInspector.Demos
                     GUIHelper.PopColor();
                 }
 
-                if ((this.gameOver || visible == Tile.Open) && (int)tile >= 1 && (int)tile <= 8)
+                if ((gameOver || visible == Tile.Open) && (int)tile >= 1 && (int)tile <= 8)
                 {
-                    GUIHelper.PushColor(this.NumberColors[(int)tile - 1]);
+                    GUIHelper.PushColor(NumberColors[(int)tile - 1]);
                     GUI.Label(tileRect.AlignCenter(18).AlignCenter(18).AddX(2).AddY(2), ((int)tile).ToString(), EditorStyles.boldLabel);
                     GUIHelper.PopColor();
                 }
 
-                if (!this.gameOver && tileRect.Contains(Event.current.mousePosition))
+                if (!gameOver && tileRect.Contains(Event.current.mousePosition))
                 {
                     SirenixEditorGUI.DrawSolidRect(new Rect(tileRect.x + 1, tileRect.y + 1, tileRect.width - 1, tileRect.height - 1), new Color(0f, 1f, 0f, 0.3f));
 
-                    // Input
-                    // Reveal
                     if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
                     {
                         if (visible != Tile.Flag)
                         {
                             if (tile == Tile.Bomb)
                             {
-                                // LOSE
-                                this.gameOver = true;
-                                SirenixEditorGUI.StartShakingGroup(this.Key, 3f);
+                                gameOver = true;
+                                SirenixEditorGUI.StartShakingGroup(Key, 3f);
                             }
                             else
                             {
-                                this.Reveal(x, y);
+                                Reveal(x, y);
                             }
                         }
 
                         Event.current.Use();
                     }
-                    // Place flag
                     else if (Event.current.type == EventType.MouseDown && Event.current.button == 1)
                     {
                         if (visible == Tile.Empty)
                         {
-                            this.visibleTiles[x, y] = Tile.Flag;
+                            visibleTiles[x, y] = Tile.Flag;
 
                             if (tile == Tile.Bomb)
                             {
-                                this.flaggedBombs++;
+                                flaggedBombs++;
 
-                                if (this.flaggedBombs == this.numberOfBombs)
+                                if (flaggedBombs == numberOfBombs)
                                 {
-                                    this.gameOver = true;
+                                    gameOver = true;
                                 }
                             }
                         }
                         else if (visible == Tile.Flag)
                         {
-                            this.visibleTiles[x, y] = Tile.Empty;
+                            visibleTiles[x, y] = Tile.Empty;
 
                             if (tile == Tile.Bomb)
                             {
-                                this.flaggedBombs--;
+                                flaggedBombs--;
                             }
                         }
 
@@ -299,41 +282,40 @@ namespace Sirenix.OdinInspector.Demos
 
         private void Reveal(int x, int y)
         {
-            if (x < 0 || x >= BoardSize || y < 0 || y >= BoardSize)
+            if (x is < 0 or >= BoardSize || y is < 0 or >= BoardSize)
             {
                 return;
             }
 
-            if (this.visibleTiles[x, y] == Tile.Open)
+            if (visibleTiles[x, y] == Tile.Open)
             {
                 return;
             }
 
-            if (this.tiles[x, y] == Tile.Bomb)
+            if (tiles[x, y] == Tile.Bomb)
             {
                 return;
             }
 
-            if ((int)this.tiles[x, y] <= 8)
+            if ((int)tiles[x, y] <= 8)
             {
-                this.visibleTiles[x, y] = Tile.Open;
+                visibleTiles[x, y] = Tile.Open;
 
-                if (this.tiles[x, y] != Tile.Empty)
+                if (tiles[x, y] != Tile.Empty)
                 {
                     return;
                 }
             }
 
-            // Recursive reveal.
-            this.Reveal(x + 1, y);
-            this.Reveal(x + 1, y + 1);
-            this.Reveal(x, y + 1);
-            this.Reveal(x - 1, y + 1);
+            Reveal(x + 1, y);
+            Reveal(x + 1, y + 1);
+            Reveal(x, y + 1);
+            Reveal(x - 1, y + 1);
 
-            this.Reveal(x - 1, y);
-            this.Reveal(x - 1, y - 1);
-            this.Reveal(x, y - 1);
-            this.Reveal(x + 1, y - 1);
+            Reveal(x - 1, y);
+            Reveal(x - 1, y - 1);
+            Reveal(x, y - 1);
+            Reveal(x + 1, y - 1);
         }
     }
 

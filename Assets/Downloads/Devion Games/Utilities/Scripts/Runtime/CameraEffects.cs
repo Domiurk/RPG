@@ -7,7 +7,7 @@ namespace DevionGames
     /// </summary>
     public class CameraEffects : MonoBehaviour
     {
-        public Vector3 amount = new Vector3(1f, 1f, 0);
+        public Vector3 amount = new(1f, 1f, 0);
         public float duration = 1;
         public float speed = 10;
         public AnimationCurve curve = AnimationCurve.EaseInOut(0, 1, 1, 0);

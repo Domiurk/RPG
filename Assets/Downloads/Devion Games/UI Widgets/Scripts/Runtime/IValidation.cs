@@ -1,5 +1,5 @@
 ﻿namespace DevionGames.UIWidgets{
-	public interface IValidation<T> {
+	public interface IValidation<in T> {
 		bool Validate(T item);
 	}
 }

@@ -69,23 +69,23 @@ namespace DevionGames.InventorySystem
         protected override void Start()
         {
             base.Start();
-            this.m_ResultStorageContainer = WidgetUtility.Find<ItemContainer>(this.m_ResultStorageWindow);
-            this.m_RequiredIngredientsContainer = WidgetUtility.Find<ItemContainer>(this.m_RequiredIngredientsWindow);
-            this.m_Progressbar = WidgetUtility.Find<Progressbar>(this.m_CraftingProgressbar);
+            m_ResultStorageContainer = WidgetUtility.Find<ItemContainer>(m_ResultStorageWindow);
+            m_RequiredIngredientsContainer = WidgetUtility.Find<ItemContainer>(m_RequiredIngredientsWindow);
+            m_Progressbar = WidgetUtility.Find<Progressbar>(m_CraftingProgressbar);
         }
 
 
         public override bool OverrideUse(Slot slot, Item item)
         {
 
-            if (Trigger.currentUsedWindow == item.Container && !slot.MoveItem())
+            if (currentUsedWindow == item.Container && !slot.MoveItem())
             {
-                this.m_AmountSpinner = Trigger.currentUsedWindow.GetComponentInChildren<Spinner>();
-                if (this.m_AmountSpinner != null)
+                m_AmountSpinner = currentUsedWindow.GetComponentInChildren<Spinner>();
+                if (m_AmountSpinner != null)
                 {
-                    this.m_AmountSpinner.min = 1;
-                    this.m_AmountSpinner.max = int.MaxValue;
-                    StartCrafting(item, (int)this.m_AmountSpinner.current);
+                    m_AmountSpinner.min = 1;
+                    m_AmountSpinner.max = int.MaxValue;
+                    StartCrafting(item, (int)m_AmountSpinner.current);
                 }else {
                     StartCrafting(item, 1);
                 }
@@ -96,9 +96,9 @@ namespace DevionGames.InventorySystem
         protected override void Update()
         {
             base.Update();
-            if (this.m_IsCrafting)
+            if (m_IsCrafting)
             {
-                this.m_Progressbar.SetProgress(GetCraftingProgress());
+                m_Progressbar.SetProgress(GetCraftingProgress());
             }
             
         }
@@ -106,8 +106,8 @@ namespace DevionGames.InventorySystem
         protected override void OnTriggerInterrupted()
         {
             StopAllCoroutines();
-            this.m_IsCrafting = false;
-            this.m_Progressbar.SetProgress(0f);
+            m_IsCrafting = false;
+            m_Progressbar.SetProgress(0f);
             GameObject user = InventoryManager.current.PlayerInfo.gameObject;
             if (user != null)
                 user.SendMessage("SetControllerActive", true, SendMessageOptions.DontRequireReceiver);
@@ -132,7 +132,7 @@ namespace DevionGames.InventorySystem
                 ExecuteEvent<ITriggerFailedCraftStart>(Execute, item, FailureCause.FurtherAction);
                 return;
             }
-            if (this.m_IsCrafting) {
+            if (m_IsCrafting) {
                 InventoryManager.Notifications.alreadyCrafting.Show();
                 ExecuteEvent<ITriggerFailedCraftStart>(Execute, item, FailureCause.InUse);
                 return;
@@ -161,7 +161,7 @@ namespace DevionGames.InventorySystem
                 }
             }
 
-            if (!HasIngredients(this.m_RequiredIngredientsContainer, item))
+            if (!HasIngredients(m_RequiredIngredientsContainer, item))
             {
                 InventoryManager.Notifications.missingIngredient.Show();
                 ExecuteEvent<ITriggerFailedCraftStart>(Execute, item, FailureCause.Requirement);
@@ -171,7 +171,6 @@ namespace DevionGames.InventorySystem
             GameObject user = InventoryManager.current.PlayerInfo.gameObject;
             if (user != null)
             {
-                //user.transform.LookAt(new Vector3(Trigger.currentUsedTrigger.transform.position.x, user.transform.position.y, Trigger.currentUsedTrigger.transform.position.z));
                 user.SendMessage("SetControllerActive", false, SendMessageOptions.DontRequireReceiver);
 
                 Animator animator = InventoryManager.current.PlayerInfo.animator;
@@ -179,8 +178,8 @@ namespace DevionGames.InventorySystem
                     animator.CrossFadeInFixedTime(Animator.StringToHash(item.CraftingAnimatorState), 0.2f);
 
             }
-            //this.m_RequiredIngredientsContainer.Lock(true);
-           coroutine= StartCoroutine(CraftItems(item, amount));
+
+            coroutine= StartCoroutine(CraftItems(item, amount));
             ExecuteEvent<ITriggerCraftStart>(Execute, item);
 
         }
@@ -198,7 +197,7 @@ namespace DevionGames.InventorySystem
 
         public void StopCrafting(Item item)
         {
-            this.m_IsCrafting = false;
+            m_IsCrafting = false;
             GameObject user = InventoryManager.current.PlayerInfo.gameObject;
             if(user != null)
                 user.SendMessage("SetControllerActive", true, SendMessageOptions.DontRequireReceiver);
@@ -206,15 +205,15 @@ namespace DevionGames.InventorySystem
             LoadCachedAnimatorStates();
             StopCoroutine("CraftItems");
             ExecuteEvent<ITriggerCraftStop>(Execute, item);
-            this.m_Progressbar.SetProgress(0f);
+            m_Progressbar.SetProgress(0f);
         }
 
         private IEnumerator CraftItems(Item item, int amount)
         {
-            this.m_IsCrafting = true;
+            m_IsCrafting = true;
             for (int i = 0; i < amount; i++)
             {
-                if (HasIngredients(this.m_RequiredIngredientsContainer,item))
+                if (HasIngredients(m_RequiredIngredientsContainer,item))
                 {
 
                     yield return StartCoroutine(CraftItem(item));
@@ -227,13 +226,13 @@ namespace DevionGames.InventorySystem
                 }
             }
             StopCrafting(item);
-            this.m_IsCrafting = false;
+            m_IsCrafting = false;
         }
 
         private IEnumerator CraftItem(Item item)
         {
-            this.m_ProgressDuration = item.CraftingDuration;
-            this.m_ProgressInitTime = Time.time;
+            m_ProgressDuration = item.CraftingDuration;
+            m_ProgressInitTime = Time.time;
             yield return new WaitForSeconds(item.CraftingDuration);
             if (item.UseCraftingSkill) {
                 ItemContainer skills = WidgetUtility.Find<ItemContainer>(item.SkillWindow);
@@ -244,7 +243,7 @@ namespace DevionGames.InventorySystem
                     if (item.RemoveIngredientsWhenFailed) {
                         for (int i = 0; i < item.ingredients.Count; i++)
                         {
-                            this.m_RequiredIngredientsContainer.RemoveItem(item.ingredients[i].item, item.ingredients[i].amount);
+                            m_RequiredIngredientsContainer.RemoveItem(item.ingredients[i].item, item.ingredients[i].amount);
                         }
                     }
                     yield break;
@@ -258,18 +257,18 @@ namespace DevionGames.InventorySystem
 
 
 
-            if (this.m_ResultStorageContainer.StackOrAdd(craftedItem))
+            if (m_ResultStorageContainer.StackOrAdd(craftedItem))
             {
                 for (int i = 0; i < item.ingredients.Count; i++)
                 {
-                    this.m_RequiredIngredientsContainer.RemoveItem(item.ingredients[i].item, item.ingredients[i].amount);
+                    m_RequiredIngredientsContainer.RemoveItem(item.ingredients[i].item, item.ingredients[i].amount);
                 }
                 InventoryManager.Notifications.craftedItem.Show(UnityTools.ColorString(craftedItem.Name, craftedItem.Rarity.Color));
                 ExecuteEvent<ITriggerCraftItem>(Execute, craftedItem);
             }
             else
             {
-                InventoryManager.Notifications.containerFull.Show(this.m_ResultStorageContainer.Name);
+                InventoryManager.Notifications.containerFull.Show(m_ResultStorageContainer.Name);
                 ExecuteEvent<ITriggerFailedToCraftItem>(Execute, item, FailureCause.ContainerFull);
                 StopCrafting(item);
             }
@@ -278,11 +277,11 @@ namespace DevionGames.InventorySystem
         protected override void RegisterCallbacks()
         {
             base.RegisterCallbacks();
-            this.m_CallbackHandlers.Add(typeof(ITriggerFailedCraftStart), "OnFailedCraftStart");
-            this.m_CallbackHandlers.Add(typeof(ITriggerCraftStart), "OnCraftStart");
-            this.m_CallbackHandlers.Add(typeof(ITriggerCraftItem), "OnCraftItem");
-            this.m_CallbackHandlers.Add(typeof(ITriggerFailedToCraftItem),"OnFailedToCraftItem");
-            this.m_CallbackHandlers.Add(typeof(ITriggerCraftStop), "OnCraftStop");
+            m_CallbackHandlers.Add(typeof(ITriggerFailedCraftStart), "OnFailedCraftStart");
+            m_CallbackHandlers.Add(typeof(ITriggerCraftStart), "OnCraftStart");
+            m_CallbackHandlers.Add(typeof(ITriggerCraftItem), "OnCraftItem");
+            m_CallbackHandlers.Add(typeof(ITriggerFailedToCraftItem),"OnFailedToCraftItem");
+            m_CallbackHandlers.Add(typeof(ITriggerCraftStop), "OnCraftStop");
         }
     }
 }

@@ -12,7 +12,7 @@ public class JoystickEditor : Editor
     protected SerializedProperty background;
     private SerializedProperty handle;
 
-    protected Vector2 center = new Vector2(0.5f, 0.5f);
+    protected Vector2 center = new(0.5f, 0.5f);
 
     protected virtual void OnEnable()
     {

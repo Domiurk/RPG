@@ -4,7 +4,7 @@ namespace Sirenix.OdinInspector.Demos
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEngine;
 
     public class SelfAndChildrenExample : MonoBehaviour

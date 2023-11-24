@@ -33,7 +33,7 @@ namespace Text_Renaming.Scripts.Editor
         private void ScriptGUI()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.nameScript);
+            EditorGUILayout.PropertyField(nameScript);
             EditorGUI.EndDisabledGroup();
         }
 

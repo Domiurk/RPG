@@ -26,7 +26,7 @@ namespace DevionGames.StatSystem
 			if (GUI.Button(buttonRect, buttonContent, buttonStyle))
 			{
 				ObjectPickerWindow.ShowWindow(buttonRect, typeof(StatDatabase), BuildSelectableObjects(),
-					(UnityEngine.Object obj) => {
+					(Object obj) => {
 						property.serializedObject.Update();
 						property.objectReferenceValue = obj;
 						property.serializedObject.ApplyModifiedProperties();
@@ -47,16 +47,16 @@ namespace DevionGames.StatSystem
 			return database.effects.Where(x => type.IsAssignableFrom(x.GetType())).ToList();
 		}
 
-		protected Dictionary<UnityEngine.Object, List<UnityEngine.Object>> BuildSelectableObjects()
+		protected Dictionary<Object, List<Object>> BuildSelectableObjects()
 		{
-			Dictionary<UnityEngine.Object, List<UnityEngine.Object>> selectableObjects = new Dictionary<UnityEngine.Object, List<UnityEngine.Object>>();
+			Dictionary<Object, List<Object>> selectableObjects = new Dictionary<Object, List<Object>>();
 
 			string[] guids = AssetDatabase.FindAssets("t:StatDatabase");
 			for (int i = 0; i < guids.Length; i++)
 			{
 				string path = AssetDatabase.GUIDToAssetPath(guids[i]);
-				UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(StatDatabase));
-				List<UnityEngine.Object> items = GetItems(obj as StatDatabase).Cast<UnityEngine.Object>().ToList();
+				Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(StatDatabase));
+				List<Object> items = GetItems(obj as StatDatabase).Cast<Object>().ToList();
 				for (int j = 0; j < items.Count; j++)
 				{
 					items[j].name = (items[j] as INameable).Name;

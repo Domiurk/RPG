@@ -15,7 +15,7 @@ namespace DevionGames.InventorySystem
 		public static void ShowWindow()
 		{
 
-			ItemReferenceEditor window = EditorWindow.GetWindow<ItemReferenceEditor>(true, "Item Reference Updater");
+			ItemReferenceEditor window = GetWindow<ItemReferenceEditor>(true, "Item Reference Updater");
 			Vector2 size = new Vector2(450f, 270f);
 			window.minSize = size;
 			window.wantsMouseMove = true;
@@ -23,10 +23,10 @@ namespace DevionGames.InventorySystem
 
 		
 		[SerializeField]
-		private List<SceneAsset> m_Scenes= new List<SceneAsset>();
+		private List<SceneAsset> m_Scenes= new();
 		private ItemDatabase m_Database;
 		private string m_PrefabsPath;
-		private int m_ChangedReferences = 0;
+		private int m_ChangedReferences;
 
 		private void OnGUI()
         {
@@ -39,7 +39,7 @@ namespace DevionGames.InventorySystem
 			GUILayout.Label("Changed References: "+ m_ChangedReferences);
 			GUILayout.BeginHorizontal();
 			GUILayout.FlexibleSpace();
-			EditorGUI.BeginDisabledGroup(this.m_Database == null);
+			EditorGUI.BeginDisabledGroup(m_Database == null);
 			if (GUILayout.Button("Update", "AC Button"))
 			{
 				UpdateScenes();
@@ -56,12 +56,12 @@ namespace DevionGames.InventorySystem
 		private List<GameObject> GetPrefabs()
 		{
 			List<GameObject> result = new List<GameObject>();
-			if (!string.IsNullOrEmpty(this.m_PrefabsPath))
+			if (!string.IsNullOrEmpty(m_PrefabsPath))
 			{
 				string[] temp = AssetDatabase.GetAllAssetPaths();
 				foreach (string s in temp)
 				{
-					if (s.Contains(".prefab") && s.Contains(this.m_PrefabsPath.Substring(m_PrefabsPath.IndexOf("Assets/"))))
+					if (s.Contains(".prefab") && s.Contains(m_PrefabsPath.Substring(m_PrefabsPath.IndexOf("Assets/"))))
 					{
 						result.Add(AssetDatabase.LoadAssetAtPath<GameObject>(s));
 					}
@@ -77,10 +77,10 @@ namespace DevionGames.InventorySystem
 				
 				List<GameObject> rootObjectsInScene = new List<GameObject>();
 				
-				string scenePath = AssetDatabase.GetAssetPath(this.m_Scenes[i]);
+				string scenePath = AssetDatabase.GetAssetPath(m_Scenes[i]);
 				if (EditorPrefs.GetBool("ItemReference.Scene." + scenePath, true))
 				{
-					Scene scene = EditorSceneManager.GetSceneByPath(scenePath);
+					Scene scene = SceneManager.GetSceneByPath(scenePath);
 					bool isLoaded = scene.isLoaded;
 
 					if (!isLoaded)
@@ -103,8 +103,7 @@ namespace DevionGames.InventorySystem
 				Component[] allComponents = gameObjects[j].GetComponentsInChildren<Component>(true);
 				for (int k = 0; k < allComponents.Length; k++)
 				{
-					//if (allComponents[k] is VisibleItem)
-						Debug.Log(allComponents[k]);
+					Debug.Log(allComponents[k]);
 					UpdateComponent(allComponents[k]);
 				}
 				EditorUtility.SetDirty(gameObjects[j]);
@@ -123,13 +122,12 @@ namespace DevionGames.InventorySystem
 
 		private void UpdateComponent(Component component) {
 			List<INameable> items = new List<INameable>();
-			items.AddRange(this.m_Database.items);
-			items.AddRange(this.m_Database.categories);
-			items.AddRange(this.m_Database.raritys);
-			items.AddRange(this.m_Database.equipments);
-			items.AddRange(this.m_Database.currencies);
-			items.AddRange(this.m_Database.itemGroups);
-			//Debug.Log("Component Update: "+component.gameObject+" "+component.GetType());
+			items.AddRange(m_Database.items);
+			items.AddRange(m_Database.categories);
+			items.AddRange(m_Database.raritys);
+			items.AddRange(m_Database.equipments);
+			items.AddRange(m_Database.currencies);
+			items.AddRange(m_Database.itemGroups);
 			UpdateReference(component, items);
 		}
 
@@ -151,14 +149,13 @@ namespace DevionGames.InventorySystem
 
 				if (typeof(IList).IsAssignableFrom(fieldInfo.FieldType))
 				{
-					System.Type elementType = Utility.GetElementType(fieldInfo.FieldType);
+					Type elementType = Utility.GetElementType(fieldInfo.FieldType);
 					
 					if (ShouldReference(elementType))
 					{
-						//Debug.Log("INameable List: "+ source +" "+fieldInfo.Name + " (" + fieldInfo.FieldType + ")");
 						IList array = fieldInfo.GetValue(source) as IList;
 
-						System.Type targetType = typeof(List<>).MakeGenericType(Utility.GetElementType(fieldInfo.FieldType));
+						Type targetType = typeof(List<>).MakeGenericType(Utility.GetElementType(fieldInfo.FieldType));
 						IList items = (IList)Activator.CreateInstance(targetType);
 						for (int i = 0; i < array.Count; i++)
 						{
@@ -187,9 +184,8 @@ namespace DevionGames.InventorySystem
 					}
 					else
 					{
-					//	Debug.Log("Custom Class List: " + source  + " " + fieldInfo.Name + " (" + fieldInfo.FieldType.GetElementType() + ")");
 						IList list = fieldInfo.GetValue(source) as IList;
-						foreach (var o in list)
+						foreach (object o in list)
 						{
 							UpdateReference(o, destItems);
 						}
@@ -197,7 +193,6 @@ namespace DevionGames.InventorySystem
 				}
 				else if (ShouldReference(fieldInfo.FieldType))
 				{
-					//Debug.Log("Direct INameable Field: " +source+" "+ fieldInfo.Name + " (" + fieldInfo.FieldType + ")");
 					INameable item = (INameable)fieldInfo.GetValue(source);
 					if (item != null)
 					{
@@ -214,7 +209,6 @@ namespace DevionGames.InventorySystem
 				}
 				else
 				{
-				//	Debug.Log("Custom Class: "+ source  + " " + fieldInfo.Name + " (" + fieldInfo.FieldType + ")");
 					object subSource = fieldInfo.GetValue(source);
 					try
 					{
@@ -227,7 +221,7 @@ namespace DevionGames.InventorySystem
 			}
 		}
 
-		private bool ShouldReference(System.Type type) {
+		private bool ShouldReference(Type type) {
 			return typeof(Item).IsAssignableFrom(type) || 
 				typeof(Category).IsAssignableFrom(type) || 
 				typeof(Rarity).IsAssignableFrom(type) || 
@@ -239,11 +233,11 @@ namespace DevionGames.InventorySystem
 		{
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Prefabs", GUILayout.Width(70f));
-			if (GUILayout.Button(string.IsNullOrEmpty(this.m_PrefabsPath) ? "Empty" : this.m_PrefabsPath, EditorStyles.objectField))
+			if (GUILayout.Button(string.IsNullOrEmpty(m_PrefabsPath) ? "Empty" : m_PrefabsPath, EditorStyles.objectField))
 			{
 
-				this.m_PrefabsPath = EditorUtility.OpenFolderPanel("Root Prfab Folder", Application.dataPath, "");
-				this.m_PrefabsPath = this.m_PrefabsPath.Substring(m_PrefabsPath.IndexOf("Assets/"));
+				m_PrefabsPath = EditorUtility.OpenFolderPanel("Root Prfab Folder", Application.dataPath, "");
+				m_PrefabsPath = m_PrefabsPath.Substring(m_PrefabsPath.IndexOf("Assets/"));
 			}
 			EditorGUILayout.EndHorizontal();
 		}
@@ -252,7 +246,7 @@ namespace DevionGames.InventorySystem
 		{
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Database", GUILayout.Width(70f));
-			if (GUILayout.Button(this.m_Database != null ? m_Database.name : "Null", EditorStyles.objectField))
+			if (GUILayout.Button(m_Database != null ? m_Database.name : "Null", EditorStyles.objectField))
 			{
 				string searchString = "Search...";
 				ItemDatabase[] databases = EditorTools.FindAssets<ItemDatabase>();
@@ -271,7 +265,7 @@ namespace DevionGames.InventorySystem
 						style.wordWrap = true;
 						if (GUILayout.Button(AssetDatabase.GetAssetPath(databases[i]), style))
 						{
-							this.m_Database = databases[i];
+							m_Database = databases[i];
 							UtilityInstanceWindow.CloseWindow();
 						}
 					}
@@ -288,8 +282,8 @@ namespace DevionGames.InventorySystem
 			Event evt = Event.current;
 			Rect dropArea = GUILayoutUtility.GetRect(0.0f, 120.0f, GUILayout.ExpandWidth(true));
 			GUI.Box(dropArea, GUIContent.none, (GUIStyle)"AvatarMappingBox");
-			for (int i = 0; i < this.m_Scenes.Count; i++) {
-				string assetPath = AssetDatabase.GetAssetPath(this.m_Scenes[i]);
+			for (int i = 0; i < m_Scenes.Count; i++) {
+				string assetPath = AssetDatabase.GetAssetPath(m_Scenes[i]);
 				Rect rect = new Rect(dropArea.x+2f, dropArea.y + i * EditorGUIUtility.singleLineHeight, dropArea.width, EditorGUIUtility.singleLineHeight);
 				bool state = EditorPrefs.GetBool("ItemReference.Scene." + assetPath, true);
 				bool flag = GUI.Toggle(rect,state, assetPath);
@@ -314,7 +308,6 @@ namespace DevionGames.InventorySystem
 
 						foreach (UnityEngine.Object draggedObject in DragAndDrop.objectReferences)
 						{
-							// Do On Drag Stuff here
 							if (draggedObject.GetType() == typeof(SceneAsset)) {
 								m_Scenes.Add(draggedObject as SceneAsset);
 							}
@@ -332,7 +325,7 @@ namespace DevionGames.InventorySystem
 						Scene scene = SceneManager.GetSceneAt(i);
 						SceneAsset sceneAsset=AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
 						if (sceneAsset != null && !m_Scenes.Contains(sceneAsset)) {
-							this.m_Scenes.Add(sceneAsset);
+							m_Scenes.Add(sceneAsset);
 						}
 					}
 				

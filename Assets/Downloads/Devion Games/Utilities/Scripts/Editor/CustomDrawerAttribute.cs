@@ -5,10 +5,10 @@ namespace DevionGames
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class CustomDrawerAttribute : Attribute
     {
-        private Type m_Type;
+        private readonly Type m_Type;
         public Type Type => m_Type;
 
-        private bool m_UseForChildren;
+        private readonly bool m_UseForChildren;
         public bool UseForChildren => m_UseForChildren;
 
         public CustomDrawerAttribute(Type type)

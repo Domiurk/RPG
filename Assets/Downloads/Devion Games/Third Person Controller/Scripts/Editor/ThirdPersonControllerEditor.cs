@@ -23,12 +23,12 @@ namespace DevionGames
 
         private void OnEnable()
         {
-            this.m_Controller = target as ThirdPersonController;
-            this.m_GameObject = this.m_Controller.gameObject;
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_Motions = serializedObject.FindProperty("Motions");
+            m_Controller = target as ThirdPersonController;
+            m_GameObject = m_Controller.gameObject;
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_Motions = serializedObject.FindProperty("Motions");
 
-            this.m_MotionList = new ReorderableList(serializedObject, this.m_Motions, true, true, true, true){
+            m_MotionList = new ReorderableList(serializedObject, m_Motions, true, true, true, true){
                 drawHeaderCallback = DrawMotionHeader,
                 drawElementCallback = DrawMotion,
                 onAddDropdownCallback = AddMotion,
@@ -38,28 +38,28 @@ namespace DevionGames
             };
             int motionIndex = EditorPrefs.GetInt("MotionIndex" + target.GetInstanceID().ToString(), -1);
 
-            if(this.m_MotionList.count > motionIndex){
-                this.m_MotionList.index = motionIndex;
-                SelectMotion(this.m_MotionList);
+            if(m_MotionList.count > motionIndex){
+                m_MotionList.index = motionIndex;
+                SelectMotion(m_MotionList);
             }
 
-            MotionState[] states = this.m_Controller.GetComponents<MotionState>();
+            MotionState[] states = m_Controller.GetComponents<MotionState>();
             foreach(MotionState state in states)
                 state.hideFlags = HideFlags.HideInInspector;
 
-            this.m_NotReferencedMotions = new List<MotionState>();
+            m_NotReferencedMotions = new List<MotionState>();
             foreach(MotionState state in states)
-                if(!this.m_Controller.Motions.Contains(state))
-                    this.m_NotReferencedMotions.Add(state);
+                if(!m_Controller.Motions.Contains(state))
+                    m_NotReferencedMotions.Add(state);
 
-            for(int i = 0; i < this.m_Controller.Motions.Count; i++){
-                if(this.m_Controller.Motions[i] != null){
-                    if(this.m_Controller.Motions[i].gameObject != this.m_GameObject){
-                        if(ComponentUtility.CopyComponent(this.m_Controller.Motions[i])){
+            for(int i = 0; i < m_Controller.Motions.Count; i++){
+                if(m_Controller.Motions[i] != null){
+                    if(m_Controller.Motions[i].gameObject != m_GameObject){
+                        if(ComponentUtility.CopyComponent(m_Controller.Motions[i])){
                             MotionState component =
-                                this.m_GameObject.AddComponent(this.m_Controller.Motions[i].GetType()) as MotionState;
+                                m_GameObject.AddComponent(m_Controller.Motions[i].GetType()) as MotionState;
                             ComponentUtility.PasteComponentValues(component);
-                            this.m_Controller.Motions[i] = component;
+                            m_Controller.Motions[i] = component;
                         }
                     }
                 }
@@ -84,8 +84,8 @@ namespace DevionGames
 
         private void OnDestroy()
         {
-            if(this.m_GameObject != null && target == null && !playModeStateChange){
-                MotionState[] states = this.m_GameObject.GetComponents<MotionState>();
+            if(m_GameObject != null && target == null && !playModeStateChange){
+                MotionState[] states = m_GameObject.GetComponents<MotionState>();
 
                 foreach(MotionState state in states)
                     DestroyImmediate(state);
@@ -101,31 +101,31 @@ namespace DevionGames
             bool enabled = GUI.enabled;
             
             GUI.enabled = false;
-            EditorGUILayout.PropertyField(this.m_Script);
+            EditorGUILayout.PropertyField(m_Script);
             GUI.enabled = enabled;
             
             DrawPropertiesExcluding(serializedObject, "m_Script", "Motions");
             GUILayout.Space(10f);
 
-            if(this.m_NotReferencedMotions.Count > 0){
+            if(m_NotReferencedMotions.Count > 0){
                 EditorGUILayout
                     .HelpBox("There are unreferenced motions! You should add them to the motions list or remove.",
                              MessageType.Warning);
                 EditorGUILayout.BeginHorizontal();
 
                 if(GUILayout.Button("Add")){
-                    this.m_Controller.Motions.AddRange(this.m_NotReferencedMotions);
-                    EditorUtility.SetDirty(this.m_Controller);
+                    m_Controller.Motions.AddRange(m_NotReferencedMotions);
+                    EditorUtility.SetDirty(m_Controller);
                     OnDisable();
                     OnEnable();
                 }
 
                 if(GUILayout.Button("Remove")){
                     for(int i = 0; i < m_NotReferencedMotions.Count; i++){
-                        DestroyImmediate(this.m_NotReferencedMotions[i]);
+                        DestroyImmediate(m_NotReferencedMotions[i]);
                     }
 
-                    EditorUtility.SetDirty(this.m_Controller);
+                    EditorUtility.SetDirty(m_Controller);
                     OnDisable();
                     OnEnable();
                 }
@@ -133,13 +133,13 @@ namespace DevionGames
                 EditorGUILayout.EndHorizontal();
             }
 
-            if(this.m_MotionList != null){
+            if(m_MotionList != null){
                 GUILayout.Space(3f);
-                this.m_MotionList.DoLayoutList();
+                m_MotionList.DoLayoutList();
                 GUILayout.Space(15f);
 
                 if(m_MotionList.index != -1){
-                    DrawSelectedMotion(this.m_Motions.GetArrayElementAtIndex(m_MotionList.index).objectReferenceValue as
+                    DrawSelectedMotion(m_Motions.GetArrayElementAtIndex(m_MotionList.index).objectReferenceValue as
                                            MotionState);
                 }
             }
@@ -158,9 +158,9 @@ namespace DevionGames
         {
             Color color = GUI.color;
 
-            if(this.m_Controller.Motions != null){
-                for(int i = 0; i < this.m_Controller.Motions.Count; i++){
-                    MotionState motion = this.m_Controller.Motions[i];
+            if(m_Controller.Motions != null){
+                for(int i = 0; i < m_Controller.Motions.Count; i++){
+                    MotionState motion = m_Controller.Motions[i];
 
                     if(i == index){
                         if(motion.IsActive){
@@ -181,7 +181,7 @@ namespace DevionGames
         private void DrawMotion(Rect rect, int index, bool isActive, bool isFocused)
         {
             rect.y += 2f;
-            SerializedProperty element = this.m_Motions.GetArrayElementAtIndex(index);
+            SerializedProperty element = m_Motions.GetArrayElementAtIndex(index);
 
             SerializedObject obj = new SerializedObject(element.objectReferenceValue);
             obj.Update();
@@ -196,7 +196,7 @@ namespace DevionGames
             rect1.width = 20f;
             rect1.x += rect.width - 20f;
 
-            if(index == this.m_RenameMotionIndex){
+            if(index == m_RenameMotionIndex){
                 string before = friendlyName.stringValue;
                 GUI.SetNextControlName("RenameMotionField");
                 rect.height = rect.height - 4f;
@@ -220,29 +220,29 @@ namespace DevionGames
                 case EventType.MouseDown:
                     if(rect.Contains(currentEvent.mousePosition) && index == m_MotionList.index &&
                        currentEvent.button == 0 && currentEvent.type == EventType.MouseDown){
-                        this.m_ClickCount += 1;
+                        m_ClickCount += 1;
                     }
 
                     break;
                 case EventType.KeyUp:
-                    if(currentEvent.keyCode == KeyCode.Return && this.m_RenameMotionIndex != -1){
-                        this.m_RenameMotionIndex = -1;
+                    if(currentEvent.keyCode == KeyCode.Return && m_RenameMotionIndex != -1){
+                        m_RenameMotionIndex = -1;
                         currentEvent.Use();
                     }
 
                     break;
                 case EventType.MouseUp:
-                    if(this.m_ClickCount > 0 && rect.Contains(currentEvent.mousePosition) &&
+                    if(m_ClickCount > 0 && rect.Contains(currentEvent.mousePosition) &&
                        index == m_MotionList.index && currentEvent.button == 0 &&
                        currentEvent.type == EventType.MouseUp){
-                        this.m_RenameMotionIndex = index;
-                        this.m_ClickCount = 0;
+                        m_RenameMotionIndex = index;
+                        m_ClickCount = 0;
                         EditorGUI.FocusTextInControl("RenameMotionField");
                         Event.current.Use();
                     }
                     else if(!rect.Contains(Event.current.mousePosition) && Event.current.clickCount > 0 &&
-                            index == this.m_MotionList.index && this.m_RenameMotionIndex != -1){
-                        this.m_RenameMotionIndex = -1;
+                            index == m_MotionList.index && m_RenameMotionIndex != -1){
+                        m_RenameMotionIndex = -1;
                         Event.current.Use();
                     }
 
@@ -287,19 +287,19 @@ namespace DevionGames
             MotionState motion = m_Motions.GetArrayElementAtIndex(list.index).objectReferenceValue as MotionState;
             m_Motions.GetArrayElementAtIndex(list.index).objectReferenceValue = null;
             m_Motions.DeleteArrayElementAtIndex(list.index);
-            UnityEngine.Object.DestroyImmediate(motion, true);
+            DestroyImmediate(motion, true);
             list.index = list.index - 1;
 
             if(list.index == -1 && m_Motions.arraySize > 0){
                 list.index = 0;
             }
 
-            EditorUtility.SetDirty(this.m_Controller);
+            EditorUtility.SetDirty(m_Controller);
         }
 
         private void SelectMotion(ReorderableList list)
         {
-            this.m_RenameMotionIndex = -1;
+            m_RenameMotionIndex = -1;
             EditorPrefs.SetInt("MotionIndex" + target.GetInstanceID().ToString(), list.index);
         }
 

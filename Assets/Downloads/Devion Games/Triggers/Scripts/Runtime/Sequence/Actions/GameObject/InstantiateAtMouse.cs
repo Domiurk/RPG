@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DevionGames
 {
@@ -7,27 +8,30 @@ namespace DevionGames
     [ComponentMenu("GameObject/Instantiate At Mouse")]
     public class InstantiateAtMouse : Action
     {
-        [SerializeField]
-        private GameObject m_Original = null;
-        [SerializeField]
-        private bool m_IgnorePlayerCollision = true;
+        [SerializeField] private readonly GameObject m_Original = null;
+        [SerializeField] private readonly bool m_IgnorePlayerCollision = true;
 
+        private Camera cameraMain;
+
+        public override void OnStart()
+        {
+            cameraMain = Camera.main;
+        }
 
         public override ActionStatus OnUpdate()
         {
-            if (m_Original == null)
-            {
+            if(m_Original == null){
                 Debug.LogWarning("The game object you want to instantiate is null.");
                 return ActionStatus.Failure;
             }
 
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100))
-            {
-                GameObject go = GameObject.Instantiate(m_Original, hit.point, Quaternion.identity);
-                if (m_IgnorePlayerCollision)
-                {
+            if(Physics.Raycast(cameraMain.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit,
+                               100)){
+                GameObject go = Object.Instantiate(m_Original, hit.point, Quaternion.identity);
+
+                if(m_IgnorePlayerCollision)
                     UnityTools.IgnoreCollision(playerInfo.gameObject, go);
-                }
+
                 return ActionStatus.Success;
             }
 

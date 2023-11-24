@@ -3,71 +3,48 @@
 namespace DevionGames.UIWidgets{
 	internal struct FloatTween : ITweenValue
 	{
-		private FloatTween.FloatTweenCallback m_Target;
-		private FloatTween.FloatTweenFinishCallback m_OnFinish;
+		private FloatTweenCallback m_Target;
+		private FloatTweenFinishCallback m_OnFinish;
 
-		private EasingEquations.EaseType m_EaseType;
-		public EasingEquations.EaseType easeType{
-			get => this.m_EaseType;
-			set => this.m_EaseType = value;
-		}
-		private float m_StartValue;
-		public float startValue{
-			get => this.m_StartValue;
-			set => this.m_StartValue = value;
-		}
-		private float m_TargetValue;
-		public float targetValue{
-			get => this.m_TargetValue;
-			set => this.m_TargetValue = value;
-		}
-		private float m_Duration;
-		public float duration{
-			get => this.m_Duration;
-			set => this.m_Duration = value;
-		}
-		private bool m_IgnoreTimeScale;
-		public bool ignoreTimeScale{
-			get => this.m_IgnoreTimeScale;
-			set => this.m_IgnoreTimeScale = value;
-		}
+		public EasingEquations.EaseType easeType { get; set; }
+		public float startValue { get; set; }
+		public float targetValue { get; set; }
+		public float duration { get; set; }
+		public bool ignoreTimeScale { get; set; }
 
 		public bool ValidTarget()
 		{
-			return this.m_Target != null;
+			return m_Target != null;
 		}
 
 		public void TweenValue(float floatPercentage)
 		{
-			if (!this.ValidTarget()){
+			if (!ValidTarget()){
 				return;
 			}
 			float value = EasingEquations.GetValue (easeType, startValue, targetValue, floatPercentage);
-			this.m_Target.Invoke(value);
+			m_Target.Invoke(value);
            
 
 		}
 
 		public void AddOnChangedCallback(UnityAction<float> callback)
 		{
-			if (m_Target == null)
-				m_Target = new FloatTweenCallback();
+			m_Target ??= new FloatTweenCallback();
 
 			m_Target.AddListener (callback);
 		}
 		
 		public void AddOnFinishCallback(UnityAction callback)
 		{
-			if (m_OnFinish == null)
-				m_OnFinish = new FloatTweenFinishCallback();
+			m_OnFinish ??= new FloatTweenFinishCallback();
 
-            m_OnFinish.AddListener (callback);
+			m_OnFinish.AddListener (callback);
 		}
 
 		public void OnFinish()
 		{
-			if (m_OnFinish != null)
-				m_OnFinish.Invoke();
+			m_OnFinish?.Invoke();
 		}
 
 		public class FloatTweenCallback : UnityEvent<float>

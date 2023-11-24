@@ -3,13 +3,13 @@ namespace Sirenix.OdinInspector.Demos
 {
     using UnityEngine;
     using System.Collections.Generic;
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using System;
     using System.Reflection;
 
     public class CustomizeDictionaryKeyValueExample : SerializedMonoBehaviour
     {
-        public Dictionary<MyKey, int> MyDictionary = new Dictionary<MyKey, int>();
+        public Dictionary<MyKey, int> MyDictionary = new();
     }
 
     public enum MyKey

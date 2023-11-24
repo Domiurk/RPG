@@ -17,38 +17,38 @@ namespace DevionGames
 
 		private void Start ()
 		{
-			this.m_Rigidbody = GetComponent<Rigidbody> ();	
-			this.m_Transform = transform;
+			m_Rigidbody = GetComponent<Rigidbody> ();	
+			m_Transform = transform;
 		}
 
 		public void StartMove (ThirdPersonController controller)
 		{
-			this.m_CanMove = true;
-			this.m_MoveDirection = controller.transform.forward;
-			this.m_MoveDirection.y = 0f;
-			this.m_Moving = true;
-			this.m_Controller = controller;
+			m_CanMove = true;
+			m_MoveDirection = controller.transform.forward;
+			m_MoveDirection.y = 0f;
+			m_Moving = true;
+			m_Controller = controller;
 		}
 
 		public void StopMove ()
 		{
-			this.m_Moving = false;
+			m_Moving = false;
 		}
 
 		public bool Move (Vector3 position)
 		{
-			this.m_Rigidbody.MovePosition (position);
+			m_Rigidbody.MovePosition (position);
 			return m_CanMove;
 		}
 
 		private void OnCollisionStay (Collision collision)
 		{
-			if (this.m_Moving) {
+			if (m_Moving) {
 				foreach (ContactPoint p in collision.contacts) {
 					Vector3 direction = p.normal;
-					if (p.otherCollider.transform != m_Controller.transform && p.point.y > this.m_Transform.position.y + 0.1f && Vector3.Dot (direction, this.m_MoveDirection) < -0.2) {
+					if (p.otherCollider.transform != m_Controller.transform && p.point.y > m_Transform.position.y + 0.1f && Vector3.Dot (direction, m_MoveDirection) < -0.2) {
 						
-						this.m_CanMove = false;
+						m_CanMove = false;
 						break;
 					}
 				}

@@ -9,7 +9,7 @@ namespace DevionGames.UIWidgets
     /// <summary>
     /// UIWidget is responsible for the management of widgets as well as animating them. 
     /// Your custom widgets should extend from this class or from child classes. 
-    /// This way you can always track existing widgets by name in your game using WidgetUtility.Find<T>(name).
+    /// This way you can always track existing widgets by name in your game using WidgetUtility.Find(name).
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
     public class UIWidget : CallbackHandler
@@ -18,8 +18,7 @@ namespace DevionGames.UIWidgets
         /// Name of the widget.
         /// </summary>
         [Tooltip("Name of the widget. You can find a reference to a widget with WidgetUtility.Find<T>(name).")]
-        [SerializeField]
-        protected new string name;
+        [SerializeField] protected new string name;
 
         /// <summary>
         /// Gets or sets the name.
@@ -37,7 +36,7 @@ namespace DevionGames.UIWidgets
         public override string[] Callbacks
         {
             get{
-                return new string[]{
+                return new[]{
                     "OnShow",
                     "OnClose",
                 };
@@ -48,72 +47,59 @@ namespace DevionGames.UIWidgets
         /// Widgets with higher priority will be preferred when used with WidgetUtility.Find (Generic Method).
         /// </summary>
         [Tooltip("Widgets with higher priority will be preferred when used with WidgetUtility.Find<T>(name).")]
-        [Range(0, 100)]
-        public int priority;
+        [Range(0, 100)] public int priority;
 
         /// <summary>
         /// Key to toggle show and close
         /// </summary>
         [Header("Appearance")]
         [Tooltip("Key to show or close this widget.")]
-        [SerializeField]
-        protected Key m_Key = Key.None;
+        [SerializeField] protected Key m_Key = Key.None;
 
         [Tooltip("Easing equation type used to tween this widget.")]
-        [SerializeField]
-        private EasingEquations.EaseType m_EaseType = EasingEquations.EaseType.EaseInOutBack;
+        [SerializeField] private EasingEquations.EaseType m_EaseType = EasingEquations.EaseType.EaseInOutBack;
 
         /// <summary>
         /// The duration to tween this widget.
         /// </summary>
         [Tooltip("The duration to tween this widget.")]
-        [SerializeField]
-        protected float m_Duration = 0.7f;
+        [SerializeField] protected float m_Duration = 0.7f;
 
-        [SerializeField]
-        protected bool m_IgnoreTimeScale = true;
-        public bool IgnoreTimeScale => this.m_IgnoreTimeScale;
+        [SerializeField] protected bool m_IgnoreTimeScale = true;
+        public bool IgnoreTimeScale => m_IgnoreTimeScale;
 
         /// <summary>
         /// The AudioClip that will be played when this widget shows.
         /// </summary>
         [Tooltip("The AudioClip that will be played when this widget shows.")]
-        [SerializeField]
-        protected AudioClip m_ShowSound;
+        [SerializeField] protected AudioClip m_ShowSound;
 
         /// <summary>
         /// The AudioClip that will be played when this widget closes.
         /// </summary>
         [Tooltip("The AudioClip that will be played when this widget closes.")]
-        [SerializeField]
-        protected AudioClip m_CloseSound;
+        [SerializeField] protected AudioClip m_CloseSound;
 
         /// <summary>
         /// Brings this window to front in Show()
         /// </summary>
         [Tooltip("Focus the widget. This will bring the widget to front when it is shown.")]
-        [SerializeField]
-        protected bool m_Focus = true;
+        [SerializeField] protected bool m_Focus = true;
 
         /// <summary>
-        /// If true deactivates the gameobject when closed.
+        /// If true deactivates the gameObject when closed.
         /// </summary>
-        [Tooltip("If true, deactivates the game object when it gets closed. This prevets Update() to be called every frame.")]
-        [SerializeField]
-        protected bool m_DeactivateOnClose = true;
+        [Tooltip("If true, deactivates the game object when it gets closed. This presets Update() to be called every frame.")]
+        [SerializeField] protected bool m_DeactivateOnClose = true;
 
         [Tooltip("Enables Cursor when this window is shown. Hides it again when the window is closed or character moves.")]
-        [SerializeField]
-        protected bool m_ShowAndHideCursor;
+        [SerializeField] protected bool m_ShowAndHideCursor;
         [Tooltip("Close this widget when the player moves.")]
-        [SerializeField]
-        protected bool m_CloseOnMove = true;
+        [SerializeField] protected bool m_CloseOnMove = true;
         [Tooltip("When the key is pressed, show and hide cursor functionality will be disabled.")]
-        [SerializeField]
-        protected KeyCode m_Deactivate = KeyCode.LeftControl;
+        [SerializeField] protected KeyCode m_Deactivate = KeyCode.LeftControl;
         [Tooltip("This option allows to focus and rotate player. This functionality only works with the included ThirdPersonCamera and FocusTarget component!")]
-        [SerializeField]
-        protected bool m_FocusPlayer;
+        [SerializeField] protected bool m_FocusPlayer;
 
         protected static CursorLockMode m_PreviousCursorLockMode;
         protected static bool m_PreviousCursorVisibility;
@@ -121,7 +107,7 @@ namespace DevionGames.UIWidgets
         protected MonoBehaviour m_CameraController;
         protected MonoBehaviour m_ThirdPersonController;
         protected static bool m_PreviousCameraControllerEnabled;
-        protected static List<UIWidget> m_CurrentVisibleWidgets = new List<UIWidget>();
+        protected static readonly List<UIWidget> m_CurrentVisibleWidgets = new();
 
         /// <summary>
         /// Gets a value indicating whether this widget is visible.
@@ -130,8 +116,8 @@ namespace DevionGames.UIWidgets
         public bool IsVisible
         {
             get{
-                if(this.m_CanvasGroup == null)
-                    this.m_CanvasGroup = GetComponent<CanvasGroup>();
+                if(m_CanvasGroup == null)
+                    m_CanvasGroup = GetComponent<CanvasGroup>();
                 return m_CanvasGroup.alpha == 1f;
             }
         }
@@ -155,36 +141,32 @@ namespace DevionGames.UIWidgets
         protected Scrollbar[] m_Scrollbars;
 
         protected bool m_IsLocked;
-        public bool IsLocked => this.m_IsLocked;
+        public bool IsLocked => m_IsLocked;
 
         private void Awake()
         {
-            //Register the KeyCode to show or close the widget.
-            WidgetInputHandler.RegisterInput(this.m_Key, this);
+            WidgetInputHandler.RegisterInput(m_Key, this);
             m_RectTransform = GetComponent<RectTransform>();
             m_CanvasGroup = GetComponent<CanvasGroup>();
-            this.m_Scrollbars = GetComponentsInChildren<Scrollbar>();
-            this.m_CameraTransform = Camera.main!.transform;
-            this.m_CameraController =
-                this.m_CameraTransform.GetComponent($"DevionGames.ThirdPersonCamera") as MonoBehaviour;
+            m_Scrollbars = GetComponentsInChildren<Scrollbar>();
+            m_CameraTransform = Camera.main!.transform;
+            m_CameraController =
+                m_CameraTransform.GetComponent($"DevionGames.ThirdPersonCamera") as MonoBehaviour;
             PlayerInfo playerInfo = new PlayerInfo("Player");
 
             if(playerInfo.gameObject != null)
-                this.m_ThirdPersonController =
+                m_ThirdPersonController =
                     playerInfo.gameObject.GetComponent($"DevionGames.ThirdPersonController") as MonoBehaviour;
 
             if(!IsVisible){
-                //Set local scale to zero, when widget is not visible. Used to correctly animate the widget.
                 m_RectTransform.localScale = Vector3.zero;
             }
 
-            if(this.m_AlphaTweenRunner == null)
-                this.m_AlphaTweenRunner = new TweenRunner<FloatTween>();
-            this.m_AlphaTweenRunner.Init(this);
+            m_AlphaTweenRunner ??= new TweenRunner<FloatTween>();
+            m_AlphaTweenRunner.Init(this);
 
-            if(this.m_ScaleTweenRunner == null)
-                this.m_ScaleTweenRunner = new TweenRunner<Vector3Tween>();
-            this.m_ScaleTweenRunner.Init(this);
+            m_ScaleTweenRunner ??= new TweenRunner<Vector3Tween>();
+            m_ScaleTweenRunner.Init(this);
             m_IsShowing = IsVisible;
 
             OnAwake();
@@ -211,10 +193,10 @@ namespace DevionGames.UIWidgets
 
         protected virtual void Update()
         {
-            if(this.m_ShowAndHideCursor && this.IsVisible && this.m_CloseOnMove &&
-               (this.m_ThirdPersonController == null || this.m_ThirdPersonController.enabled) &&
+            if(m_ShowAndHideCursor && IsVisible && m_CloseOnMove &&
+               (m_ThirdPersonController == null || m_ThirdPersonController.enabled) &&
                (Input.GetAxis("Vertical") != 0f || Input.GetAxis("Horizontal") != 0f) &&
-               !Input.GetKey(this.m_Deactivate)){
+               !Input.GetKey(m_Deactivate)){
                 Close();
             }
         }
@@ -224,30 +206,30 @@ namespace DevionGames.UIWidgets
         /// </summary>
         public virtual void Show()
         {
-            if(this.m_IsShowing){
+            if(m_IsShowing){
                 return;
             }
 
-            this.m_IsShowing = true;
+            m_IsShowing = true;
             gameObject.SetActive(true);
 
-            if(this.m_Focus){
+            if(m_Focus){
                 Focus();
             }
 
             TweenCanvasGroupAlpha(m_CanvasGroup.alpha, 1f);
             TweenTransformScale(Vector3.ClampMagnitude(m_RectTransform.localScale, 1.9f), Vector3.one);
 
-            WidgetUtility.PlaySound(this.m_ShowSound, 1.0f);
+            WidgetUtility.PlaySound(m_ShowSound, 1.0f);
             m_CanvasGroup.interactable = true;
             m_CanvasGroup.blocksRaycasts = true;
             Canvas.ForceUpdateCanvases();
 
-            for(int i = 0; i < this.m_Scrollbars.Length; i++){
-                this.m_Scrollbars[i].value = 1f;
+            foreach(Scrollbar scrollBar in m_Scrollbars){
+                scrollBar.value = 1f;
             }
 
-            if(this.m_ShowAndHideCursor){
+            if(m_ShowAndHideCursor){
                 if(m_CurrentVisibleWidgets.Count == 0){
                     m_PreviousCursorLockMode = Cursor.lockState;
                     m_PreviousCursorVisibility = Cursor.visible;
@@ -257,11 +239,11 @@ namespace DevionGames.UIWidgets
 
                 m_CurrentVisibleWidgets.Add(this);
 
-                if(m_CameraController != null && !Input.GetKey(this.m_Deactivate) &&
+                if(m_CameraController != null && !Input.GetKey(m_Deactivate) &&
                    m_CurrentVisibleWidgets.Count == 1){
-                    this.m_CameraController.enabled = false;
-                    if(this.m_FocusPlayer && !this.m_IsLocked)
-                        this.m_CameraController.SendMessage("Focus", true, SendMessageOptions.DontRequireReceiver);
+                    m_CameraController.enabled = false;
+                    if(m_FocusPlayer && !m_IsLocked)
+                        m_CameraController.SendMessage("Focus", true, SendMessageOptions.DontRequireReceiver);
                 }
 
                 Cursor.lockState = CursorLockMode.None;
@@ -284,22 +266,22 @@ namespace DevionGames.UIWidgets
             TweenCanvasGroupAlpha(m_CanvasGroup.alpha, 0f);
             TweenTransformScale(m_RectTransform.localScale, Vector3.zero);
 
-            WidgetUtility.PlaySound(this.m_CloseSound, 1.0f);
+            WidgetUtility.PlaySound(m_CloseSound, 1.0f);
             m_CanvasGroup.interactable = false;
             m_CanvasGroup.blocksRaycasts = false;
 
-            if(this.m_ShowAndHideCursor){
+            if(m_ShowAndHideCursor){
                 m_CurrentVisibleWidgets.Remove(this);
 
                 if(m_CurrentVisibleWidgets.Count == 0){
                     Cursor.lockState = m_PreviousCursorLockMode;
                     Cursor.visible = m_PreviousCursorVisibility;
 
-                    if(this.m_CameraController != null){
-                        this.m_CameraController.enabled = m_PreviousCameraControllerEnabled;
+                    if(m_CameraController != null){
+                        m_CameraController.enabled = m_PreviousCameraControllerEnabled;
 
-                        if(this.m_CameraController.enabled && this.m_FocusPlayer){
-                            this.m_CameraController.SendMessage("Focus", false, SendMessageOptions.DontRequireReceiver);
+                        if(m_CameraController.enabled && m_FocusPlayer){
+                            m_CameraController.SendMessage("Focus", false, SendMessageOptions.DontRequireReceiver);
                         }
                     }
                 }
@@ -322,7 +304,7 @@ namespace DevionGames.UIWidgets
             alphaTween.AddOnFinishCallback(() =>
                                                {
                                                    if(alphaTween.startValue > alphaTween.targetValue){
-                                                       if(m_DeactivateOnClose && !this.m_IsShowing){
+                                                       if(m_DeactivateOnClose && !m_IsShowing){
                                                            gameObject.SetActive(false);
                                                        }
                                                    }
@@ -368,21 +350,20 @@ namespace DevionGames.UIWidgets
 
         protected virtual void OnDestroy()
         {
-            //Unregister input key
-            WidgetInputHandler.UnregisterInput(this.m_Key, this);
+            WidgetInputHandler.UnregisterInput(m_Key, this);
         }
 
         public void Lock(bool state)
         {
-            this.m_IsLocked = state;
+            m_IsLocked = state;
         }
 
         public static void LockAll(bool state)
         {
             UIWidget[] widgets = WidgetUtility.FindAll<UIWidget>();
 
-            for(int i = 0; i < widgets.Length; i++){
-                widgets[i].Lock(state);
+            foreach(UIWidget widget in widgets){
+                widget.Lock(state);
             }
         }
     }

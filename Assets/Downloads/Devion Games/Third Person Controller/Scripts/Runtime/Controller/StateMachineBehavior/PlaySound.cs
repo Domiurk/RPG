@@ -19,13 +19,13 @@ public class PlaySound : StateMachineBehaviour
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (this.audioSource == null)
+        if (audioSource == null)
         {
-            this.audioSource = animator.GetComponent<AudioSource>();
-            if (this.audioSource == null)
+            audioSource = animator.GetComponent<AudioSource>();
+            if (audioSource == null)
             {
-                this.audioSource = animator.gameObject.AddComponent<AudioSource>();
-                this.audioSource.outputAudioMixerGroup = audioMixerGroup;
+                audioSource = animator.gameObject.AddComponent<AudioSource>();
+                audioSource.outputAudioMixerGroup = audioMixerGroup;
             }
 
         }
@@ -34,13 +34,12 @@ public class PlaySound : StateMachineBehaviour
             Play(sound, volume);
     }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if (condition != Condition.OnUpdate)
             return;
 
-        var x = stateInfo.normalizedTime - Math.Truncate(stateInfo.normalizedTime);
+        double x = stateInfo.normalizedTime - Math.Truncate(stateInfo.normalizedTime);
         if (x < normalizedPlayTime) {
             restart = true;
         }

@@ -7,7 +7,6 @@ namespace DevionGames
     [System.Serializable]
     public class ActionTemplate : ScriptableObject
     {
-        [SerializeReference]
-        public List<Action> actions= new List<Action>();
+        [SerializeReference] public List<Action> actions = new();
     }
 }

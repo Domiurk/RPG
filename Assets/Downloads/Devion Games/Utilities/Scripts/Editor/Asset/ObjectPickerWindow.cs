@@ -14,7 +14,7 @@ namespace DevionGames
 
         private Vector2 m_ScrollPosition;
         private Type m_Type;
-        private bool m_SelectChildren = false;
+        private bool m_SelectChildren;
         private UnityEngine.Object m_Root;
         private Dictionary<UnityEngine.Object, List<UnityEngine.Object>> m_SelectableObjects;
         public delegate void SelectCallbackDelegate(UnityEngine.Object obj);
@@ -245,11 +245,11 @@ namespace DevionGames
 
         private class Styles
         {
-            public GUIStyle header = new GUIStyle("DD HeaderStyle");
+            public readonly GUIStyle header = new("DD HeaderStyle");
             public GUIStyle rightArrow = "AC RightArrow";
             public GUIStyle leftArrow = "AC LeftArrow";
-            public GUIStyle elementButton = new GUIStyle("MeTransitionSelectHead");
-            public GUIStyle background = "grey_border";
+            public readonly GUIStyle elementButton = new("MeTransitionSelectHead");
+            public readonly GUIStyle background = "grey_border";
 
             public Styles()
             {

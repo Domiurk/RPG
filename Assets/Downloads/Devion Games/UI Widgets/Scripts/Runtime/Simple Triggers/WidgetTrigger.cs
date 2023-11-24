@@ -4,15 +4,15 @@ namespace DevionGames.UIWidgets
 {
     public class WidgetTrigger : MonoBehaviour
     {
-        public void Show(string name) {
-           UIWidget widget = WidgetUtility.Find<UIWidget>(name);
+        public void Show(string nameWidget) {
+           UIWidget widget = WidgetUtility.Find<UIWidget>(nameWidget);
             if (widget != null)
                 widget.Show();
         }
 
-        public void Close(string name)
+        public void Close(string nameWidget)
         {
-            UIWidget widget = WidgetUtility.Find<UIWidget>(name);
+            UIWidget widget = WidgetUtility.Find<UIWidget>(nameWidget);
             if (widget != null)
                 widget.Close();
         }
