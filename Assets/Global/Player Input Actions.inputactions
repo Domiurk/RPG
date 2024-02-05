@@ -6,7 +6,7 @@
             "id": "ed3e22c1-eed9-41bd-8ed1-af37ec20c9f2",
             "actions": [
                 {
-                    "name": "Moving",
+                    "name": "Move",
                     "type": "Value",
                     "id": "6b052ec6-8747-424a-95ff-140417b906f5",
                     "expectedControlType": "Vector2",
@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Interact",
+                    "name": "Pickup",
                     "type": "Button",
                     "id": "c9af4022-e7ac-4bca-87f6-f0beab99e9f0",
                     "expectedControlType": "Button",
@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Evade",
+                    "type": "Button",
+                    "id": "d75f9269-d4ad-486f-9a00-dda0c4e0daca",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -77,7 +86,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Moving",
+                    "action": "Move",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -88,7 +97,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC(Windows)",
-                    "action": "Moving",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -99,7 +108,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC(Windows)",
-                    "action": "Moving",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -110,7 +119,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC(Windows)",
-                    "action": "Moving",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -121,7 +130,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC(Windows)",
-                    "action": "Moving",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -132,7 +141,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC(Windows)",
-                    "action": "Interact",
+                    "action": "Pickup",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -188,6 +197,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "317137d2-e563-4771-a4ad-b7fb4d9afb75",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Evade",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

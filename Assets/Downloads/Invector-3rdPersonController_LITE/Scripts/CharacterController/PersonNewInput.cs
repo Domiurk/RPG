@@ -62,7 +62,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
         {
             InputActions = new PlayerInputActions();
             personController = GetComponent<vThirdPersonController>();
-            MovementAction = InputActions.PlayerMap.Moving;
+            MovementAction = InputActions.PlayerMap.Move;
             SprintAction = InputActions.PlayerMap.Sprint;
             CrouchAction = InputActions.PlayerMap.Crouch;
             JumpAction = InputActions.PlayerMap.Jump;
@@ -97,7 +97,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         public void MoveInput()
         {
-            Vector2 input = InputActions.PlayerMap.Moving.ReadValue<Vector2>();
+            Vector2 input = InputActions.PlayerMap.Move.ReadValue<Vector2>();
             personController.input.x = input.x;
             personController.input.z = input.y;
         }

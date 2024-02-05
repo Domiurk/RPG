@@ -1,5 +1,7 @@
 ﻿using DevionGames.Graphs;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace DevionGames.StatSystem
@@ -13,7 +15,11 @@ namespace DevionGames.StatSystem
         [InspectorLabel("Name")]
         [SerializeField]
         protected string m_StatName = "New Stat";
-        public string Name { get => m_StatName; set => m_StatName=value; }
+        public string Name
+        {
+            get => m_StatName;
+            set => m_StatName = value;
+        }
 
         [SerializeField]
         protected float m_BaseValue;
@@ -27,87 +33,90 @@ namespace DevionGames.StatSystem
 
         [System.NonSerialized]
         protected float m_Value;
-        public float Value { get => m_Value; }
+        public float Value => m_Value;
 
-        protected List<StatModifier> m_StatModifiers= new();
+        protected List<StatModifier> m_StatModifiers = new();
         protected StatsHandler m_StatsHandler;
 
         public virtual void Initialize(StatsHandler handler, StatOverride statOverride)
         {
             m_StatsHandler = handler;
-            
-            if (statOverride.overrideBaseValue)
+
+            if(statOverride.overrideBaseValue)
                 m_BaseValue = statOverride.baseValue;
 
             List<StatNode> statNodes = m_FormulaGraph.FindNodesOfType<StatNode>();
 
-            for (int i = 0; i < statNodes.Count; i++)
-            {
-                Stat referencedStat = handler.GetStat(statNodes[i].stat.Trim());
-                statNodes[i].statValue = referencedStat;
+            foreach(StatNode statNode in statNodes){
+                Stat referencedStat = handler.GetStat(statNode.stat.Trim());
+                statNode.statValue = referencedStat;
                 referencedStat.onValueChangeInternal += CalculateValue;
             }
-        
-            for (int i = 0; i < m_Callbacks.Count; i++)
-            {
-                m_Callbacks[i].Initialize(handler, this);
+
+            foreach(StatCallback statCallback in m_Callbacks){
+                statCallback.Initialize(handler, this);
             }
         }
 
-        public virtual void ApplyStartValues() {
+        public virtual void ApplyStartValues()
+        {
             CalculateValue();
         }
 
-        public void Add(float amount) {
+        public void Add(float amount)
+        {
             m_BaseValue += amount;
             m_BaseValue = Mathf.Clamp(m_BaseValue, 0, float.MaxValue);
             CalculateValue();
         }
 
-        public void Subtract(float amount) {
+        public void Subtract(float amount)
+        {
             m_BaseValue -= amount;
             m_BaseValue = Mathf.Clamp(m_BaseValue, 0, float.MaxValue);
             CalculateValue();
         }
 
-        public void CalculateValue() {
+        public void CalculateValue()
+        {
             CalculateValue(true);
         }
 
-        public void CalculateValue(bool invokeCallbacks) {
+        public void CalculateValue(bool invokeCallbacks)
+        {
             float finalValue = m_BaseValue + m_FormulaGraph;
             float sumPercentAdd = 0f;
             m_StatModifiers.Sort((x, y) => x.Type.CompareTo(y.Type));
 
-            for (int i = 0; i < m_StatModifiers.Count; i++)
-            {
+            for(int i = 0; i < m_StatModifiers.Count; i++){
                 StatModifier mod = m_StatModifiers[i];
-                if (mod.Type == StatModType.Flat)
-                {
-                    finalValue += mod.Value;
-                }
-                else if (mod.Type == StatModType.PercentAdd)
-                {
-                    sumPercentAdd += mod.Value;
 
-                    if (i + 1 >= m_StatModifiers.Count || m_StatModifiers[i + 1].Type != StatModType.PercentAdd)
-                    {
-                        finalValue *= 1f + sumPercentAdd;
-                        sumPercentAdd = 0f;
+                switch(mod.Type){
+                    case StatModType.Flat:
+                        finalValue += mod.Value;
+                        break;
+                    case StatModType.PercentAdd:{
+                        sumPercentAdd += mod.Value;
+
+                        if(i + 1 >= m_StatModifiers.Count || m_StatModifiers[i + 1].Type != StatModType.PercentAdd){
+                            finalValue *= 1f + sumPercentAdd;
+                            sumPercentAdd = 0f;
+                        }
+
+                        break;
                     }
-                }
-                else if (mod.Type == StatModType.PercentMult)
-                {
-                    finalValue *= 1f + mod.Value;
+                    case StatModType.PercentMult:
+                        finalValue *= 1f + mod.Value;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
-            if (m_Cap >= 0)
+
+            if(m_Cap >= 0)
                 finalValue = Mathf.Clamp(finalValue, 0, m_Cap);
 
-
-
-            if (m_Value != finalValue)
-            {
+            if(m_Value != finalValue){
                 m_Value = finalValue;
                 if(invokeCallbacks)
                     onValueChange?.Invoke();
@@ -124,11 +133,11 @@ namespace DevionGames.StatSystem
 
         public bool RemoveModifier(StatModifier modifier)
         {
-            if (m_StatModifiers.Remove(modifier))
-            {
+            if(m_StatModifiers.Remove(modifier)){
                 CalculateValue();
                 return true;
             }
+
             return false;
         }
 
@@ -136,11 +145,11 @@ namespace DevionGames.StatSystem
         {
             int numRemovals = m_StatModifiers.RemoveAll(mod => mod.source == source);
 
-            if (numRemovals > 0)
-            {
+            if(numRemovals > 0){
                 CalculateValue();
                 return true;
             }
+
             return false;
         }
 
@@ -151,7 +160,7 @@ namespace DevionGames.StatSystem
 
         public override string ToString()
         {
-            return m_StatName+": "+Value.ToString();
+            return m_StatName + ": " + Value.ToString(CultureInfo.CurrentCulture);
         }
 
         public virtual void GetObjectData(Dictionary<string, object> data)
@@ -172,6 +181,5 @@ namespace DevionGames.StatSystem
     {
         public bool overrideBaseValue;
         public float baseValue;
-
     }
 }

@@ -12,22 +12,10 @@
         public readonly object source;
 
         private readonly float m_Value;
-        public float Value
-        {
-            get
-            {
-                return m_Value;
-            }
-        }
+        public float Value => m_Value;
 
         private readonly StatModType m_Type;
-        public StatModType Type
-        {
-            get
-            {
-                return m_Type;
-            }
-        }
+        public StatModType Type => m_Type;
 
         public StatModifier() : this(0f, StatModType.Flat, null)
         {

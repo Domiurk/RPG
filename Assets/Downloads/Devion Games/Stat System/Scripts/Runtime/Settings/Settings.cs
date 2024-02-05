@@ -7,7 +7,7 @@ namespace DevionGames.StatSystem.Configuration
     {
         public virtual string Name
         {
-            get { return "Settings"; }
+            get => "Settings";
             set { }
         }
     }

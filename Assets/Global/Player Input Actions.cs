@@ -28,7 +28,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""id"": ""ed3e22c1-eed9-41bd-8ed1-af37ec20c9f2"",
             ""actions"": [
                 {
-                    ""name"": ""Moving"",
+                    ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""6b052ec6-8747-424a-95ff-140417b906f5"",
                     ""expectedControlType"": ""Vector2"",
@@ -37,7 +37,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Interact"",
+                    ""name"": ""Pickup"",
                     ""type"": ""Button"",
                     ""id"": ""c9af4022-e7ac-4bca-87f6-f0beab99e9f0"",
                     ""expectedControlType"": ""Button"",
@@ -89,6 +89,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Evade"",
+                    ""type"": ""Button"",
+                    ""id"": ""d75f9269-d4ad-486f-9a00-dda0c4e0daca"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -99,7 +108,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Moving"",
+                    ""action"": ""Move"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -110,7 +119,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC(Windows)"",
-                    ""action"": ""Moving"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -121,7 +130,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC(Windows)"",
-                    ""action"": ""Moving"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -132,7 +141,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC(Windows)"",
-                    ""action"": ""Moving"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -143,7 +152,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC(Windows)"",
-                    ""action"": ""Moving"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -154,7 +163,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC(Windows)"",
-                    ""action"": ""Interact"",
+                    ""action"": ""Pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -210,6 +219,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""317137d2-e563-4771-a4ad-b7fb4d9afb75"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Evade"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -453,13 +473,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
 }");
         // PlayerMap
         m_PlayerMap = asset.FindActionMap("PlayerMap", throwIfNotFound: true);
-        m_PlayerMap_Moving = m_PlayerMap.FindAction("Moving", throwIfNotFound: true);
-        m_PlayerMap_Interact = m_PlayerMap.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerMap_Move = m_PlayerMap.FindAction("Move", throwIfNotFound: true);
+        m_PlayerMap_Pickup = m_PlayerMap.FindAction("Pickup", throwIfNotFound: true);
         m_PlayerMap_Inventory = m_PlayerMap.FindAction("Inventory", throwIfNotFound: true);
         m_PlayerMap_Sprint = m_PlayerMap.FindAction("Sprint", throwIfNotFound: true);
         m_PlayerMap_Crouch = m_PlayerMap.FindAction("Crouch", throwIfNotFound: true);
         m_PlayerMap_Jump = m_PlayerMap.FindAction("Jump", throwIfNotFound: true);
         m_PlayerMap_Slide = m_PlayerMap.FindAction("Slide", throwIfNotFound: true);
+        m_PlayerMap_Evade = m_PlayerMap.FindAction("Evade", throwIfNotFound: true);
         // CameraMap
         m_CameraMap = asset.FindActionMap("CameraMap", throwIfNotFound: true);
         m_CameraMap_Delta = m_CameraMap.FindAction("Delta", throwIfNotFound: true);
@@ -535,24 +556,26 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     // PlayerMap
     private readonly InputActionMap m_PlayerMap;
     private List<IPlayerMapActions> m_PlayerMapActionsCallbackInterfaces = new List<IPlayerMapActions>();
-    private readonly InputAction m_PlayerMap_Moving;
-    private readonly InputAction m_PlayerMap_Interact;
+    private readonly InputAction m_PlayerMap_Move;
+    private readonly InputAction m_PlayerMap_Pickup;
     private readonly InputAction m_PlayerMap_Inventory;
     private readonly InputAction m_PlayerMap_Sprint;
     private readonly InputAction m_PlayerMap_Crouch;
     private readonly InputAction m_PlayerMap_Jump;
     private readonly InputAction m_PlayerMap_Slide;
+    private readonly InputAction m_PlayerMap_Evade;
     public struct PlayerMapActions
     {
         private @PlayerInputActions m_Wrapper;
         public PlayerMapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Moving => m_Wrapper.m_PlayerMap_Moving;
-        public InputAction @Interact => m_Wrapper.m_PlayerMap_Interact;
+        public InputAction @Move => m_Wrapper.m_PlayerMap_Move;
+        public InputAction @Pickup => m_Wrapper.m_PlayerMap_Pickup;
         public InputAction @Inventory => m_Wrapper.m_PlayerMap_Inventory;
         public InputAction @Sprint => m_Wrapper.m_PlayerMap_Sprint;
         public InputAction @Crouch => m_Wrapper.m_PlayerMap_Crouch;
         public InputAction @Jump => m_Wrapper.m_PlayerMap_Jump;
         public InputAction @Slide => m_Wrapper.m_PlayerMap_Slide;
+        public InputAction @Evade => m_Wrapper.m_PlayerMap_Evade;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -562,12 +585,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerMapActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerMapActionsCallbackInterfaces.Add(instance);
-            @Moving.started += instance.OnMoving;
-            @Moving.performed += instance.OnMoving;
-            @Moving.canceled += instance.OnMoving;
-            @Interact.started += instance.OnInteract;
-            @Interact.performed += instance.OnInteract;
-            @Interact.canceled += instance.OnInteract;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Pickup.started += instance.OnPickup;
+            @Pickup.performed += instance.OnPickup;
+            @Pickup.canceled += instance.OnPickup;
             @Inventory.started += instance.OnInventory;
             @Inventory.performed += instance.OnInventory;
             @Inventory.canceled += instance.OnInventory;
@@ -583,16 +606,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Slide.started += instance.OnSlide;
             @Slide.performed += instance.OnSlide;
             @Slide.canceled += instance.OnSlide;
+            @Evade.started += instance.OnEvade;
+            @Evade.performed += instance.OnEvade;
+            @Evade.canceled += instance.OnEvade;
         }
 
         private void UnregisterCallbacks(IPlayerMapActions instance)
         {
-            @Moving.started -= instance.OnMoving;
-            @Moving.performed -= instance.OnMoving;
-            @Moving.canceled -= instance.OnMoving;
-            @Interact.started -= instance.OnInteract;
-            @Interact.performed -= instance.OnInteract;
-            @Interact.canceled -= instance.OnInteract;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Pickup.started -= instance.OnPickup;
+            @Pickup.performed -= instance.OnPickup;
+            @Pickup.canceled -= instance.OnPickup;
             @Inventory.started -= instance.OnInventory;
             @Inventory.performed -= instance.OnInventory;
             @Inventory.canceled -= instance.OnInventory;
@@ -608,6 +634,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Slide.started -= instance.OnSlide;
             @Slide.performed -= instance.OnSlide;
             @Slide.canceled -= instance.OnSlide;
+            @Evade.started -= instance.OnEvade;
+            @Evade.performed -= instance.OnEvade;
+            @Evade.canceled -= instance.OnEvade;
         }
 
         public void RemoveCallbacks(IPlayerMapActions instance)
@@ -792,13 +821,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     }
     public interface IPlayerMapActions
     {
-        void OnMoving(InputAction.CallbackContext context);
-        void OnInteract(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
+        void OnPickup(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSlide(InputAction.CallbackContext context);
+        void OnEvade(InputAction.CallbackContext context);
     }
     public interface ICameraMapActions
     {

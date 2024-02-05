@@ -84,8 +84,12 @@ namespace DevionGames
 
         private void OnEnable()
         {
-            foreach(CameraSettings preset in m_Presets.Where(p => p.InputAction != null))
-                preset.InputAction.action.Enable();
+            foreach(CameraSettings preset in m_Presets){
+                if(preset.InputAction != null)
+                    preset.InputAction.action.Enable();
+                if(preset.Activation == CameraSettings.ActivationType.Button && preset.TurnButton!= null)
+                    preset.TurnButton.action.Enable();
+            }
 
             if(m_CrosshairImage != null)
                 m_CrosshairImage.gameObject.SetActive(m_CrosshairActive);
@@ -93,9 +97,13 @@ namespace DevionGames
 
         private void OnDisable()
         {
-            foreach(CameraSettings preset in m_Presets.Where(p => p.InputAction != null))
-                preset.InputAction.action.Enable();
-
+            foreach(CameraSettings preset in m_Presets){
+                if(preset.InputAction != null)
+                    preset.InputAction.action.Disable();
+                if(preset.Activation == CameraSettings.ActivationType.Button && preset.TurnButton!= null)
+                    preset.TurnButton.action.Disable();
+            }
+            
             if(m_CrosshairImage != null){
                 m_CrosshairActive = m_CrosshairImage.gameObject.activeSelf;
                 m_CrosshairImage.gameObject.SetActive(false);
