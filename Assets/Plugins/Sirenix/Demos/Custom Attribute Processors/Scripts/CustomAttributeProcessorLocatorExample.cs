@@ -4,11 +4,11 @@ namespace Sirenix.OdinInspector.Demos
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEngine;
     using UnityEditor;
     using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
+    using Utilities;
 
     [TypeInfoBox("This example demonstrate how it possible to create a custom AttributeProcessorLocator to complete change how an entire PropertyTree resolves attributes, and therefore how all objects in the tree are displayed.")]
     public class CustomAttributeProcessorLocatorExample : MonoBehaviour
@@ -16,52 +16,52 @@ namespace Sirenix.OdinInspector.Demos
         [Button(ButtonSizes.Large)]
         private void OpenEditorWindow()
         {
-            var window = Editor.CreateInstance<SomeCustomEditorWindow>();
+            var window = ScriptableObject.CreateInstance<SomeCustomEditorWindow>();
             window.Show();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(500, 300);
         }
     }
 
-    public class SomeCustomEditorWindow : UnityEditor.EditorWindow
+    public class SomeCustomEditorWindow : EditorWindow
     {
         private PropertyTree defaultPropertyTree;
         private PropertyTree customPropertyTree;
 
         private void OnEnable()
         {
-            this.wantsMouseMove = true;
+            wantsMouseMove = true;
         }
 
         private void OnGUI()
         {
-            this.DrawWithDefaultLocator();
-            this.DrawWithCustomLocator();
+            DrawWithDefaultLocator();
+            DrawWithCustomLocator();
 
             this.RepaintIfRequested();
         }
 
         private void DrawWithDefaultLocator()
         {
-            if (this.defaultPropertyTree == null)
+            if (defaultPropertyTree == null)
             {
-                this.defaultPropertyTree = PropertyTree.Create(new SomeClass());
+                defaultPropertyTree = PropertyTree.Create(new SomeClass());
             }
 
             SirenixEditorGUI.BeginBox("Default Locator");
-            this.defaultPropertyTree.Draw(false);
+            defaultPropertyTree.Draw(false);
             SirenixEditorGUI.EndBox();
         }
 
         private void DrawWithCustomLocator()
         {
-            if (this.customPropertyTree == null)
+            if (customPropertyTree == null)
             {
-                this.customPropertyTree = PropertyTree.Create(new SomeClass());
-                this.customPropertyTree.AttributeProcessorLocator = new CustomMinionAttributeProcessorLocator();
+                customPropertyTree = PropertyTree.Create(new SomeClass());
+                customPropertyTree.AttributeProcessorLocator = new CustomMinionAttributeProcessorLocator();
             }
 
             SirenixEditorGUI.BeginBox("Custom Locator");
-            this.customPropertyTree.Draw(false);
+            customPropertyTree.Draw(false);
             SirenixEditorGUI.EndBox();
         }
     }
@@ -81,12 +81,12 @@ namespace Sirenix.OdinInspector.Demos
         public int Health, Damage, Speed;
     }
 
-    [OdinDontRegister] // This attributes prevents Odin from using this AttributeProcessor in the default attribute resolver locator.
+    [OdinDontRegister]
     public class CustomMinionAttributeProcessor : OdinAttributeProcessor<SomeClass>
     {
         public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
         {
-            attributes.Clear(); // Get rid of all other attributes.
+            attributes.Clear();
 
             switch (member.Name)
             {
@@ -115,7 +115,7 @@ namespace Sirenix.OdinInspector.Demos
 
     public class CustomMinionAttributeProcessorLocator : OdinAttributeProcessorLocator
     {
-        private static readonly CustomMinionAttributeProcessor Processor = new CustomMinionAttributeProcessor();
+        private static readonly CustomMinionAttributeProcessor Processor = new();
 
         public override List<OdinAttributeProcessor> GetChildProcessors(InspectorProperty parentProperty, MemberInfo member)
         {

@@ -2,7 +2,6 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
 
 namespace DevionGames.InventorySystem
 {
@@ -26,7 +25,7 @@ namespace DevionGames.InventorySystem
 			if (GUI.Button(buttonRect, buttonContent, buttonStyle))
 			{
 				ObjectPickerWindow.ShowWindow(buttonRect, typeof(ItemDatabase), BuildSelectableObjects(),
-					(UnityEngine.Object obj) => {
+					(Object obj) => {
 						property.serializedObject.Update();
 						property.objectReferenceValue = obj;
 						property.serializedObject.ApplyModifiedProperties();
@@ -39,16 +38,16 @@ namespace DevionGames.InventorySystem
 
 		protected abstract List<T> GetItems(ItemDatabase database);
 
-		protected Dictionary<UnityEngine.Object,List<UnityEngine.Object>> BuildSelectableObjects()
+		protected Dictionary<Object,List<Object>> BuildSelectableObjects()
 		{
-			Dictionary<UnityEngine.Object,List<UnityEngine.Object>> selectableObjects = new Dictionary<UnityEngine.Object, List<UnityEngine.Object>>();
+			Dictionary<Object,List<Object>> selectableObjects = new Dictionary<Object, List<Object>>();
 
 			string[] guids = AssetDatabase.FindAssets("t:ItemDatabase");
 			for (int i = 0; i < guids.Length; i++)
 			{
 				string path = AssetDatabase.GUIDToAssetPath(guids[i]);
-				UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(ItemDatabase));
-				List<UnityEngine.Object> items = GetItems(obj as ItemDatabase).Cast<UnityEngine.Object>().ToList();
+				Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(ItemDatabase));
+				List<Object> items = GetItems(obj as ItemDatabase).Cast<Object>().ToList();
 				for (int j = 0; j < items.Count; j++){
 					items[j].name = (items[j] as INameable).Name; 
 				}

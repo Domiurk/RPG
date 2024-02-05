@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace DevionGames.InventorySystem
@@ -18,7 +15,7 @@ namespace DevionGames.InventorySystem
         
         public static void ShowWindow(SerializedObject serializedObject)
         {
-            EquipmentHandlerEditor window = EditorWindow.GetWindow<EquipmentHandlerEditor>(true,"Setup Items");
+            EquipmentHandlerEditor window = GetWindow<EquipmentHandlerEditor>(true,"Setup Items");
             window.minSize = new Vector2(227,200);
             window.serializedObject = serializedObject;
             window.target = serializedObject.targetObject;
@@ -136,12 +133,6 @@ namespace DevionGames.InventorySystem
             EditorGUILayout.PropertyField(property.FindPropertyRelative("item"), true);
             EditorGUILayout.PropertyField(property.FindPropertyRelative("attachments"), true);
             GUILayout.Label("Animator:",EditorStyles.boldLabel);
-
-           /* EditorGUILayout.PropertyField(property.FindPropertyRelative("m_InputName"), true);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("m_StartType"), true);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("m_StopType"), true);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("m_TransitionDuration"), true);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("m_State"), true);*/
         }
 
       

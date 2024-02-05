@@ -1,14 +1,16 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Text;
+﻿using JetBrains.Annotations;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace DevionGames{
 	public static class JsonSerializer {
-		/*public static string Serialize(List<object> list, ref List<UnityEngine.Object> objectReferences)
+		public static string Serialize(List<object> list, [NotNull] ref List<UnityEngine.Object> objectReferences)
 		{
+			if(objectReferences == null)
+				throw new ArgumentNullException(nameof(objectReferences));
 
 			List<UnityEngine.Object> serializedObjects = new List<UnityEngine.Object>();
 			Dictionary<string, object>[] listData = new Dictionary<string, object>[list.Count];
@@ -133,7 +135,7 @@ namespace DevionGames{
 				type = Utility.GetType(typeString);
 			}
 
-			object obj = System.Activator.CreateInstance(type);
+			object obj = Activator.CreateInstance(type);
 			DeserializeFields(obj, data, objectReferences);
 			return obj;
 		}
@@ -164,7 +166,7 @@ namespace DevionGames{
 				Debug.Log("key: "+key+" type:"+type);
 				if (typeof(UnityEngine.Object).IsAssignableFrom(type))
 				{
-					int index = System.Convert.ToInt32(value);
+					int index = Convert.ToInt32(value);
 					if (index >= 0 && index < objectReferences.Count)
 					{
 						return objectReferences[index];
@@ -226,7 +228,7 @@ namespace DevionGames{
 				}
 			}
 			return null;
-		}*/
+		}
 
 
 		public static string Serialize(IJsonSerializable[] objs){

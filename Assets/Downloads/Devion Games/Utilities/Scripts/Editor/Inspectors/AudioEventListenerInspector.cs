@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -16,8 +14,8 @@ namespace DevionGames
 
         private void OnEnable()
         {
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_AudioGroups = serializedObject.FindProperty("m_AudioGroups");
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_AudioGroups = serializedObject.FindProperty("m_AudioGroups");
             CreateAudioGroupList();
             
         }
@@ -27,7 +25,7 @@ namespace DevionGames
             EditorGUI.BeginDisabledGroup(Application.isPlaying);
             EditorGUILayout.BeginVertical();
             serializedObject.Update();
-            this.m_AudioGroupList.DoLayoutList();
+            m_AudioGroupList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
             EditorGUILayout.EndVertical();
             GUILayout.Space(-4.5f);
@@ -36,8 +34,8 @@ namespace DevionGames
             GUIStyle textStyle = new GUIStyle(EditorStyles.textField);
             textStyle.margin = new RectOffset(0,1, 1, 1);
             textStyle.alignment = TextAnchor.MiddleRight;
-            this.m_AudioGroupName = EditorGUILayout.TextField(this.m_AudioGroupName, textStyle);
-            if (string.IsNullOrEmpty(this.m_AudioGroupName))
+            m_AudioGroupName = EditorGUILayout.TextField(m_AudioGroupName, textStyle);
+            if (string.IsNullOrEmpty(m_AudioGroupName))
             {
                 Rect variableNameRect = GUILayoutUtility.GetLastRect();
                 GUIStyle variableNameOverlayStyle = new GUIStyle(EditorStyles.label);
@@ -46,14 +44,14 @@ namespace DevionGames
                 GUI.Label(variableNameRect, "(New Group Name)", variableNameOverlayStyle);
             }
 
-            if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Plus"), (GUIStyle)"toolbarbuttonLeft", GUILayout.Width(28f)))
+            if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Plus"), "toolbarbuttonLeft", GUILayout.Width(28f)))
             {
 
-                if (string.IsNullOrEmpty(this.m_AudioGroupName))
+                if (string.IsNullOrEmpty(m_AudioGroupName))
                 {
                     EditorUtility.DisplayDialog("New Audio Group", "Please enter a group name.", "OK");
                 }
-                else if (AudioGroupNameExists(this.m_AudioGroupName))
+                else if (AudioGroupNameExists(m_AudioGroupName))
                 {
                     EditorUtility.DisplayDialog("New Audio Group", "A group with the same name already exists.", "OK");
                 }
@@ -64,13 +62,13 @@ namespace DevionGames
                 EditorGUI.FocusTextInControl("");
             }
 
-            EditorGUI.BeginDisabledGroup(this.m_AudioGroupList.index == -1);
+            EditorGUI.BeginDisabledGroup(m_AudioGroupList.index == -1);
             if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Minus"), EditorStyles.toolbarButton, GUILayout.Width(25f)))
             {
-                this.serializedObject.Update();
-                this.m_AudioGroups.DeleteArrayElementAtIndex(this.m_AudioGroupList.index);
-                this.serializedObject.ApplyModifiedProperties();
-                this.m_AudioGroupList.index = this.m_AudioGroups.arraySize - 1;
+                serializedObject.Update();
+                m_AudioGroups.DeleteArrayElementAtIndex(m_AudioGroupList.index);
+                serializedObject.ApplyModifiedProperties();
+                m_AudioGroupList.index = m_AudioGroups.arraySize - 1;
             }
             EditorGUI.EndDisabledGroup();
 
@@ -80,9 +78,9 @@ namespace DevionGames
 
         private bool AudioGroupNameExists(string name)
         {
-            for (int i = 0; i < this.m_AudioGroups.arraySize; i++)
+            for (int i = 0; i < m_AudioGroups.arraySize; i++)
             {
-                SerializedProperty element = this.m_AudioGroups.GetArrayElementAtIndex(i);
+                SerializedProperty element = m_AudioGroups.GetArrayElementAtIndex(i);
                 if (name == element.FindPropertyRelative("name").stringValue)
                 {
                     return true;
@@ -98,19 +96,19 @@ namespace DevionGames
 
         protected void CreateAudioGroupList()
         {
-            this.m_AudioGroupList = new ReorderableList(serializedObject, this.m_AudioGroups, true, false, false, false);
-            this.m_AudioGroupList.headerHeight = 0f;
-            this.m_AudioGroupList.footerHeight = 0f;
-            this.m_AudioGroupList.showDefaultBackground = false;
-            float defaultHeight = this.m_AudioGroupList.elementHeight;
+            m_AudioGroupList = new ReorderableList(serializedObject, m_AudioGroups, true, false, false, false);
+            m_AudioGroupList.headerHeight = 0f;
+            m_AudioGroupList.footerHeight = 0f;
+            m_AudioGroupList.showDefaultBackground = false;
+            float defaultHeight = m_AudioGroupList.elementHeight;
             float verticalOffset = (defaultHeight - EditorGUIUtility.singleLineHeight) * 0.5f;
 
-            this.m_AudioGroupList.elementHeight = (defaultHeight + verticalOffset) * 2;
-            this.m_AudioGroupList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_AudioGroupList.elementHeight = (defaultHeight + verticalOffset) * 2;
+            m_AudioGroupList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;
-                SerializedProperty element = this.m_AudioGroups.GetArrayElementAtIndex(index);
+                SerializedProperty element = m_AudioGroups.GetArrayElementAtIndex(index);
                 if (!EditorGUIUtility.wideMode)
                 {
                     EditorGUIUtility.wideMode = true;
@@ -121,7 +119,7 @@ namespace DevionGames
                 EditorGUI.PropertyField(rect, element.FindPropertyRelative("m_AudioMixerGroup"), true);
 
             };
-            this.m_AudioGroupList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            m_AudioGroupList.drawElementBackgroundCallback = (Rect rect, int _, bool isActive, bool isFocused) => {
 
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -138,12 +136,12 @@ namespace DevionGames
         {
            
             serializedObject.Update();
-            this.m_AudioGroups.arraySize++;
-            SerializedProperty property = this.m_AudioGroups.GetArrayElementAtIndex(this.m_AudioGroups.arraySize - 1);
-            property.FindPropertyRelative("name").stringValue=this.m_AudioGroupName;
+            m_AudioGroups.arraySize++;
+            SerializedProperty property = m_AudioGroups.GetArrayElementAtIndex(m_AudioGroups.arraySize - 1);
+            property.FindPropertyRelative("name").stringValue=m_AudioGroupName;
             serializedObject.ApplyModifiedProperties();
-            this.m_AudioGroupName = string.Empty;
-            this.m_AudioGroupList.index = this.m_AudioGroups.arraySize - 1;
+            m_AudioGroupName = string.Empty;
+            m_AudioGroupList.index = m_AudioGroups.arraySize - 1;
 
 
 

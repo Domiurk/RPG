@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 
 namespace DevionGames
@@ -9,16 +7,13 @@ namespace DevionGames
     [ComponentMenu("Audio/Play")]
     public class Play : Action
     {
-        [SerializeField]
-        private AudioClip m_Clip = null;
-        [SerializeField]
-        private AudioMixerGroup m_AudioMixerGroup = null;
-        [SerializeField]
-        private float m_Volume = 0.4f;
+        [SerializeField] private readonly AudioClip m_Clip = null;
+        [SerializeField] private readonly AudioMixerGroup m_AudioMixerGroup = null;
+        [SerializeField] private readonly float m_Volume = 0.4f;
 
         public override ActionStatus OnUpdate()
         {
-            UnityTools.PlaySound(this.m_Clip, this.m_Volume,this.m_AudioMixerGroup);
+            UnityTools.PlaySound(m_Clip, m_Volume, m_AudioMixerGroup);
             return ActionStatus.Success;
         }
     }

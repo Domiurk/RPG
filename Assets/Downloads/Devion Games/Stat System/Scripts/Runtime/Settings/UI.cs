@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DevionGames.UIWidgets;
+﻿using DevionGames.UIWidgets;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -9,13 +7,7 @@ namespace DevionGames.StatSystem.Configuration
     [System.Serializable]
     public class UI : Settings
     {
-        public override string Name
-        {
-            get
-            {
-                return "UI";
-            }
-        }
+        public override string Name => "UI";
 
         [InspectorLabel("Notification", "Name of Notification widget.")]
         public string notificationName = "Notification";
@@ -28,13 +20,13 @@ namespace DevionGames.StatSystem.Configuration
         {
             get
             {
-                if (this.m_Notification == null)
+                if (m_Notification == null)
                 {
-                    this.m_Notification = WidgetUtility.Find<Notification>(this.notificationName);
-                    Debug.Log(this.m_Notification);
+                    m_Notification = WidgetUtility.Find<Notification>(notificationName);
+                    Debug.Log(m_Notification);
                 }
-                Assert.IsNotNull(this.m_Notification, "Notification widget with name " + this.notificationName + " is not present in scene.");
-                return this.m_Notification;
+                Assert.IsNotNull(m_Notification, "Notification widget with name " + notificationName + " is not present in scene.");
+                return m_Notification;
             }
         }
 
@@ -43,12 +35,12 @@ namespace DevionGames.StatSystem.Configuration
         {
             get
             {
-                if (this.m_DialogBox == null)
+                if (m_DialogBox == null)
                 {
-                    this.m_DialogBox = WidgetUtility.Find<DialogBox>(this.dialogBoxName);
+                    m_DialogBox = WidgetUtility.Find<DialogBox>(dialogBoxName);
                 }
-                Assert.IsNotNull(this.m_DialogBox, "DialogBox widget with name " + this.dialogBoxName + " is not present in scene.");
-                return this.m_DialogBox;
+                Assert.IsNotNull(m_DialogBox, "DialogBox widget with name " + dialogBoxName + " is not present in scene.");
+                return m_DialogBox;
             }
         }
     }

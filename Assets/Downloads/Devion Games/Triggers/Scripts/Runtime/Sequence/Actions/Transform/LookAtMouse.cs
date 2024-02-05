@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DevionGames
 {
@@ -9,35 +8,28 @@ namespace DevionGames
     [ComponentMenu("Transform/Look At Mouse")]
     public class LookAtMouse : Action
     {
-        [SerializeField]
-        private TargetType m_Target = TargetType.Player;
-        [SerializeField]
-        private float m_MaxDistance = 100f;
-        [SerializeField]
-        private float m_Speed = 15f;
+        [SerializeField] private readonly TargetType m_Target = TargetType.Player;
+        [SerializeField] private readonly float m_MaxDistance = 100f;
+        [SerializeField] private readonly float m_Speed = 15f;
 
         private Quaternion m_LastRotation;
         private Quaternion m_DesiredRotation;
-
         private Transform m_Transform;
-
 
         public override void OnStart()
         {
-            this.m_Transform = GetTarget(this.m_Target).transform;
-            this.m_LastRotation = this.m_Transform.rotation;
-            this.m_DesiredRotation = m_LastRotation;
-            RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, this.m_MaxDistance))
-            {
+            m_Transform = GetTarget(m_Target).transform;
+            m_LastRotation = m_Transform.rotation;
+            m_DesiredRotation = m_LastRotation;
 
+            if(Physics.Raycast(Camera.main!.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit, m_MaxDistance)){
                 Vector3 targetPosition = hit.point;
-                Vector3 position = this.m_Transform.position;
+                Vector3 position = m_Transform.position;
                 targetPosition.y = position.y;
 
                 Vector3 dir = targetPosition - position;
-                if (dir.sqrMagnitude > 0f)
-                {
+
+                if(dir.sqrMagnitude > 0f){
                     m_DesiredRotation = Quaternion.LookRotation(dir);
                 }
             }
@@ -45,9 +37,11 @@ namespace DevionGames
 
         public override ActionStatus OnUpdate()
         {
-            m_LastRotation = Quaternion.Slerp(m_LastRotation, m_DesiredRotation, this.m_Speed * Time.deltaTime);
+            m_LastRotation = Quaternion.Slerp(m_LastRotation, m_DesiredRotation, m_Speed * Time.deltaTime);
             playerInfo.transform.rotation = m_LastRotation;
-            return Quaternion.Angle(m_LastRotation, m_DesiredRotation) > 5f ? ActionStatus.Running : ActionStatus.Success;
+            return Quaternion.Angle(m_LastRotation, m_DesiredRotation) > 5f
+                       ? ActionStatus.Running
+                       : ActionStatus.Success;
         }
     }
 }

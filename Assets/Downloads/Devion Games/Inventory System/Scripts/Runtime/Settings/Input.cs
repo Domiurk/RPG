@@ -1,27 +1,20 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DevionGames.InventorySystem.Configuration
 {
-    [System.Serializable]
+    [Serializable]
     public class Input : Settings
     {
-        public override string Name
-        {
-            get
-            {
-                return "Input";
-            }
-        }
+        public override string Name => "Input";
 
         [Header("Unstacking:")]
         [InspectorLabel("Event")]
         [EnumFlags]
         public UnstackInput unstackEvent = UnstackInput.OnClick | UnstackInput.OnDrag;
         [InspectorLabel("Key Code")]
-        public KeyCode unstackKeyCode = KeyCode.LeftShift;
+        public Key unstackKeyCode = Key.LeftShift;
 
         [Flags]
         public enum UnstackInput {

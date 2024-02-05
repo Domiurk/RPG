@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace DevionGames.UIWidgets
@@ -11,31 +8,31 @@ namespace DevionGames.UIWidgets
         private Transform m_Target;
         private Vector3 m_Offset;
         private Text m_Text;
+        private Camera cameraMain;
 
         private void Awake()
         {
-            this.m_Text = GetComponent<Text>();
+            cameraMain = Camera.main;
+            m_Text = GetComponent<Text>();
         }
-
 
         private void LateUpdate()
         {
-
-            Vector3 pos = UnityTools.GetBounds(this.m_Target.gameObject).center + this.m_Offset;
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(pos);
-            this.m_Text.enabled = screenPos.x > 0 && screenPos.x < Camera.main.pixelWidth && screenPos.y > 0 && screenPos.y < Camera.main.pixelHeight && screenPos.z > 0;
-            transform.position = Camera.main.WorldToScreenPoint(UnityTools.GetBounds(this.m_Target.gameObject).center + this.m_Offset);
+            Vector3 pos = UnityTools.GetBounds(m_Target.gameObject).center + m_Offset;
+            Vector3 screenPos = cameraMain.WorldToScreenPoint(pos);
+            m_Text.enabled = screenPos.x > 0 && screenPos.x < cameraMain.pixelWidth && screenPos.y > 0 &&
+                             screenPos.y < cameraMain.pixelHeight && screenPos.z > 0;
+            transform.position =
+                cameraMain.WorldToScreenPoint(UnityTools.GetBounds(m_Target.gameObject).center + m_Offset);
         }
 
-        public void SetText(Transform target, string text, Color color, Vector3 offset) {
-            this.m_Target = target;
-            this.m_Offset = offset;
+        public void SetText(Transform target, string text, Color color, Vector3 offset)
+        {
+            m_Target = target;
+            m_Offset = offset;
             Text component = GetComponent<Text>();
             component.text = text;
             component.color = color;
-
         }
-
-      
     }
 }

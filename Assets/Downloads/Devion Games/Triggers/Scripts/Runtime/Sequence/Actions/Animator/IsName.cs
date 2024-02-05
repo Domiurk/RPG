@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames
 {
@@ -9,31 +7,29 @@ namespace DevionGames
     [ComponentMenu("Animator/Is Name")]
     public class IsName : Action, ICondition
     {
-        [SerializeField]
-        private TargetType m_Target = TargetType.Player;
-        [SerializeField]
-        private int layer = 0;
-        [SerializeField]
-        private string name = string.Empty;
+        [SerializeField] private readonly TargetType m_Target = TargetType.Player;
+        [SerializeField] private readonly int layer = 0;
+        [SerializeField] private readonly string name = string.Empty;
 
         private Animator m_Animator;
 
         public override void OnStart()
         {
-            this.m_Animator = this.m_Target == TargetType.Self ? gameObject.GetComponentInChildren<Animator>() : playerInfo.animator;
+            m_Animator = m_Target == TargetType.Self
+                             ? gameObject.GetComponentInChildren<Animator>()
+                             : playerInfo.animator;
         }
 
         public override ActionStatus OnUpdate()
         {
-            if (m_Animator == null)
-            {
+            if(m_Animator == null){
                 Debug.LogWarning("Missing Component of type Animator!");
                 return ActionStatus.Failure;
             }
 
-            AnimatorStateInfo stateInfo= this.m_Animator.GetCurrentAnimatorStateInfo(layer);
+            AnimatorStateInfo stateInfo = m_Animator.GetCurrentAnimatorStateInfo(layer);
 
-            return stateInfo.IsName(name)? ActionStatus.Success : ActionStatus.Failure;
+            return stateInfo.IsName(name) ? ActionStatus.Success : ActionStatus.Failure;
         }
     }
 }

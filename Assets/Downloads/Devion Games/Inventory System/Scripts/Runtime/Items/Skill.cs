@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace DevionGames.InventorySystem
@@ -12,13 +11,13 @@ namespace DevionGames.InventorySystem
         protected float m_FixedSuccessChance = 50f;
 
 
-        protected float m_CurrentValue = 0f;
+        protected float m_CurrentValue;
         public float CurrentValue {
-            get { return this.m_CurrentValue; }
+            get => m_CurrentValue;
             set {
-                if (this.m_CurrentValue != value)
+                if (m_CurrentValue != value)
                 {
-                    this.m_CurrentValue = value;
+                    m_CurrentValue = value;
                     if (Slot != null)
                         Slot.Repaint();
                 }
@@ -29,14 +28,14 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         protected SkillModifier m_GainModifier;
         public SkillModifier GainModifier {
-            get { return this.m_GainModifier; }
-            set { this.m_GainModifier = value; }
+            get => m_GainModifier;
+            set => m_GainModifier = value;
         }
 
         public bool CheckSkill() {
             m_GainModifier.Modify(this);
 
-            bool result = (CurrentValue + this.m_FixedSuccessChance) > Random.Range(0f, 100f);
+            bool result = (CurrentValue + m_FixedSuccessChance) > Random.Range(0f, 100f);
             return result;
         }
 
@@ -50,7 +49,7 @@ namespace DevionGames.InventorySystem
         {
             base.SetObjectData(data);
             if(data.ContainsKey("SkillValue"))
-                this.CurrentValue = System.Convert.ToSingle(data["SkillValue"]);
+                CurrentValue = System.Convert.ToSingle(data["SkillValue"]);
         }
     }
 }

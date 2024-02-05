@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 
 namespace DevionGames.InventorySystem
@@ -39,7 +37,7 @@ namespace DevionGames.InventorySystem
         private float m_DestroyDelay = 0.1f;
 
         [SerializeField]
-        private Object m_Data=null;
+        private Object m_Data;
 
         private Rigidbody m_Rigidbody;
         private Collider m_Collider;
@@ -47,16 +45,16 @@ namespace DevionGames.InventorySystem
 
         private void Start()
         {
-            this.transform.parent = null;
-            this.m_Rigidbody = GetComponent<Rigidbody>();
-            this.m_Collider = GetComponent<Collider>();
-            if (this.m_AutoDestruct)
-                Destroy(gameObject, this.m_DestructDelay);
+            transform.parent = null;
+            m_Rigidbody = GetComponent<Rigidbody>();
+            m_Collider = GetComponent<Collider>();
+            if (m_AutoDestruct)
+                Destroy(gameObject, m_DestructDelay);
 
-            transform.position = transform.TransformPoint(this.m_StartPositionOffset);
+            transform.position = transform.TransformPoint(m_StartPositionOffset);
             PlayerInfo player = InventoryManager.current.PlayerInfo;
 
-            switch (this.m_StartDirection) {
+            switch (m_StartDirection) {
                 case StartDirection.Camera:
                     SetStartDirection(Camera.main.transform.forward);
                     break;
@@ -67,10 +65,10 @@ namespace DevionGames.InventorySystem
                     }
                     break;
             }
-            if (this.m_FollowTarget)
+            if (m_FollowTarget)
             {
-                this.m_Target = GetTarget();
-                this.m_FollowTarget = CheckFieldOfView(player.gameObject != null ? player.gameObject : Camera.main.gameObject, this.m_Target, this.m_FieldOfView);
+                m_Target = GetTarget();
+                m_FollowTarget = CheckFieldOfView(player.gameObject != null ? player.gameObject : Camera.main.gameObject, m_Target, m_FieldOfView);
             }
         }
 
@@ -79,14 +77,14 @@ namespace DevionGames.InventorySystem
 
         private void FixedUpdate()
         {
-            this.m_Rigidbody.velocity = transform.forward * m_Speed;
+            m_Rigidbody.velocity = transform.forward * m_Speed;
 
-            if (!this.m_FollowTarget) return;
+            if (!m_FollowTarget) return;
 
-            if (this.m_Target != null)
+            if (m_Target != null)
             {
-                Vector3 targetPosition = UnityTools.GetBounds(this.m_Target.gameObject).center;
-                if (this.m_TurnSpeed < 0f)
+                Vector3 targetPosition = UnityTools.GetBounds(m_Target.gameObject).center;
+                if (m_TurnSpeed < 0f)
                 {
                     transform.LookAt(targetPosition);
 
@@ -95,7 +93,7 @@ namespace DevionGames.InventorySystem
                 {
                     Vector3 directionToTarget = targetPosition - transform.position;
                     Vector3 currentDirection = transform.forward;
-                    Vector3 resultingDirection = Vector3.RotateTowards(currentDirection, directionToTarget, this.m_TurnSpeed * Mathf.Deg2Rad * Time.fixedDeltaTime, 1f);
+                    Vector3 resultingDirection = Vector3.RotateTowards(currentDirection, directionToTarget, m_TurnSpeed * Mathf.Deg2Rad * Time.fixedDeltaTime, 1f);
                     transform.rotation = Quaternion.LookRotation(resultingDirection);
                 }
             }
@@ -104,12 +102,12 @@ namespace DevionGames.InventorySystem
         private GameObject GetTarget() {
             if (SelectableObject.current != null)
             {
-                if(Vector3.Distance(SelectableObject.current.position,transform.position) < this.m_MaxDistance)
+                if(Vector3.Distance(SelectableObject.current.position,transform.position) < m_MaxDistance)
                     return SelectableObject.current.gameObject;
             }
 
-            if (this.m_SelectBestTarget) {
-                Collider[] colliders = Physics.OverlapSphere(transform.position, this.m_MaxDistance);
+            if (m_SelectBestTarget) {
+                Collider[] colliders = Physics.OverlapSphere(transform.position, m_MaxDistance);
                 Collider[] selectables = colliders.Where(x => x.GetComponent<SelectableObject>() != null).ToArray();
 
                 GameObject from = InventoryManager.current.PlayerInfo.gameObject;
@@ -119,7 +117,6 @@ namespace DevionGames.InventorySystem
 
                 for (int i = 0; i < selectables.Length; i++) {
                     Vector3 directionToTarget = selectables[i].transform.position - from.transform.position;
-                    // Get angle between forward and look direction
                     float angle = Vector3.Angle(from.transform.forward, directionToTarget);
                     float dist = Vector3.Distance(from.transform.position, selectables[i].transform.position) * angle;
                     if (dist < minDist)
@@ -146,14 +143,10 @@ namespace DevionGames.InventorySystem
         {
             if (target == null) return false;
 
-            // Get direction to target
             Vector3 directionToTarget = target.transform.position - from.transform.position;
-            // Get angle between forward and look direction
             float angle = Vector3.Angle(from.transform.forward, directionToTarget);
-            // Is target within field of view?
             if (angle <= fieldOfView * 0.5f)
                 return true;
-            // Not within view
             return false;
         }
 
@@ -164,14 +157,14 @@ namespace DevionGames.InventorySystem
         }
 
         private void OnHit(Transform hit, Vector3 position) {
-            this.m_Collider.enabled = false;
-            this.m_Rigidbody.velocity = Vector3.zero;
-            this.m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            m_Collider.enabled = false;
+            m_Rigidbody.velocity = Vector3.zero;
+            m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             transform.position = position;
             transform.parent = hit;
-            EventHandler.Execute(InventoryManager.current.PlayerInfo.gameObject, "SendDamage", hit.gameObject, this.m_Data); 
-            if(this.m_DestroyOnCollision)
-                Destroy(gameObject, this.m_DestroyDelay);
+            EventHandler.Execute(InventoryManager.current.PlayerInfo.gameObject, "SendDamage", hit.gameObject, m_Data); 
+            if(m_DestroyOnCollision)
+                Destroy(gameObject, m_DestroyDelay);
         }
 
         public enum StartDirection { 

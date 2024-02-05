@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames.InventorySystem.ItemActions
 {
@@ -14,24 +12,24 @@ namespace DevionGames.InventorySystem.ItemActions
         private string m_WindowName = "Inventory";
         [ItemPicker(true)]
         [SerializeField]
-        private Item m_Item = null;
+        private Item m_Item;
         [Range(1, 200)]
         [SerializeField]
         private int m_Amount = 1;
 
         public override ActionStatus OnUpdate()
         {
-            Item instance = ScriptableObject.Instantiate(this.m_Item);
-            instance.Stack = this.m_Amount;
-            if (this.m_Item.IsCraftable)
+            Item instance = Object.Instantiate(m_Item);
+            instance.Stack = m_Amount;
+            if (m_Item.IsCraftable)
             {
-                for (int j = 0; j < this.m_Item.ingredients.Count; j++)
+                for (int j = 0; j < m_Item.ingredients.Count; j++)
                 {
-                    instance.ingredients[j].item = ScriptableObject.Instantiate(this.m_Item.ingredients[j].item);
-                    instance.ingredients[j].item.Stack = this.m_Item.ingredients[j].amount;
+                    instance.ingredients[j].item = Object.Instantiate(m_Item.ingredients[j].item);
+                    instance.ingredients[j].item.Stack = m_Item.ingredients[j].amount;
                 }
             }
-            if (ItemContainer.AddItem(this.m_WindowName, instance)) {
+            if (ItemContainer.AddItem(m_WindowName, instance)) {
                 return ActionStatus.Success;
             }
             return ActionStatus.Failure;

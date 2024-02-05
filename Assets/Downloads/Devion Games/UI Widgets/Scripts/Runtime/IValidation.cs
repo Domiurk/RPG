@@ -1,8 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-
-namespace DevionGames.UIWidgets{
-	public interface IValidation<T> {
+﻿namespace DevionGames.UIWidgets{
+	public interface IValidation<in T> {
 		bool Validate(T item);
 	}
 }

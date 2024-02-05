@@ -2,10 +2,10 @@
 namespace Sirenix.OdinInspector.Demos
 {
     using UnityEditor;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.OdinInspector;
+    using Editor;
+    using OdinInspector;
     using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
+    using Utilities;
 
     public class BasicOdinEditorExampleWindow : OdinEditorWindow
     {
@@ -14,7 +14,6 @@ namespace Sirenix.OdinInspector.Demos
         {
             var window = GetWindow<BasicOdinEditorExampleWindow>();
 
-            // Nifty little trick to quickly position the window in the middle of the editor.
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(700, 700);
         }
 

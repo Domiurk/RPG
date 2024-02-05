@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames.InventorySystem.Restrictions
 {
@@ -8,24 +6,19 @@ namespace DevionGames.InventorySystem.Restrictions
     {
         [CategoryPicker(true)]
         [SerializeField]
-        private DevionGames.InventorySystem.Category[] m_Categories = null;
+        private DevionGames.InventorySystem.Category[] m_Categories;
         [SerializeField]
-        private bool invert = false;
+        private bool invert;
         public override bool CanAddItem(Item item)
         {
-            for (int i = 0; i < this.m_Categories.Length; i++)
+            for (int i = 0; i < m_Categories.Length; i++)
             {
-                if (this.m_Categories[i].IsAssignable(item.Category))
+                if (m_Categories[i].IsAssignable(item.Category))
                 {
                     return !invert;
                 }
             }
 
-           /* for (int i = 0; i < this.m_Categories.Length; i++) {
-                if (item.Category != null && item.Category.Name == m_Categories[i].Name) {
-                    return !invert;
-                }
-            }*/
             return invert;
         }
     }

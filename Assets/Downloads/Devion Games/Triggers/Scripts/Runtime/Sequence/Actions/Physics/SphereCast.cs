@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace DevionGames
@@ -10,40 +8,34 @@ namespace DevionGames
     [ComponentMenu("Physics/SphereCast")]
     public class SphereCast : Action
     {
-        [SerializeField]
-        private TargetType m_Target = TargetType.Camera;
-        [SerializeField]
-        private Direction m_Direction = Direction.Forward;
-        [SerializeField]
-        private float m_Radius = 1f;
-        [SerializeField]
-        private float m_MaxDistance = 5f;
-        [SerializeField]
-        private LayerMask m_LayerMask = Physics.DefaultRaycastLayers;
-        [SerializeField]
-        private LayerMask m_HitSuccessLayer = Physics.DefaultRaycastLayers;
-        [SerializeField]
-        private QueryTriggerInteraction m_QueryTriggerInteraction = QueryTriggerInteraction.Collide;
+        [SerializeField] private readonly TargetType m_Target = TargetType.Camera;
+        [SerializeField] private readonly Direction m_Direction = Direction.Forward;
+        [SerializeField] private readonly float m_Radius = 1f;
+        [SerializeField] private readonly float m_MaxDistance = 5f;
+        [SerializeField] private readonly LayerMask m_LayerMask = Physics.DefaultRaycastLayers;
+        [SerializeField] private readonly LayerMask m_HitSuccessLayer = Physics.DefaultRaycastLayers;
+        [SerializeField] private readonly QueryTriggerInteraction m_QueryTriggerInteraction = QueryTriggerInteraction.Collide;
 
         private Transform m_TargetTransform;
 
         public override void OnStart()
         {
-            this.m_TargetTransform = GetTarget(this.m_Target).transform;
+            m_TargetTransform = GetTarget(m_Target).transform;
         }
 
         public override ActionStatus OnUpdate()
         {
-            Vector3 startPosition = this.m_TargetTransform.position;
-            Vector3 direction = PhysicsUtility.GetDirection(this.m_TargetTransform, this.m_Direction);
-            RaycastHit hit;
-            if (Physics.SphereCast(startPosition+Vector3.up*0.2f, this.m_Radius,direction,out hit,this.m_MaxDistance, this.m_LayerMask, this.m_QueryTriggerInteraction) && this.m_HitSuccessLayer.Contains(hit.collider.gameObject.layer )){
+            Vector3 startPosition = m_TargetTransform.position;
+            Vector3 direction = PhysicsUtility.GetDirection(m_TargetTransform, m_Direction);
 
+            if(Physics.SphereCast(startPosition + Vector3.up * 0.2f, m_Radius, direction, out RaycastHit hit,
+                                  m_MaxDistance, m_LayerMask, m_QueryTriggerInteraction) &&
+               m_HitSuccessLayer.Contains(hit.collider.gameObject.layer)){
                 Debug.Log(hit.collider.name);
                 return ActionStatus.Success;
             }
+
             return ActionStatus.Failure;
         }
-
     }
 }

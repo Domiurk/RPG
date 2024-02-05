@@ -3,8 +3,5 @@
 namespace DevionGames
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class ExcludeFromCreation : Attribute
-    {
-
-    }
+    public class ExcludeFromCreation : Attribute { }
 }

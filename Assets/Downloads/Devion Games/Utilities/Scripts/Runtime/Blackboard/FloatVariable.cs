@@ -1,55 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 namespace DevionGames
 {
-	
-	[System.Serializable]
-	public class FloatVariable : Variable
-	{
-		[SerializeField]
-		private float m_Value;
+    [Serializable]
+    public class FloatVariable : Variable
+    {
+        [SerializeField] private float m_Value;
 
-		public float Value {
-			get{ return this.m_Value; }
-			set{ this.m_Value = value; }
-		}
+        public float Value
+        {
+            get => m_Value;
+            set => m_Value = value;
+        }
 
-		public override object RawValue {
-			get {
-				return this.m_Value;
-			}
-			set {
-				this.m_Value = System.Convert.ToSingle (value);
-			}
-		}
+        public override object RawValue
+        {
+            get => m_Value;
+            set => m_Value = Convert.ToSingle(value);
+        }
 
-		public override System.Type type {
-			get {
-				return typeof(float);
-			}
-		}
+        public override Type type => typeof(float);
 
-		public FloatVariable ()
-		{
-		}
+        public FloatVariable() { }
 
-		public FloatVariable (string name) : base (name)
-		{
-		}
+        public FloatVariable(string name) : base(name) { }
 
-		public static implicit operator FloatVariable(float value)
-		{
-			return new FloatVariable()
-			{
-				Value = value
-			};
-		}
+        public static implicit operator FloatVariable(float value)
+        {
+            return new FloatVariable{
+                Value = value
+            };
+        }
 
-		public static implicit operator float(FloatVariable value)
-		{
-			return value.Value;
-		}
-	}
+        public static implicit operator float(FloatVariable value)
+        {
+            return value.Value;
+        }
+    }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames.InventorySystem
 {
@@ -13,8 +11,8 @@ namespace DevionGames.InventorySystem
         public ItemEventData(Item item) {
             this.item = item;
             if (item != null){
-                this.slot = item.Slot;
-                this.gameObject = item.Prefab;
+                slot = item.Slot;
+                gameObject = item.Prefab;
             }
         }
     }

@@ -1,22 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames
 {
-
     [ComponentMenu("Blackboard/Set Bool Variable")]
     public class SetBoolVariable : Action
     {
-        [SerializeField]
-        private string m_VariableName = "";
-        [SerializeField]
-        private bool m_Value = true;
+        [SerializeField] private readonly string m_VariableName = "";
+        [SerializeField] private readonly bool m_Value = true;
 
         public override ActionStatus OnUpdate()
         {
-           
-            blackboard.SetValue<bool>(this.m_VariableName, this.m_Value);
+            blackboard.SetValue<bool>(m_VariableName, m_Value);
             return ActionStatus.Success;
         }
     }

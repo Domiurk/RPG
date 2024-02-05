@@ -9,9 +9,9 @@ namespace Invector.vCharacterController
         [Header("- Movement")]
 
         [Tooltip("Turn off if you have 'in place' animations and use this values above to move the character, or use with root motion as extra speed")]
-        public bool useRootMotion = false;
+        public bool useRootMotion;
         [Tooltip("Use this to rotate the character using the World axis, or false to use the camera axis - CHECK for Isometric Camera")]
-        public bool rotateByWorld = false;
+        public bool rotateByWorld;
         [Tooltip("Check This to use sprint on press button to your Character run until the stamina finish or movement stops\nIf uncheck your Character will sprint as long as the SprintInput is pressed or the stamina finishes")]
         public bool useContinuousSprint = true;
         [Tooltip("Check this to sprint always in free movement")]
@@ -29,7 +29,7 @@ namespace Invector.vCharacterController
         [Header("- Airborne")]
 
         [Tooltip("Use the currently Rigidbody Velocity to influence on the Jump Distance")]
-        public bool jumpWithRigidbodyForce = false;
+        public bool jumpWithRigidbodyForce;
         [Tooltip("Rotate or not while airborne")]
         public bool jumpAndRotate = true;
         [Tooltip("How much time the character will be jumping")]
@@ -59,49 +59,42 @@ namespace Invector.vCharacterController
         #region Components
 
         internal Animator animator;
-        internal Rigidbody _rigidbody;                                                      // access the Rigidbody component
-        internal PhysicMaterial frictionPhysics, maxFrictionPhysics, slippyPhysics;         // create PhysicMaterial for the Rigidbody
-        internal CapsuleCollider _capsuleCollider;                                          // access CapsuleCollider information
+        internal Rigidbody _rigidbody;
+        internal PhysicMaterial frictionPhysics, maxFrictionPhysics, slippyPhysics;
+        internal CapsuleCollider _capsuleCollider;
 
         #endregion
 
         #region Internal Variables
 
-        // movement bools
         internal bool isJumping;
         internal bool isStrafing
         {
-            get
-            {
-                return _isStrafing;
-            }
-            set
-            {
-                _isStrafing = value;
-            }
+            get => _isStrafing;
+            set => _isStrafing = value;
         }
         internal bool isGrounded { get; set; }
         internal bool isSprinting { get; set; }
         public bool stopMove { get; protected set; }
 
-        internal float inputMagnitude;                      // sets the inputMagnitude to update the animations in the animator controller
-        internal float verticalSpeed;                       // set the verticalSpeed based on the verticalInput
-        internal float horizontalSpeed;                     // set the horizontalSpeed based on the horizontalInput       
-        internal float moveSpeed;                           // set the current moveSpeed for the MoveCharacter method
-        internal float verticalVelocity;                    // set the vertical velocity of the rigidbody
-        internal float colliderRadius, colliderHeight;      // storage capsule collider extra information        
-        internal float heightReached;                       // max height that character reached in air;
-        internal float jumpCounter;                         // used to count the routine to reset the jump
-        internal float groundDistance;                      // used to know the distance from the ground
-        internal RaycastHit groundHit;                      // raycast to hit the ground 
-        internal bool lockMovement = false;                 // lock the movement of the controller (not the animation)
-        internal bool lockRotation = false;                 // lock the rotation of the controller (not the animation)        
-        internal bool _isStrafing;                          // internally used to set the strafe movement                
-        internal Transform rotateTarget;                    // used as a generic reference for the camera.transform
-        internal Vector3 input;                             // generate raw input for the controller
-        internal Vector3 colliderCenter;                    // storage the center of the capsule collider info                
-        internal Vector3 inputSmooth;                       // generate smooth input based on the inputSmooth value       
-        internal Vector3 moveDirection;                     // used to know the direction you're moving 
+        internal float inputMagnitude;
+        internal float verticalSpeed;
+        internal float horizontalSpeed;
+        internal float moveSpeed;
+        internal float verticalVelocity;
+        internal float colliderRadius, colliderHeight;
+        internal float heightReached;
+        internal float jumpCounter;
+        internal float groundDistance;
+        internal RaycastHit groundHit;
+        internal readonly bool lockMovement = false;
+        internal readonly bool lockRotation = false;
+        internal bool _isStrafing;
+        internal Transform rotateTarget;
+        internal Vector3 input;
+        internal Vector3 colliderCenter;
+        internal Vector3 inputSmooth;
+        internal Vector3 moveDirection;
 
         #endregion
 
@@ -110,34 +103,28 @@ namespace Invector.vCharacterController
             animator = GetComponent<Animator>();
             animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
 
-            // slides the character through walls and edges
             frictionPhysics = new PhysicMaterial();
             frictionPhysics.name = "frictionPhysics";
             frictionPhysics.staticFriction = .25f;
             frictionPhysics.dynamicFriction = .25f;
             frictionPhysics.frictionCombine = PhysicMaterialCombine.Multiply;
 
-            // prevents the collider from slipping on ramps
             maxFrictionPhysics = new PhysicMaterial();
             maxFrictionPhysics.name = "maxFrictionPhysics";
             maxFrictionPhysics.staticFriction = 1f;
             maxFrictionPhysics.dynamicFriction = 1f;
             maxFrictionPhysics.frictionCombine = PhysicMaterialCombine.Maximum;
 
-            // air physics 
             slippyPhysics = new PhysicMaterial();
             slippyPhysics.name = "slippyPhysics";
             slippyPhysics.staticFriction = 0f;
             slippyPhysics.dynamicFriction = 0f;
             slippyPhysics.frictionCombine = PhysicMaterialCombine.Minimum;
 
-            // rigidbody info
             _rigidbody = GetComponent<Rigidbody>();
 
-            // capsule collider info
             _capsuleCollider = GetComponent<CapsuleCollider>();
 
-            // save your collider preferences 
             colliderCenter = GetComponent<CapsuleCollider>().center;
             colliderRadius = GetComponent<CapsuleCollider>().radius;
             colliderHeight = GetComponent<CapsuleCollider>().height;
@@ -165,7 +152,6 @@ namespace Invector.vCharacterController
 
         public virtual void MoveCharacter(Vector3 _direction)
         {
-            // calculate input smooth
             inputSmooth = Vector3.Lerp(inputSmooth, input, (isStrafing ? strafeSpeed.movementSmooth : freeSpeed.movementSmooth) * Time.deltaTime);
 
             if (!isGrounded || isJumping) return;
@@ -173,7 +159,6 @@ namespace Invector.vCharacterController
             _direction.y = 0;
             _direction.x = Mathf.Clamp(_direction.x, -1f, 1f);
             _direction.z = Mathf.Clamp(_direction.z, -1f, 1f);
-            // limit the input
             if (_direction.magnitude > 1f)
                 _direction.Normalize();
 
@@ -190,13 +175,13 @@ namespace Invector.vCharacterController
             if (input.sqrMagnitude < 0.1) return;
 
             RaycastHit hitinfo;
-            var hitAngle = 0f;
+            float hitAngle = 0f;
 
             if (Physics.Linecast(transform.position + Vector3.up * (_capsuleCollider.height * 0.5f), transform.position + moveDirection.normalized * (_capsuleCollider.radius + 0.2f), out hitinfo, groundLayer))
             {
                 hitAngle = Vector3.Angle(Vector3.up, hitinfo.normal);
 
-                var targetPoint = hitinfo.point + moveDirection.normalized * _capsuleCollider.radius;
+                Vector3 targetPoint = hitinfo.point + moveDirection.normalized * _capsuleCollider.radius;
                 if ((hitAngle > slopeLimit) && Physics.Linecast(transform.position + Vector3.up * (_capsuleCollider.height * 0.5f), targetPoint, out hitinfo, groundLayer))
                 {
                     hitAngle = Vector3.Angle(Vector3.up, hitinfo.normal);
@@ -245,8 +230,8 @@ namespace Invector.vCharacterController
                 jumpCounter = 0;
                 isJumping = false;
             }
-            // apply extra force to the jump height   
-            var vel = _rigidbody.velocity;
+
+            Vector3 vel = _rigidbody.velocity;
             vel.y = jumpHeight;
             _rigidbody.velocity = vel;
         }
@@ -305,11 +290,9 @@ namespace Invector.vCharacterController
             {
                 if (groundDistance >= groundMaxDistance)
                 {
-                    // set IsGrounded to false 
                     isGrounded = false;
-                    // check vertical velocity
                     verticalVelocity = _rigidbody.velocity.y;
-                    // apply extra gravity when falling
+
                     if (!isJumping)
                     {
                         _rigidbody.AddForce(transform.up * extraGravity * Time.deltaTime, ForceMode.VelocityChange);
@@ -324,7 +307,6 @@ namespace Invector.vCharacterController
 
         protected virtual void ControlMaterialPhysics()
         {
-            // change the physics material to very slip when not grounded
             _capsuleCollider.material = (isGrounded && GroundAngle() <= slopeLimit + 1) ? frictionPhysics : slippyPhysics;
 
             if (isGrounded && input == Vector3.zero)
@@ -339,15 +321,12 @@ namespace Invector.vCharacterController
         {
             if (_capsuleCollider != null)
             {
-                // radius of the SphereCast
                 float radius = _capsuleCollider.radius * 0.9f;
-                var dist = 10f;
-                // ray for RayCast
+                float dist = 10f;
                 Ray ray2 = new Ray(transform.position + new Vector3(0, colliderHeight / 2, 0), Vector3.down);
-                // raycast for check the ground distance
                 if (Physics.Raycast(ray2, out groundHit, (colliderHeight / 2) + dist, groundLayer) && !groundHit.collider.isTrigger)
                     dist = transform.position.y - groundHit.point.y;
-                // sphere cast around the base of the capsule to check the ground distance
+
                 if (dist >= groundMinDistance)
                 {
                     Vector3 pos = transform.position + Vector3.up * (_capsuleCollider.radius);
@@ -365,14 +344,14 @@ namespace Invector.vCharacterController
 
         public virtual float GroundAngle()
         {
-            var groundAngle = Vector3.Angle(groundHit.normal, Vector3.up);
+            float groundAngle = Vector3.Angle(groundHit.normal, Vector3.up);
             return groundAngle;
         }
 
         public virtual float GroundAngleFromDirection()
         {
-            var dir = isStrafing && input.magnitude > 0 ? (transform.right * input.x + transform.forward * input.z).normalized : transform.forward;
-            var movementAngle = Vector3.Angle(dir, groundHit.normal) - 90;
+            Vector3 dir = isStrafing && input.magnitude > 0 ? (transform.right * input.x + transform.forward * input.z).normalized : transform.forward;
+            float movementAngle = Vector3.Angle(dir, groundHit.normal) - 90;
             return movementAngle;
         }
 
@@ -388,9 +367,9 @@ namespace Invector.vCharacterController
             [Tooltip("Rotation speed of the character")]
             public float rotationSpeed = 16f;
             [Tooltip("Character will limit the movement to walk instead of running")]
-            public bool walkByDefault = false;
+            public bool walkByDefault;
             [Tooltip("Rotate with the Camera forward when standing idle")]
-            public bool rotateWithCamera = false;
+            public bool rotateWithCamera;
             [Tooltip("Speed to Walk using rigidbody or extra speed if you're using RootMotion")]
             public float walkSpeed = 2f;
             [Tooltip("Speed to Run using rigidbody or extra speed if you're using RootMotion")]

@@ -1,7 +1,4 @@
 ﻿using DevionGames.UIWidgets;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DevionGames.InventorySystem
@@ -19,44 +16,44 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         private float  m_Duration = 1f;
 
-        private float m_Time = 0f;
+        private float m_Time;
 
         private Progressbar m_Widget;
 
         public override void OnStart()
         {
-            this.m_Time = 0f;
-            this.m_Widget = WidgetUtility.Find<Progressbar>(this.m_WidgetName);
-            if (this.m_Widget == null)
+            m_Time = 0f;
+            m_Widget = WidgetUtility.Find<Progressbar>(m_WidgetName);
+            if (m_Widget == null)
             {
-                Debug.LogWarning("Missing progressbar widget " + this.m_WidgetName + " in scene!");
+                Debug.LogWarning("Missing progressbar widget " + m_WidgetName + " in scene!");
                 return;
             }
-            this.m_Widget.Show(this.m_Title);
+            m_Widget.Show(m_Title);
         }
 
         public override ActionStatus OnUpdate()
         {
 
-            if (this.m_Widget == null) {
-                Debug.LogWarning("Missing progressbar widget " + this.m_WidgetName + " in scene!");
+            if (m_Widget == null) {
+                Debug.LogWarning("Missing progressbar widget " + m_WidgetName + " in scene!");
                 return ActionStatus.Failure;
             }
 
-            this.m_Time += Time.deltaTime;
-            if (this.m_Time > this.m_Duration)
+            m_Time += Time.deltaTime;
+            if (m_Time > m_Duration)
             {
-                this.m_Widget.Close();
+                m_Widget.Close();
                 return ActionStatus.Success;
             }
-            this.m_Widget.SetProgress(this.m_Time / this.m_Duration);
+            m_Widget.SetProgress(m_Time / m_Duration);
             return ActionStatus.Running;
         }
 
         public override void OnInterrupt()
         {
-            if (this.m_Widget != null)
-                this.m_Widget.Close();
+            if (m_Widget != null)
+                m_Widget.Close();
         }
     }
 }

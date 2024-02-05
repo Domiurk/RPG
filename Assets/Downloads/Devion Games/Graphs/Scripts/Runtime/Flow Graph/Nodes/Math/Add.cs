@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace DevionGames.Graphs
+﻿namespace DevionGames.Graphs
 {
     [System.Serializable]
     [ComponentMenu("Math/Add")]

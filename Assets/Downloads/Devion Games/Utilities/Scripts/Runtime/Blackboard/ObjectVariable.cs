@@ -1,54 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevionGames
 {
-	[System.Serializable]
-	public class ObjectVariable : Variable
-	{
-		[SerializeField]
-		private Object m_Value;
+    [Serializable]
+    public class ObjectVariable : Variable
+    {
+        [SerializeField] private Object m_Value;
 
-		public Object Value {
-			get{ return this.m_Value; }
-			set{ this.m_Value = value; }
-		}
+        public Object Value
+        {
+            get => m_Value;
+            set => m_Value = value;
+        }
 
-		public override object RawValue {
-			get {
-				return this.m_Value;
-			}
-			set {
-				this.m_Value = (Object)value;
-			}
-		}
+        public override object RawValue
+        {
+            get => m_Value;
+            set => m_Value = (Object)value;
+        }
 
-		public override System.Type type {
-			get {
-				return typeof(Object);
-			}
-		}
+        public override Type type => typeof(Object);
 
-		public ObjectVariable ()
-		{
-		}
+        public ObjectVariable() { }
 
-		public ObjectVariable (string name) : base (name)
-		{
-		}
+        public ObjectVariable(string name) : base(name) { }
 
-		public static implicit operator ObjectVariable(Object value)
-		{
-			return new ObjectVariable()
-			{
-				Value = value
-			};
-		}
+        public static implicit operator ObjectVariable(Object value)
+        {
+            return new ObjectVariable{
+                Value = value
+            };
+        }
 
-		public static implicit operator Object(ObjectVariable value)
-		{
-			return value.Value;
-		}
-	}
+        public static implicit operator Object(ObjectVariable value)
+        {
+            return value.Value;
+        }
+    }
 }

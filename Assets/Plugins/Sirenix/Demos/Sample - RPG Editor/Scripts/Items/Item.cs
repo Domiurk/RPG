@@ -4,15 +4,6 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
     using System.Linq;
     using UnityEngine;
 
-    // 
-    // This is the base-class for all items. It contains a lot of layout using various layout group attributes. 
-    // We've also defines a few relevant groups in constant variables, which derived classes can utilize.
-    // 
-    // Also note that each item deriving from this class, needs to specify which Item types are
-    // supported via the SupporteItemTypes property. This is then referenced in ValueDropdown attribute  
-    // on the Type field, so that when users only can specify supported item-types.  
-    // 
-
     public abstract class Item : ScriptableObject
     {
         protected const string LEFT_VERTICAL_GROUP             = "Split/Left";
@@ -59,7 +50,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
 
         private bool IsSupportedType(ItemTypes type)
         {
-            return this.SupportedItemTypes.Contains(type);
+            return SupportedItemTypes.Contains(type);
         }
     }
 }

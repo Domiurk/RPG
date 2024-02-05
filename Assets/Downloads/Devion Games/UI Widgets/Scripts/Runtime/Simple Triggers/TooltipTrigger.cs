@@ -21,7 +21,6 @@ namespace DevionGames.UIWidgets
 		/// </summary>
 		[SerializeField]
 		private bool showBackground=true;
-		//Width to use, Height is set based on width
 		[SerializeField]
 		private float width = 300;
 		/// <summary>
@@ -29,6 +28,7 @@ namespace DevionGames.UIWidgets
 		/// </summary>
 		[SerializeField]
 		private Color color = Color.white;
+		///<summary>
         /// The title to display
 		/// </summary>
         public string tooltipTitle;
@@ -53,16 +53,12 @@ namespace DevionGames.UIWidgets
 		/// </summary>
 		private void Start ()
 		{
-			//Find tooltip instance with name "Tooltip"
 			instance = WidgetUtility.Find<Tooltip> (instanceName);
-			//Check if an instance of UITooltip is located in scene
-			if (enabled && instance == null) {
-				//No instance -> disable trigger
+			if (enabled && instance == null)
 				enabled = false;
-			}
-            this.m_PropertyPairs = new List<KeyValuePair<string, string>>();
-            for (int i = 0; i < properties.Length; i++) {
-                this.m_PropertyPairs.Add(new KeyValuePair<string, string>(properties[i].key,properties[i].value));
+			m_PropertyPairs = new List<KeyValuePair<string, string>>();
+            foreach(StringPair property in properties){
+	            m_PropertyPairs.Add(new KeyValuePair<string, string>(property.key,property.value));
             }
 		}
 
@@ -72,8 +68,7 @@ namespace DevionGames.UIWidgets
 		/// <param name="eventData">Event data.</param>
 		public void OnPointerEnter (PointerEventData eventData)
 		{
-            //Show tooltip
-            ShowTooltip();
+			ShowTooltip();
 		}
 
 		/// <summary>
@@ -82,8 +77,7 @@ namespace DevionGames.UIWidgets
 		/// <param name="eventData">Event data.</param>
 		public void OnPointerExit (PointerEventData eventData)
 		{
-            //Hide tooltip
-            CloseTooltip();
+			CloseTooltip();
 		}
 
         private IEnumerator DelayTooltip(float delay)
@@ -103,20 +97,20 @@ namespace DevionGames.UIWidgets
         private void ShowTooltip()
         {
 
-            if (this.m_DelayTooltipCoroutine != null)
+            if (m_DelayTooltipCoroutine != null)
             {
-                StopCoroutine(this.m_DelayTooltipCoroutine);
+                StopCoroutine(m_DelayTooltipCoroutine);
             }
-            this.m_DelayTooltipCoroutine = StartCoroutine(DelayTooltip(0.3f));
+            m_DelayTooltipCoroutine = StartCoroutine(DelayTooltip(0.3f));
 
         }
 
         private void CloseTooltip()
         {
             instance.Close();
-            if (this.m_DelayTooltipCoroutine != null)
+            if (m_DelayTooltipCoroutine != null)
             {
-                StopCoroutine(this.m_DelayTooltipCoroutine);
+                StopCoroutine(m_DelayTooltipCoroutine);
             }
         }
 

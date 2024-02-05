@@ -1,8 +1,4 @@
-﻿
-using DevionGames.UIWidgets;
-
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 
@@ -14,12 +10,12 @@ namespace DevionGames.InventorySystem
 	{
         public enum FailureCause {
             Unknown,
-            FurtherAction, // Requires a user action(Select an item for crafting)
-            NotEnoughCurrency, // Player does not have enough money 
-            Remove, // No longer exists (Item was removed)
-            ContainerFull, // Given container is full
-            InUse, // Something is already in use (Player is already crafting something-> no start possible)
-            Requirement // Missing requirements for this action( Missing ingredient to craft)
+            FurtherAction,
+            NotEnoughCurrency,
+            Remove,
+            ContainerFull,
+            InUse,
+            Requirement
         }
 
         public override PlayerInfo PlayerInfo => InventoryManager.current.PlayerInfo;
@@ -28,8 +24,6 @@ namespace DevionGames.InventorySystem
         protected delegate void ItemEventFunction<T>(T handler, Item item, GameObject player);
         protected delegate void FailureItemEventFunction<T>(T handler, Item item, GameObject player, FailureCause failureCause);
 
-        //Deprecate use SendMessage with Use
-        //used for UI Button reference
         public void StartUse() {
             Use();
         }
@@ -39,7 +33,7 @@ namespace DevionGames.InventorySystem
         {
             if (window.IsVisible)
             {
-                Trigger.currentUsedWindow = window;
+                currentUsedWindow = window;
                 Use();
             }
         }
@@ -64,9 +58,9 @@ namespace DevionGames.InventorySystem
 
         protected void ExecuteEvent<T>(ItemEventFunction<T> func, Item item, bool includeDisabled = false) where T : ITriggerEventHandler
         {
-            for (int i = 0; i < this.m_TriggerEvents.Length; i++)
+            for (int i = 0; i < m_TriggerEvents.Length; i++)
             {
-                ITriggerEventHandler handler = this.m_TriggerEvents[i];
+                ITriggerEventHandler handler = m_TriggerEvents[i];
                 if (ShouldSendEvent<T>(handler, includeDisabled))
                 {
                     func.Invoke((T)handler, item, PlayerInfo.gameObject);
@@ -74,7 +68,7 @@ namespace DevionGames.InventorySystem
             }
 
             string eventID = string.Empty;
-            if (this.m_CallbackHandlers.TryGetValue(typeof(T), out eventID))
+            if (m_CallbackHandlers.TryGetValue(typeof(T), out eventID))
             {
                 CallbackEventData triggerEventData = new CallbackEventData();
                 triggerEventData.AddData("Trigger",this);
@@ -87,9 +81,9 @@ namespace DevionGames.InventorySystem
 
         protected void ExecuteEvent<T>(FailureItemEventFunction<T> func, Item item, FailureCause failureCause , bool includeDisabled = false) where T : ITriggerEventHandler
         {
-            for (int i = 0; i < this.m_TriggerEvents.Length; i++)
+            for (int i = 0; i < m_TriggerEvents.Length; i++)
             {
-                ITriggerEventHandler handler = this.m_TriggerEvents[i];
+                ITriggerEventHandler handler = m_TriggerEvents[i];
                 if (ShouldSendEvent<T>(handler, includeDisabled))
                 {
                     func.Invoke((T)handler, item, InventoryManager.current.PlayerInfo.gameObject, failureCause);
@@ -97,7 +91,7 @@ namespace DevionGames.InventorySystem
             }
 
             string eventID = string.Empty;
-            if (this.m_CallbackHandlers.TryGetValue(typeof(T), out eventID))
+            if (m_CallbackHandlers.TryGetValue(typeof(T), out eventID))
             {
                 CallbackEventData triggerEventData = new CallbackEventData();
                 triggerEventData.AddData("Trigger", this);

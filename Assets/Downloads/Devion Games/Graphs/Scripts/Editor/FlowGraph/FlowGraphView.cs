@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +6,7 @@ using System;
 
 namespace DevionGames.Graphs
 {
-    [System.Serializable]
+    [Serializable]
     public class FlowGraphView : GraphView<FlowNode>
     {
         [SerializeField]
@@ -30,16 +28,11 @@ namespace DevionGames.Graphs
         private string m_Copy;
 
         public FlowGraphView(EditorWindow host, FlowGraph graph, UnityEngine.Object target) : base(host) {
-            this.m_Graph = graph;
-            this.m_Target = target;
+            m_Graph = graph;
+            m_Target = target;
         }
 
-        protected override FlowNode[] inspectedNodes {
-            get {
-                return this.m_Graph.nodes.Cast<FlowNode>().ToArray();
-            
-            }
-        }
+        protected override FlowNode[] inspectedNodes => m_Graph.nodes.Cast<FlowNode>().ToArray();
 
         protected override void DrawNodeConnections(FlowNode[] nodes, Vector2 offset)
         {
@@ -96,20 +89,20 @@ namespace DevionGames.Graphs
                                         Debug.LogWarning("You can't connect two "+m_ConnectingPort.direction.ToString()+" ports.");
                                         break;
                                     }
-                                    this.m_ConnectingPort.Connect(nodes[i].GetPort(j));
+                                    m_ConnectingPort.Connect(nodes[i].GetPort(j));
                                     connected = true;
                                     break;
                                 }
                             }
                         }
 
-                        if (!connected && this.m_ConnectingPort != null) {
+                        if (!connected && m_ConnectingPort != null) {
 
-                            this.m_ConnectingPort.DisconnectAll();
+                            m_ConnectingPort.DisconnectAll();
 
                         }
-                        GraphUtility.Save(this.m_Graph);
-                        PrefabUtility.RecordPrefabInstancePropertyModifications(this.m_Target);
+                        GraphUtility.Save(m_Graph);
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(m_Target);
                         m_ConnectingPort = null;
                         GUIUtility.hotControl = 0;
                         Event.current.Use();
@@ -117,9 +110,9 @@ namespace DevionGames.Graphs
                     break;
             }
 
-            if (m_ConnectingPort != null && this.m_ConnectingPort.node != null)
+            if (m_ConnectingPort != null && m_ConnectingPort.node != null)
             {
-                DrawConnection(GetPortRect(this.m_ConnectingPort).center, currentEvent.mousePosition,ConnectionStyle.Line, new Color(0.506f, 0.62f, 0.702f, 1f));
+                DrawConnection(GetPortRect(m_ConnectingPort).center, currentEvent.mousePosition,ConnectionStyle.Line, new Color(0.506f, 0.62f, 0.702f, 1f));
                 m_Host.Repaint();
             }
         }
@@ -167,7 +160,7 @@ namespace DevionGames.Graphs
                 Port port = node.GetPort(i);
                 if (port.direction == PortDirection.Input)
                 {
-                    Rect labelRect = new Rect(rect.x + NODE_CONTENT_OFFSET, rect.y + NODE_LINE_HEIGHT * i + GetHeaderRect(node, this.m_GraphOffset).height + (NODE_LINE_HEIGHT - NODE_FIELD_HEIGHT) * 0.5f, labelWidth, NODE_FIELD_HEIGHT);
+                    Rect labelRect = new Rect(rect.x + NODE_CONTENT_OFFSET, rect.y + NODE_LINE_HEIGHT * i + GetHeaderRect(node, m_GraphOffset).height + (NODE_LINE_HEIGHT - NODE_FIELD_HEIGHT) * 0.5f, labelWidth, NODE_FIELD_HEIGHT);
                   
                     if (port.Connections.Count == 0)
                     {
@@ -178,7 +171,7 @@ namespace DevionGames.Graphs
                             GUI.Label(labelRect, ObjectNames.NicifyVariableName(port.fieldName), Styles.nodeText);
                         }
 
-                        Rect fieldRect = new Rect(rect.x + NODE_CONTENT_OFFSET + (port.label?labelWidth+NODE_CONTENT_OFFSET:0f), rect.y + NODE_LINE_HEIGHT * i + GetHeaderRect(node, this.m_GraphOffset).height + (NODE_LINE_HEIGHT - NODE_FIELD_HEIGHT) * 0.5f, fieldWidth, NODE_FIELD_HEIGHT);
+                        Rect fieldRect = new Rect(rect.x + NODE_CONTENT_OFFSET + (port.label?labelWidth+NODE_CONTENT_OFFSET:0f), rect.y + NODE_LINE_HEIGHT * i + GetHeaderRect(node, m_GraphOffset).height + (NODE_LINE_HEIGHT - NODE_FIELD_HEIGHT) * 0.5f, fieldWidth, NODE_FIELD_HEIGHT);
                         EditorGUI.BeginChangeCheck();
                         if (port.fieldType == typeof(float))
                         {
@@ -191,8 +184,8 @@ namespace DevionGames.Graphs
                         if (EditorGUI.EndChangeCheck())
                         {
                             field.SetValue(port.node, value);
-                            GraphUtility.Save(this.m_Graph);
-                            PrefabUtility.RecordPrefabInstancePropertyModifications(this.m_Target);
+                            GraphUtility.Save(m_Graph);
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(m_Target);
                         }
                     }
                     else
@@ -210,11 +203,10 @@ namespace DevionGames.Graphs
                 }
 
 
-                if (Event.current.type == EventType.Repaint )// && port.drawPort)
-                {
+                if (Event.current.type == EventType.Repaint ){
                     if (i > 0 && i < node.Ports.Count - 1)
                     {
-                        Styles.seperator.Draw(new Rect(rect.x, rect.y+ GetHeaderRect(node, this.m_GraphOffset).height + i * NODE_LINE_HEIGHT, !nodeStyle.displayHeader && icon != null ? GetContentWidth(node)+NODE_CONTENT_OFFSET*1.6f:rect.width , 1f), false, false, false, false);
+                        Styles.seperator.Draw(new Rect(rect.x, rect.y+ GetHeaderRect(node, m_GraphOffset).height + i * NODE_LINE_HEIGHT, !nodeStyle.displayHeader && icon != null ? GetContentWidth(node)+NODE_CONTENT_OFFSET*1.6f:rect.width , 1f), false, false, false, false);
                     }
                 }
             }
@@ -227,10 +219,7 @@ namespace DevionGames.Graphs
             {
                 Port port = node.GetPort(i);
                 Rect portRect = GetPortRect(port);
-                GUIStyle portStyle = (port.Connections.Count() > 0 || this.m_ConnectingPort == port) ? Styles.portConnected : Styles.port;
-
-                /*if(port.direction== PortDirection.Output && EditorApplication.isPlaying)
-                    GUI.Label(new Rect(portRect.x,portRect.y-18f,50f,20f),node.OnRequestValue(port).ToString());*/
+                GUIStyle portStyle = (port.Connections.Count() > 0 || m_ConnectingPort == port) ? Styles.portConnected : Styles.port;
 
                 if (Event.current.type == EventType.Repaint && port.drawPort)
                 {
@@ -242,21 +231,19 @@ namespace DevionGames.Graphs
       
         private Rect GetPortRect(Port port)
         {
-            Rect rect = GetNodeRect(port.node,this.m_GraphOffset);
+            Rect rect = GetNodeRect(port.node,m_GraphOffset);
             int index = port.node.Ports.IndexOf(port);
             if (port.direction == PortDirection.Input)
             {
-                Vector2 inputPosition = new Vector2(rect.x - NODE_PORT_OFFSET, rect.y + NODE_LINE_HEIGHT * 0.5f - NODE_PORT_SIZE * 0.5f) + new Vector2(0f, GetHeaderRect(port.node, this.m_GraphOffset).height + NODE_LINE_HEIGHT * index);
+                Vector2 inputPosition = new Vector2(rect.x - NODE_PORT_OFFSET, rect.y + NODE_LINE_HEIGHT * 0.5f - NODE_PORT_SIZE * 0.5f) + new Vector2(0f, GetHeaderRect(port.node, m_GraphOffset).height + NODE_LINE_HEIGHT * index);
                 return new Rect(inputPosition.x, inputPosition.y, NODE_PORT_SIZE, NODE_PORT_SIZE);
             }
-            else
-            {
-                NodeStyleAttribute nodeStyle = port.node.GetType().GetCustomAttribute<NodeStyleAttribute>();
-                int height = (nodeStyle != null && !nodeStyle.displayHeader) ? NODE_LINE_HEIGHT : NODE_HEADER_HEIGHT;
 
-                Vector2 outputPosition = new Vector2(rect.x + rect.width + NODE_PORT_OFFSET - NODE_PORT_SIZE, rect.y - NODE_PORT_SIZE * 0.5f) + new Vector2(0f, height * 0.5f);
-                return new Rect(outputPosition.x, outputPosition.y, NODE_PORT_SIZE, NODE_PORT_SIZE);
-            }
+            NodeStyleAttribute nodeStyle = port.node.GetType().GetCustomAttribute<NodeStyleAttribute>();
+            int height = (nodeStyle != null && !nodeStyle.displayHeader) ? NODE_LINE_HEIGHT : NODE_HEADER_HEIGHT;
+
+            Vector2 outputPosition = new Vector2(rect.x + rect.width + NODE_PORT_OFFSET - NODE_PORT_SIZE, rect.y - NODE_PORT_SIZE * 0.5f) + new Vector2(0f, height * 0.5f);
+            return new Rect(outputPosition.x, outputPosition.y, NODE_PORT_SIZE, NODE_PORT_SIZE);
 
         }
 
@@ -378,24 +365,24 @@ namespace DevionGames.Graphs
             switch (name)
             {
                 case "Copy":
-                    this.CopyNodes();
+                    CopyNodes();
                     break;
                 case "Paste":
-                    this.PasteNodes(Vector2.zero);
+                    PasteNodes(Vector2.zero);
                     break;
                 case "Cut":
                     SaveSelection();
-                    this.CutNodes();
+                    CutNodes();
                     break;
                 case "Duplicate":
-                    this.DuplicateNodes();
+                    DuplicateNodes();
                     break;
                 case "SoftDelete":
                     SaveSelection();
-                    this.DeleteNodes();
+                    DeleteNodes();
                     break;
                 case "CenterGraph":
-                    this.CenterGraphView();
+                    CenterGraphView();
                     break;
             }
         }
@@ -407,16 +394,15 @@ namespace DevionGames.Graphs
 
             menu.AddItem(new GUIContent("Add Node"), false, delegate ()
             {
-                Vector2 pos = (position + this.m_GraphOffset) * this.m_GraphZoom + this.m_GraphViewArea.position;
-                this.m_CreateNodePosition = position;
-                AddObjectWindow.ShowWindow<FlowNode>(new Rect(pos.x - this.m_GraphViewArea.x, pos.y, 230f, 0f), AddNode, CreateNodeScript);
-               // AddNodeWindow.ShowWindow(new Rect(pos.x, pos.y, 230f, 21f), position, this.m_Graph);
+                Vector2 pos = (position + m_GraphOffset) * m_GraphZoom + m_GraphViewArea.position;
+                m_CreateNodePosition = position;
+                AddObjectWindow.ShowWindow<FlowNode>(new Rect(pos.x - m_GraphViewArea.x, pos.y, 230f, 0f), AddNode, CreateNodeScript);
             });
 
-            if (!string.IsNullOrEmpty(this.m_Copy))
+            if (!string.IsNullOrEmpty(m_Copy))
             {
                 menu.AddItem(new GUIContent("Paste Nodes"), false, delegate {
-                    this.PasteNodes(position);
+                    PasteNodes(position);
                 });
 
             }
@@ -430,17 +416,14 @@ namespace DevionGames.Graphs
         protected override void NodeContextMenu(FlowNode node, Vector2 position)
         {
             if (typeof(EventNode).IsAssignableFrom(node.GetType()))
-            {
-            //    return;
-            }
+            { }
             GenericMenu menu = new GenericMenu();
-         //   this.m_Selection.RemoveAll(x => x.GetType() == typeof(EventNode));
-            string s = (this.m_Selection.Count > 1 ? "s" : "");
-            menu.AddItem(new GUIContent("Copy Node" + s), false, new GenericMenu.MenuFunction(this.CopyNodes));
-            if (!string.IsNullOrEmpty(this.m_Copy))
+            string s = (m_Selection.Count > 1 ? "s" : "");
+            menu.AddItem(new GUIContent("Copy Node" + s), false, CopyNodes);
+            if (!string.IsNullOrEmpty(m_Copy))
             {
                 menu.AddItem(new GUIContent("Paste Node" + s), false, delegate () {
-                    this.PasteNodes(position);
+                    PasteNodes(position);
                 });
             }
             else
@@ -449,19 +432,19 @@ namespace DevionGames.Graphs
             }
             menu.AddItem(new GUIContent("Cut Node" + s), false, delegate {
                 SaveSelection();
-                this.CutNodes();
+                CutNodes();
             });
             menu.AddItem(new GUIContent("Delete Node" + s), false, delegate {
                 SaveSelection();
-                this.DeleteNodes();
+                DeleteNodes();
             });
             menu.ShowAsContext();
         }
 
         private void AddNode(Type type)
         {
-            Node node = GraphUtility.AddNode(this.m_Graph, type);
-            node.position = this.m_CreateNodePosition;
+            Node node = GraphUtility.AddNode(m_Graph, type);
+            node.position = m_CreateNodePosition;
         }
 
         private void CreateNodeScript(string scriptName) { Debug.LogWarning("This is not implemented yet!"); }
@@ -469,25 +452,25 @@ namespace DevionGames.Graphs
         private void CopyNodes()
         {
             Graph copy = new Graph();
-            copy.serializationData = this.m_Graph.serializationData;
+            copy.serializationData = m_Graph.serializationData;
             GraphUtility.Load(copy);
            
-            Node[] toDelete = copy.nodes.Where(x => !this.m_Selection.Exists(y => x.id == y.id)).ToArray();
+            Node[] toDelete = copy.nodes.Where(x => !m_Selection.Exists(y => x.id == y.id)).ToArray();
             GraphUtility.RemoveNodes(copy, toDelete.Cast<FlowNode>().ToArray());
             GraphUtility.Save(copy);
             for (int i = 0; i < copy.nodes.Count; i++)
             {
-                copy.serializationData = copy.serializationData.Replace(copy.nodes[i].id, System.Guid.NewGuid().ToString());
+                copy.serializationData = copy.serializationData.Replace(copy.nodes[i].id, Guid.NewGuid().ToString());
             }
-            this.m_Copy = copy.serializationData;
+            m_Copy = copy.serializationData;
         }
 
         private void DeleteNodes()
         {
-            GraphUtility.RemoveNodes(this.m_Graph, this.m_Selection.ToArray());
-            this.m_Selection.Clear();
-            GraphUtility.Save(this.m_Graph);
-            PrefabUtility.RecordPrefabInstancePropertyModifications(this.m_Target);
+            GraphUtility.RemoveNodes(m_Graph, m_Selection.ToArray());
+            m_Selection.Clear();
+            GraphUtility.Save(m_Graph);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(m_Target);
         }
 
         private void CutNodes()
@@ -504,11 +487,11 @@ namespace DevionGames.Graphs
 
         private void PasteNodes(Vector2 position)
         {
-            if (!string.IsNullOrEmpty(this.m_Copy))
+            if (!string.IsNullOrEmpty(m_Copy))
             {
-                this.m_Selection.Clear();
+                m_Selection.Clear();
                 Graph graph = new Graph();
-                graph.serializationData = this.m_Copy;
+                graph.serializationData = m_Copy;
                 GraphUtility.Load(graph);
 
                 for (int i = 0; i < graph.nodes.Count; i++)
@@ -519,11 +502,11 @@ namespace DevionGames.Graphs
                         position = node.position + new Vector2(20, 15);
                     }
                     node.position += position - node.position;
-                    this.m_Graph.nodes.Add(node);
-                    this.m_Selection.Add((FlowNode)node);
+                    m_Graph.nodes.Add(node);
+                    m_Selection.Add((FlowNode)node);
                 }
-                GraphUtility.Save(this.m_Graph);
-                PrefabUtility.RecordPrefabInstancePropertyModifications(this.m_Target);
+                GraphUtility.Save(m_Graph);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(m_Target);
             }
         }
 
@@ -532,15 +515,15 @@ namespace DevionGames.Graphs
         /// </summary>
         private static class Styles
         {
-            private static GUISkin skin;
-            public static GUIStyle nodeNormal;
-            public static GUIStyle nodeActive;
-            public static GUIStyle nodeSelected;
-            public static GUIStyle port;
-            public static GUIStyle portConnected;
-            public static GUIStyle seperator;
-            public static GUIStyle nodeHeaderText;
-            public static GUIStyle nodeText;
+            private static readonly GUISkin skin;
+            public static readonly GUIStyle nodeNormal;
+            public static readonly GUIStyle nodeActive;
+            public static readonly GUIStyle nodeSelected;
+            public static readonly GUIStyle port;
+            public static readonly GUIStyle portConnected;
+            public static readonly GUIStyle seperator;
+            public static readonly GUIStyle nodeHeaderText;
+            public static readonly GUIStyle nodeText;
 
             static Styles()
             {

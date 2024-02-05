@@ -1,12 +1,13 @@
+using System.Collections.Generic;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEngine;
     using UnityEditor;
     using System.Linq;
-    using Sirenix.Utilities;
-    using System.Collections.Generic;
+    using Utilities;
     using Sirenix.Utilities.Editor;
 
     public class OdinMenuStyleExample : OdinMenuEditorWindow
@@ -38,9 +39,6 @@ namespace Sirenix.OdinInspector.Demos
 
             tree.Config.DrawSearchToolbar = true;
 
-            // Adds the custom menu style to the tree, so that you can play around with it.
-            // Once you are happy, you can press Copy C# Snippet copy its settings and paste it in code.
-            // And remove the "Menu Style" menu item from the tree.
             tree.AddObjectAtPath("Menu Style", customMenuStyle);
 
             for (int i = 0; i < 5; i++)
@@ -61,19 +59,6 @@ namespace Sirenix.OdinInspector.Demos
             return tree;
         }
 
-        //// The editor window itself can also be customized.
-        //protected override void OnEnable()
-        //{
-        //    base.OnEnable();
-
-        //    this.MenuWidth = 200;
-        //    this.ResizableMenuWidth = true;
-        //    this.WindowPadding = new Vector4(10, 10, 10, 10);
-        //    this.DrawUnityEditorPreview = true;
-        //    this.DefaultEditorPreviewHeight = 20;
-        //    this.UseScrollView = true;
-        //}
-
         private class MyCustomMenuItem : OdinMenuItem
         {
             private readonly SomeCustomClass instance;
@@ -86,25 +71,24 @@ namespace Sirenix.OdinInspector.Demos
             protected override void OnDrawMenuItem(Rect rect, Rect labelRect)
             {
                 labelRect.x -= 16;
-                this.instance.Enabled = GUI.Toggle(labelRect.AlignMiddle(18).AlignLeft(16), this.instance.Enabled, GUIContent.none);
+                instance.Enabled = GUI.Toggle(labelRect.AlignMiddle(18).AlignLeft(16), instance.Enabled, GUIContent.none);
 
-                // Toggle selection when pressing space.
                 if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Space)
                 {
-                    var selection = this.MenuTree.Selection
-                        .Select(x => x.Value)
-                        .OfType<SomeCustomClass>();
+                    IEnumerable<SomeCustomClass> selection = MenuTree.Selection
+                                                                     .Select(x => x.Value)
+                                                                     .OfType<SomeCustomClass>();
 
                     if (selection.Any())
                     {
-                        var enabled = !selection.FirstOrDefault().Enabled;
+                        bool enabled = !selection.FirstOrDefault().Enabled;
                         selection.ForEach(x => x.Enabled = enabled);
                         Event.current.Use();
                     }
                 }
             }
 
-            public override string SmartName { get { return this.instance.Name; } }
+            public override string SmartName => instance.Name;
         }
 
         private class SomeCustomClass

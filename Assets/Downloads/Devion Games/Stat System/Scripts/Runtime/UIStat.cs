@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace DevionGames.StatSystem
@@ -34,9 +32,9 @@ namespace DevionGames.StatSystem
 		private Stat freePoints;
 
 		protected virtual void Start() {
-			if (this.m_IncrementButton != null)
+			if (m_IncrementButton != null)
 			{
-				this.m_IncrementButton.onClick.AddListener(delegate () {
+				m_IncrementButton.onClick.AddListener(delegate () {
 					stat.Add(1f);
 					freePoints.Subtract(1f);
 				});
@@ -44,23 +42,20 @@ namespace DevionGames.StatSystem
 		}
 
 		protected virtual void Update() {
-			//TODO BETTER FIX, SelectableUIStat is displaying same values for all enemies
-			//if (stat == null) {
-				StatsHandler handler = GetStatsHandler();
+			StatsHandler handler = GetStatsHandler();
 				if (handler == null)
 					return;
-				stat = handler.GetStat(this.m_Stat);
-				if(this.m_FreePoints != null)
-					freePoints = handler.GetStat(this.m_FreePoints);
+				stat = handler.GetStat(m_Stat);
+				if(m_FreePoints != null)
+					freePoints = handler.GetStat(m_FreePoints);
 
-				if (this.m_StatName != null)
-					this.m_StatName.text = this.stat.Name;
-		//	}
-			Repaint();
+				if (m_StatName != null)
+					m_StatName.text = stat.Name;
+				Repaint();
 		}
 
 		protected virtual StatsHandler GetStatsHandler() { 
-			return StatsManager.GetStatsHandler(this.m_StatsHandler); 
+			return StatsManager.GetStatsHandler(m_StatsHandler); 
 		}
 
 		protected virtual void Repaint() {
@@ -68,31 +63,31 @@ namespace DevionGames.StatSystem
 			{
 				float normalized = attribute.CurrentValue / attribute.Value;
 
-				if (this.m_StatBar != null)
+				if (m_StatBar != null)
 				{
-					this.m_StatBar.fillAmount = normalized;
+					m_StatBar.fillAmount = normalized;
 				}
 
-				if (this.m_StatBarFade != null)
+				if (m_StatBarFade != null)
 				{
-					this.m_StatBarFade.fillAmount = Mathf.MoveTowards(this.m_StatBarFade.fillAmount, normalized, Time.deltaTime * 0.5f);
+					m_StatBarFade.fillAmount = Mathf.MoveTowards(m_StatBarFade.fillAmount, normalized, Time.deltaTime * 0.5f);
 				}
 
-				if (this.m_CurrentValue != null)
+				if (m_CurrentValue != null)
 				{
-					this.m_CurrentValue.text = attribute.CurrentValue.ToString();
+					m_CurrentValue.text = attribute.CurrentValue.ToString();
 				}
 			}
 
-			if (this.m_Value != null)
+			if (m_Value != null)
 			{
 
-				this.m_Value.text = stat.Value.ToString();
+				m_Value.text = stat.Value.ToString();
 			}
 			
-			if (this.m_IncrementButton != null && freePoints != null)
+			if (m_IncrementButton != null && freePoints != null)
 			{
-				this.m_IncrementButton.gameObject.SetActive(freePoints.Value > 0?true:false);
+				m_IncrementButton.gameObject.SetActive(freePoints.Value > 0?true:false);
 			}
 		}
 
@@ -103,18 +98,18 @@ namespace DevionGames.StatSystem
 				return;
 			}
 			
-			string key = data.GetData("CharacterName") + ".Stats." + this.m_StatsHandler + "." + this.m_Stat.Name;
+			string key = data.GetData("CharacterName") + ".Stats." + m_StatsHandler + "." + m_Stat.Name;
 			if (PlayerPrefs.HasKey(key + ".Value"))
 			{
 				float value = PlayerPrefs.GetFloat(key + ".Value");
-				if (this.m_Value != null)
-					this.m_Value.text = value.ToString();
+				if (m_Value != null)
+					m_Value.text = value.ToString();
 			}
 			if (PlayerPrefs.HasKey(key + ".CurrentValue"))
 			{
 				float currentValue = PlayerPrefs.GetFloat(key + ".CurrentValue");
-				if (this.m_CurrentValue != null)
-					this.m_CurrentValue.text = currentValue.ToString();
+				if (m_CurrentValue != null)
+					m_CurrentValue.text = currentValue.ToString();
 			}
 		}
 	}

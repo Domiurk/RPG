@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace DevionGames.InventorySystem
@@ -10,14 +9,14 @@ namespace DevionGames.InventorySystem
     {
         [RarityPicker(true)]
         [SerializeField]
-        protected List<Rarity> m_Rarities = new List<Rarity>();
+        protected List<Rarity> m_Rarities = new();
 
-        private System.Random rnd = new System.Random();
+        private System.Random rnd = new();
         private static Rarity emptyRarity;
 
         public override void Modify(Item item)
         {
-            item.Rarity = SelectRarity(this.m_Rarities);
+            item.Rarity = SelectRarity(m_Rarities);
             ApplyPropertyMultiplier(item, item.Rarity.Multiplier);
             
         }
@@ -59,14 +58,14 @@ namespace DevionGames.InventorySystem
                 if (randomNumber <= accumulatedProbability)
                     return items[i];
             }
-            if (RarityModifier.emptyRarity is null)
+            if (emptyRarity is null)
             {
-                RarityModifier.emptyRarity = ScriptableObject.CreateInstance<Rarity>();
-                RarityModifier.emptyRarity.Color = Color.grey;
-                RarityModifier.emptyRarity.Chance = 100;
-                RarityModifier.emptyRarity.Multiplier = 1.0f;
+                emptyRarity = CreateInstance<Rarity>();
+                emptyRarity.Color = Color.grey;
+                emptyRarity.Chance = 100;
+                emptyRarity.Multiplier = 1.0f;
             }
-            return RarityModifier.emptyRarity;
+            return emptyRarity;
         }
     }
 }

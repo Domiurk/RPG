@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace DevionGames.InventorySystem
 {
@@ -11,43 +10,45 @@ namespace DevionGames.InventorySystem
 		public LayerMask mask;
 		public float maxHeightDiffrence = 1.0f;
 		public float maxDistance = 10;
-		public KeyCode rotate = KeyCode.E;
+		public Key rotate = Key.E;
 
 		public UnityEvent onPlace;
 		private BoxCollider m_BoxCollider;
 		private Transform m_Player;
 		private bool m_CanPlaceChanged;
 		private int m_Layer;
-
+		private Keyboard keyboard;
+		private Camera cameraMain;
 
 		private void Start()
 		{
-			
-			this.m_BoxCollider = GetComponent<BoxCollider>();
+			m_BoxCollider = GetComponent<BoxCollider>();
 
-			this.m_Player = InventoryManager.current.PlayerInfo.transform;
-			this.m_Layer = gameObject.layer;
+			keyboard = Keyboard.current;
+			cameraMain = Camera.main;
+			m_Player = InventoryManager.current.PlayerInfo.transform;
+			m_Layer = gameObject.layer;
 			gameObject.layer = 2;
 			SetColor(Color.red);
 		}
 
 		private void Update()
 		{
-			if (Input.GetKey(rotate))
+			if (keyboard[rotate].isPressed)
 			{
 				transform.Rotate(Vector3.up);
 			}
 			RaycastHit hit;
 			Vector3 pos = transform.position;
-			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, mask))
+			if (Physics.Raycast(cameraMain.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, mask))
 			{
 				pos = hit.point;
 			}
-			Vector3 diff = pos - this.m_Player.transform.position;
+			Vector3 diff = pos - m_Player.transform.position;
 			float distance = diff.magnitude;
 			if (distance > maxDistance)
 			{
-				pos = this.m_Player.transform.position + (diff / distance) * maxDistance;
+				pos = m_Player.transform.position + (diff / distance) * maxDistance;
 			}
 
 			float maxHeight = GetMaxCornerHeight();
@@ -59,9 +60,9 @@ namespace DevionGames.InventorySystem
 			transform.position = pos;
 
 			bool canPlace = CanPlace();
-			if (canPlace != this.m_CanPlaceChanged)
+			if (canPlace != m_CanPlaceChanged)
 			{
-				this.m_CanPlaceChanged = canPlace;
+				m_CanPlaceChanged = canPlace;
 				SetColor(canPlace ? Color.green : Color.red);
 			}
 
@@ -74,7 +75,7 @@ namespace DevionGames.InventorySystem
 		protected virtual void Build()
 		{
 			SetColor(Color.white);
-			gameObject.layer = this.m_Layer;
+			gameObject.layer = m_Layer;
 			onPlace?.Invoke();
 			enabled = false;
 		}
@@ -90,8 +91,8 @@ namespace DevionGames.InventorySystem
 
 		private bool CanPlace()
 		{
-			Vector3 boxColliderCenter = this.m_BoxCollider.center;
-			Vector3 boxColliderExtents = this.m_BoxCollider.size;
+			Vector3 boxColliderCenter = m_BoxCollider.center;
+			Vector3 boxColliderExtents = m_BoxCollider.size;
 			bool res = true;
 			for (int i = 0; i < 4; i++)
 			{

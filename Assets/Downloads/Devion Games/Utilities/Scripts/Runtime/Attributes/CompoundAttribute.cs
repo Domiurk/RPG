@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames
 {
@@ -8,7 +6,8 @@ namespace DevionGames
     {
         public readonly string propertyPath;
 
-        public CompoundAttribute(string propertyPath) {
+        public CompoundAttribute(string propertyPath)
+        {
             this.propertyPath = propertyPath;
         }
     }

@@ -31,20 +31,20 @@ namespace Invector.vCharacterController
 
         protected virtual void FixedUpdate()
         {
-            cc.UpdateMotor();               // updates the ThirdPersonMotor methods
-            cc.ControlLocomotionType();     // handle the controller locomotion type and movespeed
-            cc.ControlRotationType();       // handle the controller rotation type
+            cc.UpdateMotor();
+            cc.ControlLocomotionType();
+            cc.ControlRotationType();
         }
 
         protected virtual void Update()
         {
-            InputHandle();                  // update the input methods
-            cc.UpdateAnimator();            // updates the Animator Parameters
+            InputHandle();
+            cc.UpdateAnimator();
         }
 
         public virtual void OnAnimatorMove()
         {
-            cc.ControlAnimatorRootMotion(); // handle root motion animations 
+            cc.ControlAnimatorRootMotion();
         }
 
         #region Basic Locomotion Inputs
@@ -66,7 +66,7 @@ namespace Invector.vCharacterController
                     return;
                 if (tpCamera)
                 {
-                    tpCamera.SetMainTarget(this.transform);
+                    tpCamera.SetMainTarget(transform);
                     tpCamera.Init();
                 }
             }
@@ -107,8 +107,8 @@ namespace Invector.vCharacterController
             if (tpCamera == null)
                 return;
 
-            var Y = Input.GetAxis(rotateCameraYInput);
-            var X = Input.GetAxis(rotateCameraXInput);
+            float Y = Input.GetAxis(rotateCameraYInput);
+            float X = Input.GetAxis(rotateCameraXInput);
 
             tpCamera.RotateCamera(X, Y);
         }

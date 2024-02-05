@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DevionGames.UIWidgets;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames.InventorySystem
 {
@@ -14,17 +11,17 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         protected ItemGroup m_RequiredGroupItem;
         [SerializeField]
-        protected string m_Window="Equipment";
+        protected readonly string m_Window="Equipment";
 
 
         public override ActionStatus OnUpdate()
         {
-            for (int i = 0; i < this.m_RequiredGroupItem.Items.Length; i++)
+            for (int i = 0; i < m_RequiredGroupItem.Items.Length; i++)
             {
-                Item item = this.m_RequiredGroupItem.Items[i];
-                if (item != null && !string.IsNullOrEmpty(this.m_Window)) { 
+                Item item = m_RequiredGroupItem.Items[i];
+                if (item != null && !string.IsNullOrEmpty(m_Window)) { 
 
-                    if (ItemContainer.HasItem(this.m_Window, item, 1))
+                    if (ItemContainer.HasItem(m_Window, item, 1))
                     {
                         
                         return ActionStatus.Success;

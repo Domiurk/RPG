@@ -1,13 +1,12 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.Water
 {
     public class MeshContainer
     {
-        public Mesh mesh;
-        public Vector3[] vertices;
-        public Vector3[] normals;
+        public readonly Mesh mesh;
+        public readonly Vector3[] vertices;
+        public readonly Vector3[] normals;
 
 
         public MeshContainer(Mesh m)

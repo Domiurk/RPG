@@ -9,7 +9,7 @@ namespace Invector.vCamera
     {
         GUISkin skin;
         vThirdPersonCamera tpCamera;      
-        private Texture2D m_Logo = null;
+        private Texture2D m_Logo;
 
         void OnSceneGUI()
         {

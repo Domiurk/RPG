@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace DevionGames.StatSystem
@@ -15,13 +14,13 @@ namespace DevionGames.StatSystem
         protected float m_CurrentValue;
         public float CurrentValue
         {
-            get => this.m_CurrentValue;
+            get => m_CurrentValue;
             set
             {
                 float single = Mathf.Clamp(value, 0, Value);
-                if (this.m_CurrentValue != single)
+                if (m_CurrentValue != single)
                 {
-                    this.m_CurrentValue = single;
+                    m_CurrentValue = single;
                     onCurrentValueChange?.Invoke();
                 }
             }
@@ -39,24 +38,24 @@ namespace DevionGames.StatSystem
         public override void ApplyStartValues()
         {
             base.ApplyStartValues();
-            this.m_CurrentValue = this.m_Value * this.m_StartCurrentValue;
+            m_CurrentValue = m_Value * m_StartCurrentValue;
         }
 
         public override string ToString()
         {
-            return this.m_StatName + ": " + this.CurrentValue.ToString() + "/" + this.Value.ToString();
+            return m_StatName + ": " + CurrentValue.ToString() + "/" + Value.ToString();
         }
 
         public override void GetObjectData(Dictionary<string, object> data)
         {
             base.GetObjectData(data);
-            data.Add("CurrentValue", this.m_CurrentValue);
+            data.Add("CurrentValue", m_CurrentValue);
         }
 
         public override void SetObjectData(Dictionary<string, object> data)
         {
             base.SetObjectData(data);
-            this.m_CurrentValue = System.Convert.ToSingle(data["CurrentValue"]);
+            m_CurrentValue = System.Convert.ToSingle(data["CurrentValue"]);
             CalculateValue(false);
         }
     }

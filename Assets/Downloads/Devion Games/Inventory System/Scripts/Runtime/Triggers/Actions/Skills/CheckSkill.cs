@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DevionGames.UIWidgets;
 using UnityEngine;
 
 namespace DevionGames.InventorySystem
 {
+    [System.Serializable]
     [Icon("Item")]
     [ComponentMenu("Inventory System/Check Skill")]
     public class CheckSkill : Action, ICondition
@@ -16,37 +15,37 @@ namespace DevionGames.InventorySystem
 
         [ItemPicker(true)]
         [SerializeField]
-        private Skill m_Skill= null;
+        private Skill m_Skill;
         [SerializeField]
-        private NotificationOptions m_SuccessNotification = null;
+        private NotificationOptions m_SuccessNotification;
         [SerializeField]
-        private NotificationOptions m_FailureNotification = null;
+        private NotificationOptions m_FailureNotification;
 
         private ItemContainer m_ItemContainer;
 
         public override void OnStart()
         {
-            this.m_ItemContainer = WidgetUtility.Find<ItemContainer>(this.m_WindowName);
+            m_ItemContainer = WidgetUtility.Find<ItemContainer>(m_WindowName);
         }
 
         public override ActionStatus OnUpdate()
         {
-            if (this.m_ItemContainer == null)
+            if (m_ItemContainer == null)
             {
-                Debug.LogWarning("Missing window " + this.m_WindowName + " in scene!");
+                Debug.LogWarning("Missing window " + m_WindowName + " in scene!");
                 return ActionStatus.Failure;
             }
 
-            Skill current = (Skill)this.m_ItemContainer.GetItems(this.m_Skill.Id).FirstOrDefault();
+            Skill current = (Skill)m_ItemContainer.GetItems(m_Skill.Id).FirstOrDefault();
             if(current != null){
                 if (!current.CheckSkill()) {
-                    if (this.m_FailureNotification != null && !string.IsNullOrEmpty(this.m_FailureNotification.text))
-                        this.m_FailureNotification.Show();
+                    if (m_FailureNotification != null && !string.IsNullOrEmpty(m_FailureNotification.text))
+                        m_FailureNotification.Show();
                     return ActionStatus.Failure;
                 }
             }
-            if (this.m_SuccessNotification != null && !string.IsNullOrEmpty(this.m_SuccessNotification.text))
-                this.m_SuccessNotification.Show();
+            if (m_SuccessNotification != null && !string.IsNullOrEmpty(m_SuccessNotification.text))
+                m_SuccessNotification.Show();
             return ActionStatus.Success;
         }
     }

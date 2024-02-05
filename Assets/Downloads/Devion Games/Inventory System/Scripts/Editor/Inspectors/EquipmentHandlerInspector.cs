@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.XR;
 
 namespace DevionGames.InventorySystem
 {
@@ -19,9 +16,9 @@ namespace DevionGames.InventorySystem
 
         private void OnEnable()
         {
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_WindowName = serializedObject.FindProperty("m_WindowName");
-            this.m_Database = serializedObject.FindProperty("m_Database");
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_WindowName = serializedObject.FindProperty("m_WindowName");
+            m_Database = serializedObject.FindProperty("m_Database");
             EquipmentHandler handler = target as EquipmentHandler;
             gameObject = handler.gameObject;
 
@@ -57,7 +54,7 @@ namespace DevionGames.InventorySystem
         bool playModeStateChange;
         private void PlayModeState(PlayModeStateChange state)
         {
-            playModeStateChange = (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.ExitingPlayMode);
+            playModeStateChange = state is PlayModeStateChange.ExitingEditMode or PlayModeStateChange.EnteredEditMode or PlayModeStateChange.ExitingPlayMode;
         }
 
         private void OnDestroy()
@@ -76,10 +73,10 @@ namespace DevionGames.InventorySystem
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.m_Script);
+            EditorGUILayout.PropertyField(m_Script);
             EditorGUI.EndDisabledGroup();
             serializedObject.Update();
-            EditorGUILayout.PropertyField(this.m_WindowName);
+            EditorGUILayout.PropertyField(m_WindowName);
             serializedObject.ApplyModifiedProperties();
 
             if (EditorTools.RightArrowButton(new GUIContent("Bones"), GUILayout.Height(24f)))
@@ -105,13 +102,13 @@ namespace DevionGames.InventorySystem
 
                 SelectDatabaseButton();
                 GUILayout.Space(3f);  
-                ItemDatabase database = this.m_Database.objectReferenceValue as ItemDatabase;
+                ItemDatabase database = m_Database.objectReferenceValue as ItemDatabase;
                 if (database == null)
                     return;
 
                 List<EquipmentHandler.EquipmentBone> bones = (target as EquipmentHandler).Bones;
-                var firstNotSecond = database.equipments.Except(bones.Select(x => x.region)).ToList();
-                var secondNotFirst = bones.Select(x => x.region).Except(database.equipments).ToList();
+                List<EquipmentRegion> firstNotSecond = database.equipments.Except(bones.Select(x => x.region)).ToList();
+                List<EquipmentRegion> secondNotFirst = bones.Select(x => x.region).Except(database.equipments).ToList();
 
                 for (int i = 0; i < firstNotSecond.Count; i++)
                 {
@@ -148,17 +145,17 @@ namespace DevionGames.InventorySystem
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Database", GUILayout.Width(120f));
-            ItemDatabase database = this.m_Database.objectReferenceValue as ItemDatabase;
+            ItemDatabase database = m_Database.objectReferenceValue as ItemDatabase;
             GUIStyle buttonStyle = EditorStyles.objectField;
             GUIContent buttonContent = new GUIContent(database != null ? database.name : "Null");
             Rect buttonRect = GUILayoutUtility.GetRect(buttonContent,buttonStyle);
-            //buttonRect = EditorGUI.PrefixLabel(buttonRect, new GUIContent("Database"));
+
             if (GUI.Button(buttonRect, buttonContent, buttonStyle))
             {
                 ObjectPickerWindow.ShowWindow(buttonRect, typeof(ItemDatabase),
-                    (UnityEngine.Object obj) => {
+                    (Object obj) => {
                         serializedObject.Update();
-                        this.m_Database.objectReferenceValue = obj;
+                        m_Database.objectReferenceValue = obj;
                         serializedObject.ApplyModifiedProperties();
                     },
                     () => {

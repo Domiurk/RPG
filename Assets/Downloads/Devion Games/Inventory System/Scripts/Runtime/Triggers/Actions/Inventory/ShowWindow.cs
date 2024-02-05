@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DevionGames.UIWidgets;
+﻿using DevionGames.UIWidgets;
 using UnityEngine;
 
 namespace DevionGames.InventorySystem
@@ -12,9 +10,9 @@ namespace DevionGames.InventorySystem
     {
         [Tooltip("The name of the window to show.")]
         [SerializeField]
-        private string m_WindowName = "Loot";
+        private readonly string m_WindowName = "Loot";
         [SerializeField]
-        private bool m_DestroyWhenEmpty = false;
+        private readonly bool m_DestroyWhenEmpty = false;
 
 
         private ItemContainer m_ItemContainer;
@@ -23,17 +21,17 @@ namespace DevionGames.InventorySystem
 
         public override void OnSequenceStart()
         {
-            this.m_WindowStatus = ActionStatus.Inactive;
-            this.m_ItemContainer = WidgetUtility.Find<ItemContainer>(this.m_WindowName);
-            if (this.m_ItemContainer != null) {
-                this.m_ItemContainer.RegisterListener("OnClose",(CallbackEventData eventData)=>{ this.m_WindowStatus = ActionStatus.Success;  });
+            m_WindowStatus = ActionStatus.Inactive;
+            m_ItemContainer = WidgetUtility.Find<ItemContainer>(m_WindowName);
+            if (m_ItemContainer != null) {
+                m_ItemContainer.RegisterListener("OnClose",(CallbackEventData _)=>{ m_WindowStatus = ActionStatus.Success;  });
             }
-            this.m_ItemCollection = gameObject.GetComponent<ItemCollection>();
-            if (this.m_ItemCollection != null)
+            m_ItemCollection = gameObject.GetComponent<ItemCollection>();
+            if (m_ItemCollection != null)
             {
-                this.m_ItemCollection.onChange.AddListener(delegate ()
+                m_ItemCollection.onChange.AddListener(delegate ()
                 {
-                    if (this.m_ItemCollection.IsEmpty && this.m_DestroyWhenEmpty)
+                    if (m_ItemCollection.IsEmpty && m_DestroyWhenEmpty)
                     {
                         InventoryManager.Destroy(gameObject);
                     }
@@ -44,32 +42,32 @@ namespace DevionGames.InventorySystem
         public void OnTriggerUnUsed(GameObject player)
         {
             if (m_ItemContainer != null) {
-                this.m_ItemContainer.Close();
+                m_ItemContainer.Close();
                 Trigger.currentUsedWindow = null;
             }
         }
 
         public override ActionStatus OnUpdate()
         {
-            if (this.m_ItemContainer == null)
+            if (m_ItemContainer == null)
             {
-                Debug.LogWarning("Missing window " + this.m_WindowName + " in scene!");
+                Debug.LogWarning("Missing window " + m_WindowName + " in scene!");
                 return ActionStatus.Failure;
             }
 
-            if (this.m_WindowStatus == ActionStatus.Inactive)
+            if (m_WindowStatus == ActionStatus.Inactive)
             {
-                Trigger.currentUsedWindow = this.m_ItemContainer;
-                if (this.m_ItemCollection == null) {
-                    this.m_ItemContainer.Show();
+                Trigger.currentUsedWindow = m_ItemContainer;
+                if (m_ItemCollection == null) {
+                    m_ItemContainer.Show();
                 }else{
-                    this.m_ItemContainer.Collection = this.m_ItemCollection;
-                    this.m_ItemContainer.Show();
+                    m_ItemContainer.Collection = m_ItemCollection;
+                    m_ItemContainer.Show();
                 
                 }
-                this.m_WindowStatus = ActionStatus.Running;
+                m_WindowStatus = ActionStatus.Running;
             }
-            return this.m_WindowStatus;
+            return m_WindowStatus;
         }
 
        

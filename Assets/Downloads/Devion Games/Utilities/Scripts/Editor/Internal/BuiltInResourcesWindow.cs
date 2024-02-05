@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -10,7 +9,7 @@ namespace DevionGames
 		[MenuItem("Tools/Devion Games/Internal/Built-in styles and icons")]
 		public static void ShowWindow()
 		{
-			BuiltInResourcesWindow w = (BuiltInResourcesWindow)EditorWindow.GetWindow<BuiltInResourcesWindow>();
+			BuiltInResourcesWindow w = GetWindow<BuiltInResourcesWindow>();
 			w.Show();
 		}
 
@@ -22,13 +21,13 @@ namespace DevionGames
 
 		private List<Drawing> Drawings;
 
-		private List<UnityEngine.Object> _objects;
+		private List<Object> _objects;
 		private float _scrollPos;
 		private float _maxY;
 		private Rect _oldPosition;
 
 		private bool _showingStyles = true;
-		private bool _showingIcons = false;
+		private bool _showingIcons;
 
 		private string _search = "";
 
@@ -128,13 +127,13 @@ namespace DevionGames
 				{
 					if (_objects == null)
 					{
-						_objects = new List<UnityEngine.Object>(Resources.FindObjectsOfTypeAll(typeof(Texture2D)));
+						_objects = new List<Object>(Resources.FindObjectsOfTypeAll(typeof(Texture2D)));
 						_objects.Sort((pA, pB) => System.String.Compare(pA.name, pB.name, System.StringComparison.OrdinalIgnoreCase));
 					}
 
 					float rowHeight = 0.0f;
 
-					foreach (UnityEngine.Object oo in _objects)
+					foreach (Object oo in _objects)
 					{
 						Texture2D texture = (Texture2D)oo;
 

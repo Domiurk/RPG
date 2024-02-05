@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DevionGames.InventorySystem{
 	[System.Serializable]
 	public class ItemDatabase : ScriptableObject {
-		public List<Item> items = new List<Item>();
-        public List<Currency> currencies = new List<Currency>();
-        public List<Rarity> raritys = new List<Rarity>();
-		public List<Category> categories = new List<Category>();
-		public List<EquipmentRegion> equipments = new List<EquipmentRegion>();
-        public List<ItemGroup> itemGroups = new List<ItemGroup>();
-        public List<Configuration.Settings> settings = new List<Configuration.Settings>();
+		public List<Item> items = new();
+        public List<Currency> currencies = new();
+        public List<Rarity> raritys = new();
+		public List<Category> categories = new();
+		public List<EquipmentRegion> equipments = new();
+        public List<ItemGroup> itemGroups = new();
+        public List<Configuration.Settings> settings = new();
 
 		public List<Item> allItems {
 			get {

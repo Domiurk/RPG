@@ -2,11 +2,8 @@
 using UnityEditor;
 using UnityEngine;
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEditor.AnimatedValues;
-using UnityEngine.Events;
-using System.Collections.Generic;
 
 namespace DevionGames.InventorySystem
 {
@@ -33,35 +30,25 @@ namespace DevionGames.InventorySystem
             base.OnEnable();
             if (target == null) return;
 
-            ArrayUtility.Add(ref this.m_PropertiesToExcludeForChildClasses, serializedObject.FindProperty("actions").propertyPath);
-            this.m_UseCategoryCooldown = serializedObject.FindProperty("m_UseCategoryCooldown");
-            this.m_Cooldown = serializedObject.FindProperty("m_Cooldown");
-            this.m_ShowCategoryCooldownOptions = new AnimBool(!this.m_UseCategoryCooldown.boolValue);
+            ArrayUtility.Add(ref m_PropertiesToExcludeForChildClasses, serializedObject.FindProperty("actions").propertyPath);
+            m_UseCategoryCooldown = serializedObject.FindProperty("m_UseCategoryCooldown");
+            m_Cooldown = serializedObject.FindProperty("m_Cooldown");
+            m_ShowCategoryCooldownOptions = new AnimBool(!m_UseCategoryCooldown.boolValue);
 
-            this.m_ShowCategoryCooldownOptions.valueChanged.AddListener(new UnityAction(this.Repaint));
+            m_ShowCategoryCooldownOptions.valueChanged.AddListener(Repaint);
             
-            this.m_Target = target;
-            this.m_List = (target as UsableItem).actions;
-            this.m_ElementType = Utility.GetElementType(this.m_List.GetType());
-            this.m_ElementTypeName = this.m_ElementType.FullName;
-            FieldInfo[] fields = this.m_Target.GetType().GetSerializedFields();
+            m_Target = target;
+            m_List = (target as UsableItem).actions;
+            m_ElementType = Utility.GetElementType(m_List.GetType());
+            m_ElementTypeName = m_ElementType.FullName;
+            FieldInfo[] fields = m_Target.GetType().GetSerializedFields();
             for (int i = 0; i < fields.Length; i++)
             {
-                object temp = fields[i].GetValue(this.m_Target);
-                if (temp == this.m_List)
-                    this.m_FieldName = fields[i].Name;
+                object temp = fields[i].GetValue(m_Target);
+                if (temp == m_List)
+                    m_FieldName = fields[i].Name;
             }
             m_Actions = serializedObject.FindProperty("actions");
-            /*
-             * I can't apply any changes to managedReferenceValue if it is null
-             * for (int i = 0; i < this.m_Actions.arraySize; i++) {
-                SerializedProperty element = this.m_Actions.GetArrayElementAtIndex(i);
-                if (element.GetValue() == null) {
-             
-                    element.managedReferenceValue = new MissingAction();
-                    serializedObject.ApplyModifiedPropertiesWithoutUndo();
-                }
-            }*/
             AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
             EditorApplication.playModeStateChanged += OnPlaymodeStateChange;
@@ -81,10 +68,10 @@ namespace DevionGames.InventorySystem
              DrawBaseInspector();
              for (int i = 0; i < m_DrawInspectors.Count; i++)
              {
-                this.m_DrawInspectors[i].Invoke();
+                m_DrawInspectors[i].Invoke();
              }
 
-             DrawPropertiesExcluding(serializedObject, this.m_PropertiesToExcludeForChildClasses);
+             DrawPropertiesExcluding(serializedObject, m_PropertiesToExcludeForChildClasses);
              ActionGUI();
              serializedObject.ApplyModifiedProperties();
         }
@@ -95,12 +82,12 @@ namespace DevionGames.InventorySystem
         }
 
         protected void DrawCooldownGUI() {
-            EditorGUILayout.PropertyField(this.m_UseCategoryCooldown);
-            this.m_ShowCategoryCooldownOptions.target = !this.m_UseCategoryCooldown.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowCategoryCooldownOptions.faded))
+            EditorGUILayout.PropertyField(m_UseCategoryCooldown);
+            m_ShowCategoryCooldownOptions.target = !m_UseCategoryCooldown.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowCategoryCooldownOptions.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_Cooldown);
+                EditorGUILayout.PropertyField(m_Cooldown);
                 EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
             }
             EditorGUILayout.EndFadeGroup();
@@ -110,15 +97,15 @@ namespace DevionGames.InventorySystem
         protected void ActionGUI() {
            
             GUILayout.Space(10f);
-            for (int i = 0; i < this.m_Actions.arraySize; i++) {
-                SerializedProperty action = this.m_Actions.GetArrayElementAtIndex(i);
+            for (int i = 0; i < m_Actions.arraySize; i++) {
+                SerializedProperty action = m_Actions.GetArrayElementAtIndex(i);
 
-                object value = this.m_List[i];
+                object value = m_List[i];
                 EditorGUI.BeginChangeCheck();
-                if (this.m_Target != null)
-                    Undo.RecordObject(this.m_Target, "Item Action");
+                if (m_Target != null)
+                    Undo.RecordObject(m_Target, "Item Action");
 
-                if (EditorTools.Titlebar((target.GetInstanceID()+i).ToString(),value, ElementContextMenu(this.m_List, i)))
+                if (EditorTools.Titlebar((target.GetInstanceID()+i).ToString(),value, ElementContextMenu(m_List, i)))
                 {
                     EditorGUI.indentLevel += 1;
                     EditorGUI.BeginDisabledGroup(true);
@@ -134,21 +121,18 @@ namespace DevionGames.InventorySystem
                     }
                     else
                     {
-                        foreach (var child in action.EnumerateChildProperties())
+                        foreach (SerializedProperty child in action.EnumerateChildProperties())
                         {
-                            //Need to find a better way to disable TargetType on Item, it should be always Player   
-                           // EditorGUI.BeginDisabledGroup(child.name == "m_Target");
                             EditorGUILayout.PropertyField(
-                                child,
-                                includeChildren: true
-                            );
-                           // EditorGUI.EndDisabledGroup();
+                                                          child,
+                                                          includeChildren: true
+                                                         );
                         }
                     }
                     EditorGUI.indentLevel -= 1;
                 }
                 if (EditorGUI.EndChangeCheck())
-                    EditorUtility.SetDirty(this.m_Target);
+                    EditorUtility.SetDirty(m_Target);
             }
             GUILayout.FlexibleSpace();
 
@@ -159,10 +143,10 @@ namespace DevionGames.InventorySystem
 
         private void Add(Type type)
         {
-            object value = System.Activator.CreateInstance(type);
+            object value = Activator.CreateInstance(type);
             serializedObject.Update();
-            this.m_Actions.arraySize++;
-            this.m_Actions.GetArrayElementAtIndex(this.m_Actions.arraySize - 1).managedReferenceValue = value;
+            m_Actions.arraySize++;
+            m_Actions.GetArrayElementAtIndex(m_Actions.arraySize - 1).managedReferenceValue = value;
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -174,14 +158,14 @@ namespace DevionGames.InventorySystem
         private void DoAddButton()
         {
             GUIStyle buttonStyle = new GUIStyle("AC Button");
-            GUIContent buttonContent = new GUIContent("Add " + this.m_ElementType.Name);
+            GUIContent buttonContent = new GUIContent("Add " + m_ElementType.Name);
              Rect buttonRect = GUILayoutUtility.GetRect(buttonContent, buttonStyle, GUILayout.ExpandWidth(true));
              buttonRect.x = buttonRect.width * 0.5f - buttonStyle.fixedWidth * 0.5f;
              buttonRect.width = buttonStyle.fixedWidth;
 
              if (GUI.Button(buttonRect, buttonContent, buttonStyle))
              {
-                 AddObjectWindow.ShowWindow(buttonRect, this.m_ElementType, Add, CreateScript);
+                 AddObjectWindow.ShowWindow(buttonRect, m_ElementType, Add, CreateScript);
              }
         }
 
@@ -192,10 +176,10 @@ namespace DevionGames.InventorySystem
 
         public void OnBeforeAssemblyReload()
         {
-            if (this.m_Target is Component)
+            if (m_Target is Component)
             {
-                this.m_GameObject = (this.m_Target as Component).gameObject;
-                this.m_ComponentInstanceID = (this.m_Target as Component).GetInstanceID();
+                m_GameObject = (m_Target as Component).gameObject;
+                m_ComponentInstanceID = (m_Target as Component).GetInstanceID();
             }
         }
 
@@ -214,12 +198,12 @@ namespace DevionGames.InventorySystem
             }
             menu.AddItem(new GUIContent("Reset"), false, delegate {
 
-                object value = System.Activator.CreateInstance(list[index].GetType());
+                object value = Activator.CreateInstance(list[index].GetType());
                 list[index] = value;
                 EditorUtility.SetDirty(target);
             });
             menu.AddSeparator(string.Empty);
-            menu.AddItem(new GUIContent("Remove " + this.m_ElementType.Name), false, delegate { list.RemoveAt(index); EditorUtility.SetDirty(target); });
+            menu.AddItem(new GUIContent("Remove " + m_ElementType.Name), false, delegate { list.RemoveAt(index); EditorUtility.SetDirty(target); });
 
             if (index > 0)
             {
@@ -250,15 +234,15 @@ namespace DevionGames.InventorySystem
                 menu.AddDisabledItem(new GUIContent("Move Down"));
             }
 
-            menu.AddItem(new GUIContent("Copy " + this.m_ElementType.Name), false, delegate {
+            menu.AddItem(new GUIContent("Copy " + m_ElementType.Name), false, delegate {
                 object value = list[index];
                 m_ObjectToCopy = value;
             });
 
             if (m_ObjectToCopy != null)
             {
-                menu.AddItem(new GUIContent("Paste " + this.m_ElementType.Name + " As New"), false, delegate {
-                    object instance = System.Activator.CreateInstance(m_ObjectToCopy.GetType());
+                menu.AddItem(new GUIContent("Paste " + m_ElementType.Name + " As New"), false, delegate {
+                    object instance = Activator.CreateInstance(m_ObjectToCopy.GetType());
                     FieldInfo[] fields = instance.GetType().GetSerializedFields();
                     for (int i = 0; i < fields.Length; i++)
                     {
@@ -271,7 +255,7 @@ namespace DevionGames.InventorySystem
 
                 if (list[index].GetType() == m_ObjectToCopy.GetType())
                 {
-                    menu.AddItem(new GUIContent("Paste " + this.m_ElementType.Name + " Values"), false, delegate
+                    menu.AddItem(new GUIContent("Paste " + m_ElementType.Name + " Values"), false, delegate
                     {
                         object instance = list[index];
                         FieldInfo[] fields = instance.GetType().GetSerializedFields();
@@ -285,7 +269,7 @@ namespace DevionGames.InventorySystem
                 }
                 else
                 {
-                    menu.AddDisabledItem(new GUIContent("Paste " + this.m_ElementType.Name + " Values"));
+                    menu.AddDisabledItem(new GUIContent("Paste " + m_ElementType.Name + " Values"));
                 }
             }
 
@@ -303,14 +287,14 @@ namespace DevionGames.InventorySystem
 
         private void Reload()
         {
-            if (this.m_GameObject != null)
+            if (m_GameObject != null)
             {
-                Component[] components = this.m_GameObject.GetComponents(typeof(Component));
-                this.m_Target = Array.Find(components, x => x.GetInstanceID() == this.m_ComponentInstanceID);
+                Component[] components = m_GameObject.GetComponents(typeof(Component));
+                m_Target = Array.Find(components, x => x.GetInstanceID() == m_ComponentInstanceID);
             }
 
-            this.m_ElementType = Utility.GetType(this.m_ElementTypeName);
-            this.m_List = this.m_Target.GetType().GetSerializedField(this.m_FieldName).GetValue(this.m_Target) as IList;
+            m_ElementType = Utility.GetType(m_ElementTypeName);
+            m_List = m_Target.GetType().GetSerializedField(m_FieldName).GetValue(m_Target) as IList;
            
         }   
     }

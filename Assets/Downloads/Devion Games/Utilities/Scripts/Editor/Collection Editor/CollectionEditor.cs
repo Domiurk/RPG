@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
 
 namespace DevionGames{
 	/// <summary>
@@ -16,7 +12,7 @@ namespace DevionGames{
 		private const  float LIST_MAX_WIDTH = 400f;
 		private const float LIST_RESIZE_WIDTH = 10f;
 
-		protected Rect m_SidebarRect = new Rect(0,30,200,1000);
+		protected Rect m_SidebarRect = new(0,30,200,1000);
 		protected Vector2 m_ScrollPosition;
 		protected string m_SearchString=string.Empty;
 		protected Vector2 m_SidebarScrollPosition;
@@ -47,33 +43,33 @@ namespace DevionGames{
 
 		private string m_ToolbarName;
 
-		public virtual string ToolbarName => !string.IsNullOrEmpty(this.m_ToolbarName) ? this.m_ToolbarName: (GetType().IsGenericType ? 
+		public virtual string ToolbarName => !string.IsNullOrEmpty(m_ToolbarName) ? m_ToolbarName: (GetType().IsGenericType ? 
 			ObjectNames.NicifyVariableName(GetType().GetGenericArguments()[0].Name) : 
 			ObjectNames.NicifyVariableName(GetType().Name.Replace("Editor", "")));
 
 		public CollectionEditor() { }
 
 		public CollectionEditor(string title) {
-			this.m_ToolbarName = title;
+			m_ToolbarName = title;
 		}
 
 		public virtual void OnEnable() {
 			string prefix = "CollectionEditor." + ToolbarName + ".";
-			this.m_SelectedItemIndex = EditorPrefs.GetInt(prefix + "m_SelectedItemIndex");
-			this.m_SidebarRect.width = EditorPrefs.GetFloat(prefix + "m_SidebarRect.width", LIST_MIN_WIDTH);
-			this.m_ScrollPosition.y = EditorPrefs.GetFloat(prefix + "m_Scrollposition.y");
-			this.m_SidebarScrollPosition.y = EditorPrefs.GetFloat(prefix + "m_SidebarScrollPosition.y");
+			m_SelectedItemIndex = EditorPrefs.GetInt(prefix + "m_SelectedItemIndex");
+			m_SidebarRect.width = EditorPrefs.GetFloat(prefix + "m_SidebarRect.width", LIST_MIN_WIDTH);
+			m_ScrollPosition.y = EditorPrefs.GetFloat(prefix + "m_Scrollposition.y");
+			m_SidebarScrollPosition.y = EditorPrefs.GetFloat(prefix + "m_SidebarScrollPosition.y");
 
-			if (this.m_SelectedItemIndex > -1 && this.m_SelectedItemIndex < Items.Count)
-				Select(Items[this.m_SelectedItemIndex]);
+			if (m_SelectedItemIndex > -1 && m_SelectedItemIndex < Items.Count)
+				Select(Items[m_SelectedItemIndex]);
 		}
 		
 		public virtual void OnDisable() {
 			string prefix = "CollectionEditor." + ToolbarName + ".";
-			EditorPrefs.SetInt(prefix + "m_SelectedItemIndex",this.m_SelectedItemIndex);
-			EditorPrefs.SetFloat(prefix + "m_SidebarRect.width", this.m_SidebarRect.width);
-			EditorPrefs.SetFloat(prefix + "m_Scrollposition.y",this.m_ScrollPosition.y);
-			EditorPrefs.SetFloat(prefix + "m_SidebarScrollPosition.y",this.m_SidebarScrollPosition.y);
+			EditorPrefs.SetInt(prefix + "m_SelectedItemIndex",m_SelectedItemIndex);
+			EditorPrefs.SetFloat(prefix + "m_SidebarRect.width", m_SidebarRect.width);
+			EditorPrefs.SetFloat(prefix + "m_Scrollposition.y",m_ScrollPosition.y);
+			EditorPrefs.SetFloat(prefix + "m_SidebarScrollPosition.y",m_SidebarScrollPosition.y);
 		}
 
 		public virtual void OnDestroy() { Debug.Log("OnDestroy " + ToolbarName); }
@@ -146,7 +142,7 @@ namespace DevionGames{
 					if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown && Event.current.button == 0) {
 						GUI.FocusControl("");
 						Select(currentItem);
-						this.m_StartDrag = true;
+						m_StartDrag = true;
 						Event.current.Use();
 					}
 					DrawItemLabel(i, currentItem);
@@ -156,7 +152,7 @@ namespace DevionGames{
 					{
 						GUI.backgroundColor = Styles.warningColor;
 						Rect errorRect = new Rect(h.rect.width - 20f, h.rect.y+4.5f, 16f, 16f);
-						GUI.Label(errorRect, new GUIContent("",error), (GUIStyle)"CN EntryWarnIconSmall");
+						GUI.Label(errorRect, new GUIContent("",error), "CN EntryWarnIconSmall");
 					}
 					GUI.backgroundColor = backgroundColor;
 					Styles.selectButtonText.normal.textColor = textColor;
@@ -179,10 +175,10 @@ namespace DevionGames{
 					}
 					break;
 				case EventType.MouseUp:
-					if (this.m_Drag)
+					if (m_Drag)
 					{
-						this.m_Drag = false;
-						this.m_StartDrag = false;
+						m_Drag = false;
+						m_StartDrag = false;
 						for (int j = 0; j < rects.Count; j++)
 						{
 							Rect rect = rects[j];
@@ -190,17 +186,18 @@ namespace DevionGames{
 							Rect rect1 = new Rect(rect.x, rect.y, rect.width, rect.height * 0.5f);
 							Rect rect2 = new Rect(rect.x, rect.y + rect.height * 0.5f, rect.width, rect.height * 0.5f);
 							int index = j;
-							if (index < this.m_SelectedItemIndex)
+							if (index < m_SelectedItemIndex)
 								index += 1;
 							if (rect1.Contains(Event.current.mousePosition) && (index-1) > -1)
 							{
-								MoveItem(this.m_SelectedItemIndex, index-1);
+								MoveItem(m_SelectedItemIndex, index-1);
 								Select(Items[index-1]);
 								break;
 							}
-							else if (rect2.Contains(Event.current.mousePosition))
+
+							if (rect2.Contains(Event.current.mousePosition))
 							{
-								MoveItem(this.m_SelectedItemIndex, index );
+								MoveItem(m_SelectedItemIndex, index );
 								Select(Items[index]);
 								break;
 							}
@@ -209,13 +206,13 @@ namespace DevionGames{
 					}
 					break;
 				case EventType.MouseDrag:
-					if (this.m_StartDrag)
+					if (m_StartDrag)
 					{
 						for (int j = 0; j < rects.Count; j++)
 						{
 							if (rects[j].Contains(Event.current.mousePosition))
 							{
-								this.m_Drag = true;
+								m_Drag = true;
 								break;
 							}
 						}
@@ -237,7 +234,8 @@ namespace DevionGames{
 					m_DragRect.x = rect.x + 5f;
 					break;
 				}
-				else if (rect2.Contains(Event.current.mousePosition))
+
+				if (rect2.Contains(Event.current.mousePosition))
 				{
 					m_DragRect = rect;
 					m_DragRect.y = rect.y + 10f;
@@ -245,10 +243,7 @@ namespace DevionGames{
 
 					break;
 				}
-				else
-				{
-					m_DragRect = Rect.zero;
-				}
+				m_DragRect = Rect.zero;
 			}
 
 			if (m_Drag){
@@ -307,10 +302,10 @@ namespace DevionGames{
 		/// <param name="item">Item.</param>
 		protected virtual void Select(T item){
 			int index = Items.IndexOf(item);
-			if (this.m_SelectedItemIndex != index)
+			if (m_SelectedItemIndex != index)
 			{
-				this.m_SelectedItemIndex = index;
-				this.m_ScrollPosition.y = 0f;
+				m_SelectedItemIndex = index;
+				m_ScrollPosition.y = 0f;
 			}
 		}
 
@@ -447,7 +442,7 @@ namespace DevionGames{
 			case EventType.MouseDrag:
 				if (GUIUtility.hotControl == controlID)
 				{
-					this.m_Drag = false;
+					m_Drag = false;
 					m_SidebarRect.width=ev.mousePosition.x;
 					m_SidebarRect.width=Mathf.Clamp(m_SidebarRect.width,LIST_MIN_WIDTH,LIST_MAX_WIDTH);
                     EditorPrefs.SetFloat("CollectionEditorSidebarWidth"+ToolbarName,m_SidebarRect.width);
@@ -459,30 +454,26 @@ namespace DevionGames{
 
         public static class Styles{
 			public static GUIStyle minusButton;
-			public static GUIStyle selectButton;
+			public static readonly GUIStyle selectButton;
 			public static GUIStyle background;
 
 			private static GUIStyle m_LeftPaneDark;
 			private static GUIStyle m_LeftPaneLight;
-			public static GUIStyle leftPane {
-				get {return EditorGUIUtility.isProSkin ? m_LeftPaneDark : m_LeftPaneLight;}
-			}
+			public static GUIStyle leftPane => EditorGUIUtility.isProSkin ? m_LeftPaneDark : m_LeftPaneLight;
 
 			private static GUIStyle m_CenterPaneDark;
 			private static GUIStyle m_CenterPaneLight;
-			public static GUIStyle centerPane {
-				get { return EditorGUIUtility.isProSkin ? m_CenterPaneDark : m_CenterPaneLight; }
-			}
+			public static GUIStyle centerPane => EditorGUIUtility.isProSkin ? m_CenterPaneDark : m_CenterPaneLight;
 
-			public static GUIStyle selectButtonText;
+			public static readonly GUIStyle selectButtonText;
 			public static Color normalColor;
 			public static Color hoverColor;
 			public static Color activeColor;
 			public static Color warningColor;
-			public static GUIStyle dragInsertion;
+			public static readonly GUIStyle dragInsertion;
 			public static Texture2D errorIcon;
 
-			public static GUIStyle indicatorColor;
+			public static readonly GUIStyle indicatorColor;
 
 			private static GUISkin skin;
 

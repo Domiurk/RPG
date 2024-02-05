@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.Water
@@ -33,8 +32,6 @@ namespace UnityStandardAssets.Water
                 sharedMaterial.shader.maximumLOD = 201;
             }
 
-            // If the system does not support depth textures (ie. NaCl), turn off edge bleeding,
-            // as the shader will render everything as transparent if the depth texture is not valid.
             if (!SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.Depth))
             {
                 edgeBlend = false;
@@ -44,7 +41,7 @@ namespace UnityStandardAssets.Water
             {
                 Shader.EnableKeyword("WATER_EDGEBLEND_ON");
                 Shader.DisableKeyword("WATER_EDGEBLEND_OFF");
-                // just to make sure (some peeps might forget to add a water tile to the patches)
+
                 if (Camera.main)
                 {
                     Camera.main.depthTextureMode |= DepthTextureMode.Depth;

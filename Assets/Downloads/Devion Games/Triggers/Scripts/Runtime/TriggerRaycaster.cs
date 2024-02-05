@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
 namespace DevionGames
 {
@@ -17,69 +14,71 @@ namespace DevionGames
         private Transform m_Transform;
         private GameObject m_LastCameraHit;
 
-        private static bool m_PointerOverTrigger = false;
+        private static bool m_PointerOverTrigger;
+        private Camera mainCamera;
 
         [RuntimeInitializeOnLoadMethod]
         static void Initialize()
         {
-            Camera camera = Camera.main;
-            if (camera.GetComponent<TriggerRaycaster>() == null)
+            Camera camera = Camera.main!;
+            if(camera.GetComponent<TriggerRaycaster>() == null)
                 camera.gameObject.AddComponent<TriggerRaycaster>();
         }
 
-
         private void Start()
         {
-            this.m_Transform = transform;    
+            m_Transform = transform;
+            mainCamera = Camera.main!;
         }
 
         private void Update()
         {
+            Ray ray = (Cursor.lockState == CursorLockMode.Locked
+                           ? new Ray(m_Transform.position, m_Transform.forward)
+                           : mainCamera.ScreenPointToRay(Input.mousePosition));
 
-            Ray ray = (Cursor.lockState == CursorLockMode.Locked? new Ray(this.m_Transform.position,this.m_Transform.forward) : Camera.main.ScreenPointToRay(Input.mousePosition));
-
-            RaycastHit hit;
-            if (TriggerRaycaster.Raycast(ray, out hit, float.PositiveInfinity, this.m_LayerMask))
-            {
+            if(Raycast(ray, out RaycastHit hit, float.PositiveInfinity, m_LayerMask)){
                 GameObject current = hit.collider.GetComponentInParent<BaseTrigger>().gameObject;
 
-                if (m_LastCameraHit != current)
-                {
-                    if(this.m_LastCameraHit != null)
-                        EventHandler.Execute(this.m_LastCameraHit, "OnPointerExitTrigger");
+                if(m_LastCameraHit != current){
+                    if(m_LastCameraHit != null)
+                        EventHandler.Execute(m_LastCameraHit, "OnPointerExitTrigger");
 
                     m_LastCameraHit = current;
                     EventHandler.Execute(m_LastCameraHit, "OnPointerEnterTrigger");
                 }
+
                 int button = -1;
-                if (Input.GetMouseButtonDown(0))
+                if(Input.GetMouseButtonDown(0))
                     button = 0;
-                if (Input.GetMouseButtonDown(1))
+                if(Input.GetMouseButtonDown(1))
                     button = 1;
-                if (Input.GetMouseButtonDown(2))
+                if(Input.GetMouseButtonDown(2))
                     button = 2;
 
-                if (button != -1)
-                {
+                if(button != -1){
                     m_LastCameraHit = current;
-                    EventHandler.Execute<int>(m_LastCameraHit, "OnPoinerClickTrigger", button);
+                    EventHandler.Execute(m_LastCameraHit, "OnPointerClickTrigger", button);
                 }
-                
-                TriggerRaycaster.m_PointerOverTrigger = true;
+
+                m_PointerOverTrigger = true;
             }
-            else
-            {
-                if (m_LastCameraHit != null)
-                {
+            else{
+                if(m_LastCameraHit != null){
                     EventHandler.Execute(m_LastCameraHit, "OnPointerExitTrigger");
                     m_LastCameraHit = null;
                 }
-                TriggerRaycaster.m_PointerOverTrigger = false;
+
+                m_PointerOverTrigger = false;
             }
         }
-        
 
-        public static bool Raycast(Vector3 origin, Vector3 direction,out RaycastHit hit, float maxDistance, int layerMask ) {
+        public static bool Raycast(Vector3 origin,
+                                   Vector3 direction,
+                                   out RaycastHit hit,
+                                   float maxDistance,
+                                   int layerMask)
+        {
             return Raycast(new Ray(origin, direction), out hit, maxDistance, layerMask);
         }
 
@@ -87,25 +86,22 @@ namespace DevionGames
         {
             RaycastHit[] hits = Physics.RaycastAll(ray, maxDistance, layerMask, QueryTriggerInteraction.Collide);
             hit = new RaycastHit();
-            if (hits.Length > 0)
-            {
-                for (int i = 0; i < hits.Length; i++)
-                {
-                    RaycastHit current = hits[i];
-                    if (current.collider.GetComponentInParent<BaseTrigger>() == null)
+
+            if(hits.Length > 0){
+                foreach(RaycastHit current in hits){
+                    if(current.collider.GetComponentInParent<BaseTrigger>() == null)
                         continue;
                     hit = current;
                     return true;
                 }
-                return false;
             }
+
             return false;
         }
 
         public static bool IsPointerOverTrigger()
         {
-            return TriggerRaycaster.m_PointerOverTrigger;
+            return m_PointerOverTrigger;
         }
-
     }
 }

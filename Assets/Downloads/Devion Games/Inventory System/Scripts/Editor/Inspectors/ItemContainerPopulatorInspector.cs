@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -14,7 +12,7 @@ namespace DevionGames.InventorySystem
 
         private void OnEnable()
         {
-            this.m_Entries = serializedObject.FindProperty("m_Entries");
+            m_Entries = serializedObject.FindProperty("m_Entries");
             CreateEntryList();
         }
 
@@ -23,7 +21,7 @@ namespace DevionGames.InventorySystem
             EditorGUI.BeginDisabledGroup(Application.isPlaying);
             EditorGUILayout.BeginVertical();
             serializedObject.Update();
-            this.m_EntryList.DoLayoutList();
+            m_EntryList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
             EditorGUILayout.EndVertical();
             GUILayout.Space(-4.5f);
@@ -36,13 +34,13 @@ namespace DevionGames.InventorySystem
                 EditorGUI.FocusTextInControl("");
             }
 
-            EditorGUI.BeginDisabledGroup(this.m_EntryList.index == -1);
+            EditorGUI.BeginDisabledGroup(m_EntryList.index == -1);
             if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Minus"), EditorStyles.toolbarButton, GUILayout.Width(25f)))
             {
-                this.serializedObject.Update();
-                this.m_Entries.DeleteArrayElementAtIndex(this.m_EntryList.index);
-                this.serializedObject.ApplyModifiedProperties();
-                this.m_EntryList.index = this.m_Entries.arraySize - 1;
+                serializedObject.Update();
+                m_Entries.DeleteArrayElementAtIndex(m_EntryList.index);
+                serializedObject.ApplyModifiedProperties();
+                m_EntryList.index = m_Entries.arraySize - 1;
             }
             EditorGUI.EndDisabledGroup();
 
@@ -57,19 +55,19 @@ namespace DevionGames.InventorySystem
 
         protected void CreateEntryList()
         {
-            this.m_EntryList = new ReorderableList(serializedObject, this.m_Entries, true, false, false, false);
-            this.m_EntryList.headerHeight = 0f;
-            this.m_EntryList.footerHeight = 0f;
-            this.m_EntryList.showDefaultBackground = false;
-            float defaultHeight = this.m_EntryList.elementHeight;
+            m_EntryList = new ReorderableList(serializedObject, m_Entries, true, false, false, false);
+            m_EntryList.headerHeight = 0f;
+            m_EntryList.footerHeight = 0f;
+            m_EntryList.showDefaultBackground = false;
+            float defaultHeight = m_EntryList.elementHeight;
             float verticalOffset = (defaultHeight - EditorGUIUtility.singleLineHeight) * 0.5f;
 
-            this.m_EntryList.elementHeight = (defaultHeight + verticalOffset) * 2;
-            this.m_EntryList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_EntryList.elementHeight = (defaultHeight + verticalOffset) * 2;
+            m_EntryList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;
-                SerializedProperty element = this.m_Entries.GetArrayElementAtIndex(index);
+                SerializedProperty element = m_Entries.GetArrayElementAtIndex(index);
                 if (!EditorGUIUtility.wideMode)
                 {
                     EditorGUIUtility.wideMode = true;
@@ -80,7 +78,7 @@ namespace DevionGames.InventorySystem
                 EditorGUI.PropertyField(rect, element.FindPropertyRelative("group"), true);
 
             };
-            this.m_EntryList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            m_EntryList.drawElementBackgroundCallback = (Rect rect, int _, bool isActive, bool isFocused) => {
 
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -96,9 +94,9 @@ namespace DevionGames.InventorySystem
         private void AddEntry()
         {
             serializedObject.Update();
-            this.m_Entries.arraySize++;
+            m_Entries.arraySize++;
             serializedObject.ApplyModifiedProperties();
-            this.m_EntryList.index = this.m_Entries.arraySize - 1;
+            m_EntryList.index = m_Entries.arraySize - 1;
         }
     }
 }

@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities;
+    using OdinInspector;
+    using Editor;
+    using Utilities;
     using Sirenix.Utilities.Editor;
     using UnityEngine;
 
@@ -18,40 +18,40 @@ namespace Sirenix.OdinInspector.Demos
 
     public class QuicklyInspectObjects
     {
-        private SomeClass2 someObject = new SomeClass2();
+        private readonly SomeClass2 someObject = new();
 
         [Button(ButtonSizes.Large)]
         [Title("OdinEditorWindow.InspectObject examples", "Make sure to checkout QuicklyInspectObjects.cs")]
         private void InspectObject()
         {
-            OdinEditorWindow.InspectObject(this.someObject);
+            OdinEditorWindow.InspectObject(someObject);
         }
 
         [Button(ButtonSizes.Large), HorizontalGroup("row1")]
         private void InDropDownAutoHeight()
         {
-            var btnRect = GUIHelper.GetCurrentLayoutRect();
-            OdinEditorWindow.InspectObjectInDropDown(this.someObject, btnRect, btnRect.width);
+            Rect btnRect = GUIHelper.GetCurrentLayoutRect();
+            OdinEditorWindow.InspectObjectInDropDown(someObject, btnRect, btnRect.width);
         }
 
         [Button(ButtonSizes.Large), HorizontalGroup("row1")]
         private void InDropDown()
         {
-            var btnRect = GUIHelper.GetCurrentLayoutRect();
-            OdinEditorWindow.InspectObjectInDropDown(this.someObject, btnRect, new Vector2(btnRect.width, 100));
+            Rect btnRect = GUIHelper.GetCurrentLayoutRect();
+            OdinEditorWindow.InspectObjectInDropDown(someObject, btnRect, new Vector2(btnRect.width, 100));
         }
 
         [Button(ButtonSizes.Large), HorizontalGroup("row2")]
         private void InCenter()
         {
-            var window = OdinEditorWindow.InspectObject(this.someObject);
+            OdinEditorWindow window = OdinEditorWindow.InspectObject(someObject);
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(270, 200);
         }
 
         [Button(ButtonSizes.Large), HorizontalGroup("row2")]
         private void OtherStuffYouCanDo()
         {
-            var window = OdinEditorWindow.InspectObject(this.someObject);
+            OdinEditorWindow window = OdinEditorWindow.InspectObject(someObject);
 
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(270, 200);
             window.titleContent = new GUIContent("Custom title", EditorIcons.RulerRect.Active);

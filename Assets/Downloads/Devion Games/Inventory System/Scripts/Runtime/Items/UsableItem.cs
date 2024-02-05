@@ -13,14 +13,10 @@ namespace DevionGames.InventorySystem
         private bool m_UseCategoryCooldown = true;
         [SerializeField]
         private float m_Cooldown = 1f;
-        public float Cooldown {
-            get {
-                return this.m_UseCategoryCooldown ? Category.Cooldown : this.m_Cooldown;
-            }
-        }
+        public float Cooldown => m_UseCategoryCooldown ? Category.Cooldown : m_Cooldown;
 
         [SerializeReference]
-        public List<Action> actions = new List<Action>();
+        public List<Action> actions = new();
 
         private Sequence m_ActionSequence;
         private IEnumerator m_ActionBehavior;
@@ -28,32 +24,30 @@ namespace DevionGames.InventorySystem
         protected override void OnEnable()
         {
             base.OnEnable();
-           
-            for (int i = 0; i < actions.Count; i++) {
-                if (actions[i] is ItemAction)
-                {
-                    ItemAction action = actions[i] as ItemAction;
+
+            foreach(Action a in actions) {
+                if (a is ItemAction action)
                     action.item = this;
-                }
             }
-           
         }
 
         public override void Use()
         {
-            if(this.m_ActionSequence == null)
-                this.m_ActionSequence = new Sequence(InventoryManager.current.PlayerInfo.gameObject, InventoryManager.current.PlayerInfo, InventoryManager.current.PlayerInfo.gameObject.GetComponent<Blackboard>(), actions.Cast<IAction>().ToArray());
+            m_ActionSequence ??= new Sequence(InventoryManager.current.PlayerInfo.gameObject,
+                                                   InventoryManager.current.PlayerInfo,
+                                                   InventoryManager.current.PlayerInfo.gameObject.GetComponent<Blackboard>(),
+                                                   actions.Cast<IAction>().ToArray());
 
-            if (this.m_ActionBehavior != null) {
+            if (m_ActionBehavior != null) {
                 UnityTools.StopCoroutine(m_ActionBehavior);
             }
-            this.m_ActionBehavior = SequenceCoroutine();
-            UnityTools.StartCoroutine(this.m_ActionBehavior);
+            m_ActionBehavior = SequenceCoroutine();
+            UnityTools.StartCoroutine(m_ActionBehavior);
         }
 
         protected IEnumerator SequenceCoroutine() {
-            this.m_ActionSequence.Start();
-            while (this.m_ActionSequence.Tick()) {
+            m_ActionSequence.Start();
+            while (m_ActionSequence.Tick()) {
                 yield return null;
             }
         }

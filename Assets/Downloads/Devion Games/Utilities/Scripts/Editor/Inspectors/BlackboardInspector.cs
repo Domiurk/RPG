@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
@@ -17,7 +15,7 @@ namespace DevionGames
 
         protected virtual void OnEnable() {
             if (target == null) return;
-            this.m_Variables = serializedObject.FindProperty("m_Variables");
+            m_Variables = serializedObject.FindProperty("m_Variables");
             CreateVariableList();
         }
 
@@ -25,7 +23,7 @@ namespace DevionGames
             EditorGUI.BeginDisabledGroup(Application.isPlaying);
             EditorGUILayout.BeginVertical();
             serializedObject.Update();
-            this.m_VariableList.DoLayoutList();
+            m_VariableList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
             EditorGUILayout.EndVertical();
             GUILayout.Space(-4.5f);
@@ -34,8 +32,8 @@ namespace DevionGames
             GUIStyle textStyle = new GUIStyle(EditorStyles.textField);
             textStyle.margin = new RectOffset(0,0,1,1);
             textStyle.alignment = TextAnchor.MiddleRight;
-            this.m_VariableName = EditorGUILayout.TextField(this.m_VariableName,textStyle);
-            if (string.IsNullOrEmpty(this.m_VariableName))
+            m_VariableName = EditorGUILayout.TextField(m_VariableName,textStyle);
+            if (string.IsNullOrEmpty(m_VariableName))
             {
                 Rect variableNameRect = GUILayoutUtility.GetLastRect();
                 GUIStyle variableNameOverlayStyle = new GUIStyle(EditorStyles.label);
@@ -48,10 +46,10 @@ namespace DevionGames
             if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Plus"), createAddNewDropDown, GUILayout.Width(35f)))
             {
                 
-                if (string.IsNullOrEmpty(this.m_VariableName))
+                if (string.IsNullOrEmpty(m_VariableName))
                 {
                     EditorUtility.DisplayDialog("New Variable", "Please enter a variable name.", "OK");
-                }else if (VariableNameExists(this.m_VariableName)){
+                }else if (VariableNameExists(m_VariableName)){
                     EditorUtility.DisplayDialog("New Variable", "A variable with the same name already exists.", "OK");
                 }
                 else
@@ -70,13 +68,13 @@ namespace DevionGames
                 EditorGUI.FocusTextInControl("");
             }
 
-            EditorGUI.BeginDisabledGroup(this.m_VariableList.index == -1);
+            EditorGUI.BeginDisabledGroup(m_VariableList.index == -1);
             if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Minus"), EditorStyles.toolbarButton, GUILayout.Width(25f)))
             {
-                this.serializedObject.Update();
-                this.m_Variables.DeleteArrayElementAtIndex(this.m_VariableList.index);
-                this.serializedObject.ApplyModifiedProperties();
-                this.m_VariableList.index = this.m_Variables.arraySize - 1;
+                serializedObject.Update();
+                m_Variables.DeleteArrayElementAtIndex(m_VariableList.index);
+                serializedObject.ApplyModifiedProperties();
+                m_VariableList.index = m_Variables.arraySize - 1;
             }
             EditorGUI.EndDisabledGroup();
 
@@ -85,8 +83,8 @@ namespace DevionGames
         }
 
         private bool VariableNameExists(string name) {
-            for (int i = 0; i < this.m_Variables.arraySize;i++) {
-                SerializedProperty element = this.m_Variables.GetArrayElementAtIndex(i);
+            for (int i = 0; i < m_Variables.arraySize;i++) {
+                SerializedProperty element = m_Variables.GetArrayElementAtIndex(i);
                 if (name == element.FindPropertyRelative("m_Name").stringValue) {
                     return true;
                 }
@@ -100,19 +98,19 @@ namespace DevionGames
         }
 
         protected void CreateVariableList() {
-            this.m_VariableList = new ReorderableList(serializedObject, this.m_Variables, true, false, false, false);
-            this.m_VariableList.headerHeight = 0f;
-            this.m_VariableList.footerHeight = 0f;
-            this.m_VariableList.showDefaultBackground = false;
-            float defaultHeight = this.m_VariableList.elementHeight;
+            m_VariableList = new ReorderableList(serializedObject, m_Variables, true, false, false, false);
+            m_VariableList.headerHeight = 0f;
+            m_VariableList.footerHeight = 0f;
+            m_VariableList.showDefaultBackground = false;
+            float defaultHeight = m_VariableList.elementHeight;
             float verticalOffset = (defaultHeight - EditorGUIUtility.singleLineHeight) * 0.5f;
 
-            this.m_VariableList.elementHeight = (defaultHeight+verticalOffset)*2;
-            this.m_VariableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_VariableList.elementHeight = (defaultHeight+verticalOffset)*2;
+            m_VariableList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y = rect.y + verticalOffset;
-                SerializedProperty element = this.m_Variables.GetArrayElementAtIndex(index);
+                SerializedProperty element = m_Variables.GetArrayElementAtIndex(index);
                 if (!EditorGUIUtility.wideMode)
                 {
                     EditorGUIUtility.wideMode = true;
@@ -131,7 +129,7 @@ namespace DevionGames
                 }
     
             };
-            this.m_VariableList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            m_VariableList.drawElementBackgroundCallback = (Rect rect, int _, bool isActive, bool isFocused) => {
 
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -143,7 +141,7 @@ namespace DevionGames
                 }
             };
 
-            this.m_VariableList.onAddCallback = (ReorderableList list) => {
+            m_VariableList.onAddCallback = (ReorderableList _) => {
 
                 Type[] types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).Where(x => typeof(Variable).IsAssignableFrom(x) && !x.IsAbstract && !x.HasAttribute(typeof(ExcludeFromCreation))).ToArray();
                 types = types.OrderBy(x => x.BaseType.Name).ToArray();
@@ -162,13 +160,13 @@ namespace DevionGames
         private void AddVariable(Type type)
         {
             Variable value = Activator.CreateInstance(type) as Variable;
-            value.name = this.m_VariableName;
+            value.name = m_VariableName;
             serializedObject.Update();
-            this.m_Variables.arraySize++;
-            this.m_Variables.GetArrayElementAtIndex(this.m_Variables.arraySize - 1).managedReferenceValue = value;
+            m_Variables.arraySize++;
+            m_Variables.GetArrayElementAtIndex(m_Variables.arraySize - 1).managedReferenceValue = value;
             serializedObject.ApplyModifiedProperties();
-            this.m_VariableName = string.Empty;
-            this.m_VariableList.index = this.m_Variables.arraySize-1;
+            m_VariableName = string.Empty;
+            m_VariableList.index = m_Variables.arraySize-1;
      
 
 

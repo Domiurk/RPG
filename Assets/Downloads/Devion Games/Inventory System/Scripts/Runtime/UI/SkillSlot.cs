@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace DevionGames.InventorySystem
@@ -16,9 +14,9 @@ namespace DevionGames.InventorySystem
 
             Skill skill = ObservedItem as Skill;
 
-            if (this.m_Value != null)
+            if (m_Value != null)
             {
-                this.m_Value.text = (skill != null ? skill.CurrentValue.ToString("F1")+"%" : string.Empty);
+                m_Value.text = (skill != null ? skill.CurrentValue.ToString("F1")+"%" : string.Empty);
             }
         }
     }

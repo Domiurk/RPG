@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using System.Linq;
 using System;
+using Object = UnityEngine.Object;
 
 namespace DevionGames.InventorySystem
 {
-	[System.Serializable]
+	[Serializable]
 	public class ItemCollectionEditor : ScriptableObjectCollectionEditor<Item>
 	{
 		[SerializeField]
@@ -15,13 +15,7 @@ namespace DevionGames.InventorySystem
 		[SerializeField]
 		protected string searchFilter = "All";
 
-        public override string ToolbarName
-        {
-            get
-            {
-                return "Items";
-            }
-        }
+        public override string ToolbarName => "Items";
 
         public ItemCollectionEditor (UnityEngine.Object target, List<Item> items, List<string> searchFilters) : base (target, items)
 		{
@@ -29,16 +23,8 @@ namespace DevionGames.InventorySystem
 			this.items = items;
 			this.searchFilters = searchFilters;
 			this.searchFilters.Insert (0, "All");
-            this.m_SearchString = "All";
-
-			//Fix old items without category
-			/*for (int i = 0; i < this.items.Count; i++) {
-				if (this.items[i].Category == null && InventorySystemEditor.Database.categories.Count > 0) {
-					this.items[i].Category = InventorySystemEditor.Database.categories[0];
-					EditorUtility.SetDirty(this.items[i]);
-				}
-			}*/
-        }
+            m_SearchString = "All";
+		}
 
 		protected override void Create()
 		{
@@ -86,8 +72,8 @@ namespace DevionGames.InventorySystem
 
         protected override void Duplicate(Item item)
         {
-            Item duplicate = (Item)ScriptableObject.Instantiate(item);
-			duplicate.Id = System.Guid.NewGuid().ToString();
+            Item duplicate = (Item)Object.Instantiate(item);
+			duplicate.Id = Guid.NewGuid().ToString();
 			duplicate.hideFlags = HideFlags.HideInHierarchy;
 			AssetDatabase.AddObjectToAsset(duplicate, target);
 			AssetDatabase.SaveAssets();

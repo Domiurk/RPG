@@ -4,12 +4,12 @@ namespace Sirenix.OdinInspector.Demos
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEngine;
 
     public class BasicAttributeProcessorExample : MonoBehaviour
     {
-        public MyCustomClass Processed = new MyCustomClass();
+        public MyCustomClass Processed = new();
     }
 
     [Serializable]
@@ -19,19 +19,14 @@ namespace Sirenix.OdinInspector.Demos
         public float Size;
     }
 
-    // This AttributeProcessor will be found and used to processor attributes for the MyCustomClass class.
     public class MyResolvedClassAttributeProcessor : OdinAttributeProcessor<MyCustomClass>
     {
-        // This method will be called for any field or propety of the type MyCustomClass.
-        // In this example, this will be run for the BasicAttributeProcessorExample.Processed field.
         public override void ProcessSelfAttributes(InspectorProperty property, List<Attribute> attributes)
         {
             attributes.Add(new InfoBoxAttribute("Dynamically added attributes."));
             attributes.Add(new InlinePropertyAttribute());
         }
 
-        // This method will be called for any members of the type MyCustomClass.
-        // In this example, this will be run for the fields MyCustomClass.Mode and MyCustomClass.Size.
         public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
         {
             attributes.Add(new HideLabelAttribute());

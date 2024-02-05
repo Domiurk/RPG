@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
-using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -13,13 +11,13 @@ namespace DevionGames{
 		private SerializedProperty interval;
 		
 		private void OnEnable(){
-			execution = base.serializedObject.FindProperty ("m_Execution");
-			interval = base.serializedObject.FindProperty ("m_Interval");
+			execution = serializedObject.FindProperty ("m_Execution");
+			interval = serializedObject.FindProperty ("m_Interval");
 		}
 		
 		public override void OnInspectorGUI ()
 		{
-			base.serializedObject.Update ();
+			serializedObject.Update ();
 			EditorGUILayout.PropertyField (execution);
 			if (execution.enumValueIndex == 4) {
 				EditorGUI.indentLevel+=1;
@@ -31,11 +29,11 @@ namespace DevionGames{
 			if (sourceType !=null && targetType != null && !sourceType.IsAssignableFrom (targetType)) {
 				EditorGUILayout.HelpBox("Unable to convert "+sourceType.Name+" to "+targetType.Name,MessageType.Error);
 			}
-			base.serializedObject.ApplyModifiedProperties();
+			serializedObject.ApplyModifiedProperties();
 		}
 		
 		private Type PropertyRefHint(string property, Type filter, bool requiresWrite){
-			SerializedProperty baseProperty = base.serializedObject.FindProperty (property);
+			SerializedProperty baseProperty = serializedObject.FindProperty (property);
 			SerializedProperty componentProperty = baseProperty.FindPropertyRelative ("m_Component");
 			SerializedProperty propertyPath = baseProperty.FindPropertyRelative ("m_PropertyPath");
 			

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace DevionGames.InventorySystem
     public class ItemGenerator : MonoBehaviour, IGenerator
     {
         [SerializeField]
-        private List<ItemGeneratorData> m_ItemGeneratorData=new List<ItemGeneratorData>();
+        private List<ItemGeneratorData> m_ItemGeneratorData=new();
         [SerializeField]
         private int m_MaxAmount = 1;
 
@@ -21,13 +20,13 @@ namespace DevionGames.InventorySystem
 
         private List<Item> GenerateItems() {
             List<Item> generatedItems = new List<Item>();
-            IEnumerable<int> indices = Enumerable.Range(0, this.m_ItemGeneratorData.Count).OrderBy(x=> rng.Next());
+            IEnumerable<int> indices = Enumerable.Range(0, m_ItemGeneratorData.Count).OrderBy(_=> rng.Next());
 
             foreach (int index in indices) {
-                if (generatedItems.Count >= this.m_MaxAmount){
+                if (generatedItems.Count >= m_MaxAmount){
                     break;
                 }
-                ItemGeneratorData data = this.m_ItemGeneratorData[index];
+                ItemGeneratorData data = m_ItemGeneratorData[index];
                 if (Random.value > data.chance){
                     continue;
                 }
@@ -52,7 +51,7 @@ namespace DevionGames.InventorySystem
             return generatedItems;
         }
 
-        private System.Random rng = new System.Random();
+        private readonly System.Random rng = new();
 
      
     }

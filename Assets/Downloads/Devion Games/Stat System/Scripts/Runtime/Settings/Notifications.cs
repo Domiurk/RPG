@@ -1,5 +1,4 @@
 ﻿using DevionGames.UIWidgets;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace DevionGames.StatSystem
@@ -30,12 +29,6 @@ namespace DevionGames.StatSystem.Configuration
     public class Notifications : Settings
     {
 
-        public override string Name
-        {
-            get
-            {
-                return "Notification";
-            }
-        }
+        public override string Name => "Notification";
     }
 }

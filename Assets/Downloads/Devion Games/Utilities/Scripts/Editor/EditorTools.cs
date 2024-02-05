@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
-using System.IO;
 using System.Reflection;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor.SceneManagement;
 
 namespace DevionGames
 {
@@ -15,16 +15,16 @@ namespace DevionGames
     /// </summary>
     public static class EditorTools
     {
-        private static Dictionary<Type, CustomDrawer> m_Drawers;
-        private static Dictionary<Type, EditorTools.DrawerKeySet> m_DrawerTypeForType;
-        private static Dictionary<Type, MonoScript> m_TypeMonoScriptLookup;
-        private static Dictionary<Type, bool> m_CustomPropertyDrawerLookup;
+        private static readonly Dictionary<Type, CustomDrawer> m_Drawers;
+        private static Dictionary<Type, DrawerKeySet> m_DrawerTypeForType;
+        private static readonly Dictionary<Type, MonoScript> m_TypeMonoScriptLookup;
+        private static readonly Dictionary<Type, bool> m_CustomPropertyDrawerLookup;
 
         static EditorTools()
         {
-            EditorTools.m_TypeMonoScriptLookup = new Dictionary<Type, MonoScript>();
-            EditorTools.m_Drawers = new Dictionary<Type, CustomDrawer>();
-            EditorTools.m_CustomPropertyDrawerLookup = new Dictionary<Type, bool>();
+            m_TypeMonoScriptLookup = new Dictionary<Type, MonoScript>();
+            m_Drawers = new Dictionary<Type, CustomDrawer>();
+            m_CustomPropertyDrawerLookup = new Dictionary<Type, bool>();
         }
 
         public static string SearchField(string search, bool focus = false, params GUILayoutOption[] options)
@@ -74,17 +74,23 @@ namespace DevionGames
         /// </summary>
         /// <returns>The field.</returns>
         /// <param name="search">Search.</param>
+        /// <param
+        ///     name = "filters" >
+        /// </param>
         /// <param name="options">Options.</param>
+        /// <param
+        ///     name = "filter" >
+        /// </param>
         public static string[] SearchField(string search,
                                            string filter,
                                            List<string> filters,
                                            params GUILayoutOption[] options)
         {
             GUILayout.BeginHorizontal();
-            string[] result = new string[]{ filter, search };
+            string[] result ={ filter, search };
             string before = search;
 
-            Rect rect = GUILayoutUtility.GetRect(GUIContent.none, (GUIStyle)"ToolbarSeachTextFieldPopup", options);
+            Rect rect = GUILayoutUtility.GetRect(GUIContent.none, "ToolbarSeachTextFieldPopup", options);
             rect.x += 2f;
             rect.width -= 2f;
             Rect buttonRect = rect;
@@ -107,7 +113,6 @@ namespace DevionGames
                 style.hover.textColor = Color.gray;
             }
 
-            //  string after = EditorGUI.TextField(rect, "", before, style);
             Rect rect1 = GUILayoutUtility.GetLastRect();
             rect1.width = 20;
 
@@ -122,7 +127,7 @@ namespace DevionGames
                 }
             }
 
-            string after = EditorGUI.TextField(rect, "", before, (GUIStyle)"ToolbarSeachTextFieldPopup");
+            string after = EditorGUI.TextField(rect, "", before, "ToolbarSeachTextFieldPopup");
 
             GUI.Button(buttonRect, GUIContent.none,
                        (after != "" && after != "Search...")
@@ -329,7 +334,7 @@ namespace DevionGames
 
         public static bool Titlebar(string hash, GUIContent content, object target, GenericMenu menu)
         {
-            int controlID = EditorGUIUtility.GetControlID(FocusType.Passive);
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
 
             Rect position =
                 GUILayoutUtility.GetRect(GUIContent.none, Styles.inspectorTitle, GUILayout.ExpandWidth(true));
@@ -342,9 +347,9 @@ namespace DevionGames
                 GUI.color = color;
             }
 
-            Rect rect = new Rect(position.x + (float)Styles.inspectorTitle.padding.left,
-                                 position.y + (float)Styles.inspectorTitle.padding.top, 16f, 16f);
-            Rect rect1 = new Rect(position.xMax - (float)Styles.inspectorTitle.padding.right - 2f - 16f, rect.y, 16f,
+            Rect rect = new Rect(position.x + Styles.inspectorTitle.padding.left,
+                                 position.y + Styles.inspectorTitle.padding.top, 16f, 16f);
+            Rect rect1 = new Rect(position.xMax - Styles.inspectorTitle.padding.right - 2f - 16f, rect.y, 16f,
                                   16f);
             Rect rect4 = rect1;
             rect4.x = rect4.x - 18f;
@@ -462,60 +467,76 @@ namespace DevionGames
                 return false;
             }
 
-            return (evt.type != EventType.KeyDown || evt.keyCode != KeyCode.Space && evt.keyCode != KeyCode.Return &&
-                    evt.keyCode != KeyCode.KeypadEnter
-                        ? false
-                        : !flag);
+            return evt.type == EventType.KeyDown && evt.keyCode
+                                                     is KeyCode.Space
+                                                     or KeyCode.Return
+                                                     or KeyCode.KeypadEnter
+                                                 && !flag;
         }
 
         public static string CovertToAliasString(Type type)
         {
-            if(type == typeof(System.Boolean)){
+            if(type == typeof(Boolean)){
                 return "bool";
             }
-            else if(type == typeof(System.Byte)){
+
+            if(type == typeof(Byte)){
                 return "byte";
             }
-            else if(type == typeof(System.SByte)){
+
+            if(type == typeof(SByte)){
                 return "sbyte";
             }
-            else if(type == typeof(System.Char)){
+
+            if(type == typeof(Char)){
                 return "char";
             }
-            else if(type == typeof(System.Decimal)){
+
+            if(type == typeof(Decimal)){
                 return "decimal";
             }
-            else if(type == typeof(System.Double)){
+
+            if(type == typeof(Double)){
                 return "double";
             }
-            else if(type == typeof(System.Single)){
+
+            if(type == typeof(Single)){
                 return "float";
             }
-            else if(type == typeof(System.Int32)){
+
+            if(type == typeof(Int32)){
                 return "int";
             }
-            else if(type == typeof(System.UInt32)){
+
+            if(type == typeof(UInt32)){
                 return "uint";
             }
-            else if(type == typeof(System.Int64)){
+
+            if(type == typeof(Int64)){
                 return "long";
             }
-            else if(type == typeof(System.UInt64)){
+
+            if(type == typeof(UInt64)){
                 return "ulong";
             }
-            else if(type == typeof(System.Object)){
+
+            if(type == typeof(System.Object)){
                 return "object";
             }
-            else if(type == typeof(System.Int16)){
+
+            if(type == typeof(Int16)){
                 return "short";
             }
-            else if(type == typeof(System.UInt16)){
+
+            if(type == typeof(UInt16)){
                 return "ushort";
             }
-            else if(type == typeof(System.String)){
+
+            if(type == typeof(String)){
                 return "string";
             }
-            else if(type == typeof(void)){
+
+            if(type == typeof(void)){
                 return "void";
             }
 
@@ -552,7 +573,6 @@ namespace DevionGames
         public static T CreateAsset<T>(string path) where T : ScriptableObject
         {
             return (T)CreateAsset(typeof(T), path);
-            ;
         }
 
         public static ScriptableObject CreateAsset(Type type, bool displayFilePanel)
@@ -617,13 +637,12 @@ namespace DevionGames
 
             List<T> list = new List<T>();
 
-            foreach(T comp in comps){
-                if(comp.gameObject.hideFlags == 0){
-                    string path = AssetDatabase.GetAssetPath(comp.gameObject);
-                    if(string.IsNullOrEmpty(path))
-                        list.Add(comp);
-                }
-            }
+            if(comps != null)
+                list.AddRange(from comp in comps
+                              where comp.gameObject.hideFlags == 0
+                              let path = AssetDatabase.GetAssetPath(comp.gameObject)
+                              where string.IsNullOrEmpty(path)
+                              select comp);
 
             return list;
         }
@@ -649,7 +668,7 @@ namespace DevionGames
         {
             MonoScript monoScript;
 
-            if(!EditorTools.m_TypeMonoScriptLookup.TryGetValue(type, out monoScript)){
+            if(!m_TypeMonoScriptLookup.TryGetValue(type, out monoScript)){
                 string[] assetPaths = AssetDatabase.GetAllAssetPaths();
 
                 foreach(string assetPath in assetPaths){
@@ -657,7 +676,7 @@ namespace DevionGames
                         MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(assetPath);
 
                         if(script.GetClass() != null && script.GetClass() == type){
-                            EditorTools.m_TypeMonoScriptLookup.Add(type, script);
+                            m_TypeMonoScriptLookup.Add(type, script);
                             return script;
                         }
                     }
@@ -673,27 +692,51 @@ namespace DevionGames
             public int elementIndex;
         }
 
-        static Regex arrayElementRegex = new Regex(@"\GArray\.data\[(\d+)\]", RegexOptions.Compiled);
+        static readonly Regex arrayElementRegex = new(@"\GArray\.data\[(\d+)\]", RegexOptions.Compiled);
 
         public static object GetValue(this SerializedProperty property)
         {
             string propertyPath = property.propertyPath;
             object value = property.serializedObject.targetObject;
             int i = 0;
-            while(NextPropertyPath(propertyPath, ref i, out var token))
+            while(NextPropertyPath(propertyPath, ref i, out PropertyPath token))
                 value = GetPropertyPathValue(value, token);
             return value;
         }
-        
+
+        public static void SetValue(this SerializedProperty property, object value)
+        {
+            string propertyPath = property.propertyPath;
+            object container = property.serializedObject.targetObject;
+
+            int i = 0;
+            NextPropertyPath(propertyPath, ref i, out PropertyPath deferredToken);
+
+            while(NextPropertyPath(propertyPath, ref i, out PropertyPath token)){
+                container = GetPropertyPathValue(container, deferredToken);
+                deferredToken = token;
+            }
+
+            SetPropertyPathValue(container, deferredToken, value);
+
+            EditorUtility.SetDirty(property.serializedObject.targetObject);
+            property.serializedObject.ApplyModifiedProperties();
+            PrefabStage prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
+
+            if(prefabStage != null){
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(prefabStage.scene);
+            }
+        }
+
         public static object GetParent(this SerializedProperty property)
         {
             string propertyPath = property.propertyPath;
             object container = property.serializedObject.targetObject;
 
             int i = 0;
-            NextPropertyPath(propertyPath, ref i, out var deferredToken);
+            NextPropertyPath(propertyPath, ref i, out PropertyPath deferredToken);
 
-            while(NextPropertyPath(propertyPath, ref i, out var token)){
+            while(NextPropertyPath(propertyPath, ref i, out PropertyPath token)){
                 container = GetPropertyPathValue(container, deferredToken);
                 deferredToken = token;
             }
@@ -708,7 +751,7 @@ namespace DevionGames
             if(index >= propertyPath.Length)
                 return false;
 
-            var arrayElementMatch = arrayElementRegex.Match(propertyPath, index);
+            Match arrayElementMatch = arrayElementRegex.Match(propertyPath, index);
 
             if(arrayElementMatch.Success){
                 index += arrayElementMatch.Length + 1;
@@ -743,8 +786,17 @@ namespace DevionGames
 
                 return list[component.elementIndex];
             }
+
+            return GetFieldValue(container, component.propertyName);
+        }
+
+        private static void SetPropertyPathValue(object container, PropertyPath component, object value)
+        {
+            if(component.propertyName == null){
+                ((IList)container)[component.elementIndex] = value;
+            }
             else{
-                return GetFieldValue(container, component.propertyName);
+                SetFieldValue(container, component.propertyName, value);
             }
         }
 
@@ -752,14 +804,14 @@ namespace DevionGames
         {
             if(container == null)
                 return null;
-            var type = container.GetType();
+            Type type = container.GetType();
             FieldInfo field = type.GetSerializedField(name);
             return field.GetValue(container);
         }
 
         private static void SetFieldValue(object container, string name, object value)
         {
-            var type = container.GetType();
+            Type type = container.GetType();
             FieldInfo field = type.GetSerializedField(name);
             field.SetValue(container, value);
         }
@@ -770,7 +822,7 @@ namespace DevionGames
 
             foreach(Rect area in areas){
                 if((area.Contains(Event.current.mousePosition) &&
-                    (eventType == EventType.MouseDown || eventType == EventType.ScrollWheel))){
+                    eventType is EventType.MouseDown or EventType.ScrollWheel)){
                     Event.current.type = EventType.Ignore;
                 }
             }
@@ -874,7 +926,7 @@ namespace DevionGames
             string propertyPath = arrayProperty.propertyPath;
             Type type = element.GetValue().GetType();
 
-            if(type != null && drawScript){
+            if(drawScript){
                 MonoScript monoScript = FindMonoScript(type);
 
                 if(monoScript != null){
@@ -902,30 +954,30 @@ namespace DevionGames
 
         public static bool HasCustomPropertyDrawer(Type type)
         {
-            if(EditorTools.m_CustomPropertyDrawerLookup.ContainsKey(type)){
-                return EditorTools.m_CustomPropertyDrawerLookup[type];
+            if(m_CustomPropertyDrawerLookup.ContainsKey(type)){
+                return m_CustomPropertyDrawerLookup[type];
             }
 
             foreach(Type typesDerivedFrom in TypeCache.GetTypesDerivedFrom<GUIDrawer>()){
                 object[] customAttributes = typesDerivedFrom.GetCustomAttributes<CustomPropertyDrawer>();
 
-                for(int i = 0; i < (int)customAttributes.Length; i++){
+                for(int i = 0; i < customAttributes.Length; i++){
                     CustomPropertyDrawer customPropertyDrawer = (CustomPropertyDrawer)customAttributes[i];
 
                     FieldInfo field = customPropertyDrawer.GetType()
                                                           .GetField("m_Type",
                                                                     BindingFlags.Public | BindingFlags.NonPublic |
                                                                     BindingFlags.Instance);
-                    Type type1 = (Type)field.GetValue(customPropertyDrawer);
+                    Type type1 = (Type)field?.GetValue(customPropertyDrawer);
 
                     if(type == type1){
-                        EditorTools.m_CustomPropertyDrawerLookup.Add(type, true);
+                        m_CustomPropertyDrawerLookup.Add(type, true);
                         return true;
                     }
                 }
             }
 
-            EditorTools.m_CustomPropertyDrawerLookup.Add(type, false);
+            m_CustomPropertyDrawerLookup.Add(type, false);
             return false;
         }
 
@@ -959,7 +1011,7 @@ namespace DevionGames
                     }
                     else if(typeof(UnityEngine.Object).IsAssignableFrom(field.FieldType)){ }
                     else{
-                        value = System.Activator.CreateInstance(field.FieldType);
+                        value = Activator.CreateInstance(field.FieldType);
                     }
 
                     field.SetValue(obj, value);
@@ -968,7 +1020,7 @@ namespace DevionGames
                 EditorGUI.BeginChangeCheck();
                 rect.height = CalcHeight(label, obj, value, field) - EditorGUIUtility.standardVerticalSpacing;
 
-                object val = EditorTools.DrawField(rect, label, obj, value, field);
+                object val = DrawField(rect, label, obj, value, field);
                 rect.y += rect.height + EditorGUIUtility.standardVerticalSpacing;
 
                 if(EditorGUI.EndChangeCheck()){
@@ -988,9 +1040,8 @@ namespace DevionGames
         {
             Type type = field.FieldType;
 
-            if(value != null){
+            if(value != null)
                 type = value.GetType();
-            }
 
             CustomDrawer customDrawer = GetCustomDrawer(type);
 
@@ -1002,13 +1053,13 @@ namespace DevionGames
                 return value;
             }
 
-            if(type == typeof(int)){
+            if(type == typeof(int))
                 return EditorGUI.IntField(rect, label, (int)value);
-            }
-            else if(type == typeof(float)){
+
+            if(type == typeof(float))
                 return EditorGUI.FloatField(rect, label, (float)value);
-            }
-            else if(type == typeof(string)){
+
+            if(type == typeof(string)){
                 if(field.HasAttribute(typeof(TextAreaAttribute))){
                     TextAreaAttribute attribute = field.GetCustomAttribute<TextAreaAttribute>();
                     rect.height = EditorGUIUtility.singleLineHeight;
@@ -1017,46 +1068,46 @@ namespace DevionGames
                     rect.height = attribute.minLines * EditorGUIUtility.singleLineHeight;
                     return EditorGUI.TextArea(rect, (string)value);
                 }
-                else{
-                    return EditorGUI.TextField(rect, label, (string)value);
-                }
+
+                return EditorGUI.TextField(rect, label, (string)value);
             }
-            else if(typeof(Enum).IsAssignableFrom(type)){
+
+            if(typeof(Enum).IsAssignableFrom(type))
                 return EditorGUI.EnumPopup(rect, label, (Enum)value);
-            }
-            else if(type == typeof(bool)){
+
+            if(type == typeof(bool))
                 return EditorGUI.Toggle(rect, label, (bool)value);
-            }
-            else if(type == typeof(Color)){
+
+            if(type == typeof(Color))
                 return EditorGUI.ColorField(rect, label, (Color)value);
-            }
-            else if(type == typeof(Bounds)){
+
+            if(type == typeof(Bounds))
                 return EditorGUI.BoundsField(rect, label, (Bounds)value);
-            }
-            else if(type == typeof(AnimationCurve)){
+
+            if(type == typeof(AnimationCurve))
                 return EditorGUI.CurveField(rect, label, (AnimationCurve)value);
-            }
-            else if(type == typeof(Rect)){
+
+            if(type == typeof(Rect))
                 return EditorGUI.RectField(rect, label, (Rect)value);
-            }
-            else if(type == typeof(Vector2)){
+
+            if(type == typeof(Vector2))
                 return EditorGUI.Vector2Field(rect, label, (Vector2)value);
-            }
-            else if(type == typeof(Vector3)){
+
+            if(type == typeof(Vector3))
                 return EditorGUI.Vector3Field(rect, label, (Vector3)value);
-            }
-            else if(type == typeof(Vector4)){
+
+            if(type == typeof(Vector4))
                 return EditorGUI.Vector4Field(rect, label, (Vector4)value);
-            }
-            else if(type == typeof(LayerMask)){
+
+            if(type == typeof(LayerMask))
                 return LayerMaskField(rect, label, (LayerMask)value);
-            }
-            else if(typeof(UnityEngine.Object).IsAssignableFrom(type)){
+
+            if(typeof(UnityEngine.Object).IsAssignableFrom(type))
                 return EditorGUI.ObjectField(rect, label, (UnityEngine.Object)value, type, true);
-            }
-            else if(typeof(IList).IsAssignableFrom(type)){
-                if(EditorTools.Foldout(type.Name + label.text, label)){
-                    EditorTools.BeginIndent(1, true);
+
+            if(typeof(IList).IsAssignableFrom(type)){
+                if(Foldout(type.Name + label.text, label)){
+                    BeginIndent(1, true);
                     Type elementType = Utility.GetElementType(type);
                     IList list = (IList)value;
                     EditorGUI.BeginChangeCheck();
@@ -1068,19 +1119,14 @@ namespace DevionGames
                         int index = 0;
 
                         while(index < size){
-                            object item = null;
+                            object item;
 
-                            if(index < list.Count){
+                            if(index < list.Count)
                                 item = list[index];
-                            }
-                            else{
-                                if(Type.GetTypeCode(elementType) == TypeCode.String){
-                                    item = string.Empty;
-                                }
-                                else{
-                                    item = Activator.CreateInstance(elementType, true);
-                                }
-                            }
+                            else
+                                item = Type.GetTypeCode(elementType) == TypeCode.String
+                                           ? string.Empty
+                                           : Activator.CreateInstance(elementType, true);
 
                             array.SetValue(item, index);
                             index++;
@@ -1098,21 +1144,20 @@ namespace DevionGames
                         }
                     }
 
-                    for(int i = 0; i < list.Count; i++){
+                    for(int i = 0; i < list.Count; i++)
                         list[i] = DrawField(new GUIContent("Element " + i), list, list[i], field);
-                    }
 
-                    EditorTools.EndIndent();
+                    EndIndent();
                     return list;
                 }
 
                 return value;
             }
 
-            if(EditorTools.Foldout(type.Name + label.text, label)){
-                EditorTools.BeginIndent(1, true);
+            if(Foldout(type.Name + label.text, label)){
+                BeginIndent(1, true);
                 value = DrawFields(value);
-                EditorTools.EndIndent();
+                EndIndent();
             }
 
             return value;
@@ -1120,9 +1165,8 @@ namespace DevionGames
 
         public static object DrawFields(object obj, params GUILayoutOption[] options)
         {
-            if(obj == null){
+            if(obj == null)
                 return null;
-            }
 
             Type type = obj.GetType();
 
@@ -1148,14 +1192,14 @@ namespace DevionGames
                     }
                     else if(typeof(UnityEngine.Object).IsAssignableFrom(field.FieldType)){ }
                     else{
-                        value = System.Activator.CreateInstance(field.FieldType);
+                        value = Activator.CreateInstance(field.FieldType);
                     }
 
                     field.SetValue(obj, value);
                 }
 
                 EditorGUI.BeginChangeCheck();
-                object val = EditorTools.DrawField(label, obj, value, field, options);
+                object val = DrawField(label, obj, value, field, options);
 
                 if(EditorGUI.EndChangeCheck()){
                     field.SetValue(obj, val);
@@ -1173,9 +1217,8 @@ namespace DevionGames
         {
             Type type = field.FieldType;
 
-            if(value != null){
+            if(value != null)
                 type = value.GetType();
-            }
 
             CustomDrawer customDrawer = GetCustomDrawer(type);
 
@@ -1194,61 +1237,73 @@ namespace DevionGames
             }
 
             if(type == typeof(int)){
-                return EditorGUILayout.IntField(label, (int)value, options);
+                return EditorGUILayout.IntField(label, (int)value!, options);
             }
-            else if(type == typeof(float)){
-                return EditorGUILayout.FloatField(label, (float)value, options);
+
+            if(type == typeof(float)){
+                return EditorGUILayout.FloatField(label, (float)value!, options);
             }
-            else if(type == typeof(string)){
+
+            if(type == typeof(string)){
                 if(field.HasAttribute(typeof(TextAreaAttribute))){
                     TextAreaAttribute attribute = field.GetCustomAttribute<TextAreaAttribute>();
                     EditorGUILayout.LabelField(label);
-                    List<GUILayoutOption> op = new List<GUILayoutOption>(options);
-                    op.Add(GUILayout.Height(attribute.minLines * EditorGUIUtility.singleLineHeight));
+                    List<GUILayoutOption> op = new List<GUILayoutOption>(options){ GUILayout.Height(attribute.minLines * EditorGUIUtility.singleLineHeight) };
                     GUIStyle style = new GUIStyle(EditorStyles.textArea);
                     style.wordWrap = true;
                     return EditorGUILayout.TextArea((string)value, style, op.ToArray());
                 }
-                else{
-                    return EditorGUILayout.TextField(label, (string)value);
-                }
+
+                return EditorGUILayout.TextField(label, (string)value);
             }
-            else if(typeof(Enum).IsAssignableFrom(type)){
+
+            if(typeof(Enum).IsAssignableFrom(type)){
                 return EditorGUILayout.EnumPopup(label, (Enum)value, options);
             }
-            else if(type == typeof(bool)){
-                return EditorGUILayout.Toggle(label, (bool)value, options);
+
+            if(type == typeof(bool)){
+                return EditorGUILayout.Toggle(label, (bool)value!, options);
             }
-            else if(type == typeof(Color)){
-                return EditorGUILayout.ColorField(label, (Color)value, options);
+
+            if(type == typeof(Color)){
+                return EditorGUILayout.ColorField(label, (Color)value!, options);
             }
-            else if(type == typeof(Bounds)){
-                return EditorGUILayout.BoundsField(label, (Bounds)value, options);
+
+            if(type == typeof(Bounds)){
+                return EditorGUILayout.BoundsField(label, (Bounds)value!, options);
             }
-            else if(type == typeof(AnimationCurve)){
+
+            if(type == typeof(AnimationCurve)){
                 return EditorGUILayout.CurveField(label, (AnimationCurve)value, options);
             }
-            else if(type == typeof(Rect)){
-                return EditorGUILayout.RectField(label, (Rect)value, options);
+
+            if(type == typeof(Rect)){
+                return EditorGUILayout.RectField(label, (Rect)value!, options);
             }
-            else if(type == typeof(Vector2)){
-                return EditorGUILayout.Vector2Field(label, (Vector2)value, options);
+
+            if(type == typeof(Vector2)){
+                return EditorGUILayout.Vector2Field(label, (Vector2)value!, options);
             }
-            else if(type == typeof(Vector3)){
-                return EditorGUILayout.Vector3Field(label, (Vector3)value, options);
+
+            if(type == typeof(Vector3)){
+                return EditorGUILayout.Vector3Field(label, (Vector3)value!, options);
             }
-            else if(type == typeof(Vector4)){
-                return EditorGUILayout.Vector4Field(label, (Vector4)value, options);
+
+            if(type == typeof(Vector4)){
+                return EditorGUILayout.Vector4Field(label, (Vector4)value!, options);
             }
-            else if(type == typeof(LayerMask)){
-                return LayerMaskField(label, (LayerMask)value, options);
+
+            if(type == typeof(LayerMask)){
+                return LayerMaskField(label, (LayerMask)value!, options);
             }
-            else if(typeof(UnityEngine.Object).IsAssignableFrom(type)){
+
+            if(typeof(UnityEngine.Object).IsAssignableFrom(type)){
                 return EditorGUILayout.ObjectField(label, (UnityEngine.Object)value, type, true, options);
             }
-            else if(typeof(IList).IsAssignableFrom(type)){
-                if(EditorTools.Foldout(type.Name + label.text, label)){
-                    EditorTools.BeginIndent(1, true);
+
+            if(typeof(IList).IsAssignableFrom(type)){
+                if(Foldout(type.Name + label.text, label)){
+                    BeginIndent(1, true);
                     Type elementType = Utility.GetElementType(type);
                     IList list = (IList)value;
                     EditorGUI.BeginChangeCheck();
@@ -1260,7 +1315,7 @@ namespace DevionGames
                         int index = 0;
 
                         while(index < size){
-                            object item = null;
+                            object item;
 
                             if(index < list.Count){
                                 item = list[index];
@@ -1294,17 +1349,17 @@ namespace DevionGames
                         list[i] = DrawField(new GUIContent("Element " + i), list, list[i], field, options);
                     }
 
-                    EditorTools.EndIndent();
+                    EndIndent();
                     return list;
                 }
 
                 return value;
             }
 
-            if(EditorTools.Foldout(type.Name + label.text, label)){
-                EditorTools.BeginIndent(1, true);
+            if(Foldout(type.Name + label.text, label)){
+                BeginIndent(1, true);
                 value = DrawFields(value);
-                EditorTools.EndIndent();
+                EndIndent();
             }
 
             return value;
@@ -1341,13 +1396,13 @@ namespace DevionGames
                     }
                     else if(typeof(UnityEngine.Object).IsAssignableFrom(field.FieldType)){ }
                     else{
-                        value = System.Activator.CreateInstance(field.FieldType);
+                        value = Activator.CreateInstance(field.FieldType);
                     }
 
                     field.SetValue(obj, value);
                 }
 
-                height += EditorTools.CalcHeight(label, obj, value, field);
+                height += CalcHeight(label, obj, value, field);
             }
 
             return height;
@@ -1380,11 +1435,11 @@ namespace DevionGames
                     return attribute.minLines * EditorGUIUtility.singleLineHeight + EditorGUIUtility.singleLineHeight +
                            EditorGUIUtility.standardVerticalSpacing;
                 }
-                else{
-                    return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-                }
+
+                return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
-            else if(typeof(IList).IsAssignableFrom(type)){
+
+            if(typeof(IList).IsAssignableFrom(type)){
                 if(EditorPrefs.GetBool(type.Name + label.text)){
                     Type elementType = Utility.GetElementType(type);
                     IList list = (IList)value;
@@ -1435,9 +1490,8 @@ namespace DevionGames
 
                 return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
-            else{
-                return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-            }
+
+            return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
         }
 
         private static CustomDrawer GetCustomDrawer(Type type)
@@ -1447,9 +1501,9 @@ namespace DevionGames
             if(drawerType != null){
                 CustomDrawer drawer;
 
-                if(!EditorTools.m_Drawers.TryGetValue(drawerType, out drawer)){
-                    drawer = (CustomDrawer)System.Activator.CreateInstance(drawerType);
-                    EditorTools.m_Drawers.Add(drawerType, drawer);
+                if(!m_Drawers.TryGetValue(drawerType, out drawer)){
+                    drawer = (CustomDrawer)Activator.CreateInstance(drawerType);
+                    m_Drawers.Add(drawerType, drawer);
                 }
 
                 return drawer;
@@ -1460,18 +1514,18 @@ namespace DevionGames
 
         private static Type GetDrawerTypeForType(Type type)
         {
-            EditorTools.DrawerKeySet drawerKeySet;
+            DrawerKeySet drawerKeySet;
             Type type1;
 
-            if(EditorTools.m_DrawerTypeForType == null){
-                EditorTools.BuildDrawerTypeForTypeDictionary();
+            if(m_DrawerTypeForType == null){
+                BuildDrawerTypeForTypeDictionary();
             }
 
-            EditorTools.m_DrawerTypeForType.TryGetValue(type, out drawerKeySet);
+            m_DrawerTypeForType.TryGetValue(type, out drawerKeySet);
 
             if(drawerKeySet.drawer == null){
                 if(type.IsGenericType){
-                    EditorTools.m_DrawerTypeForType.TryGetValue(type.GetGenericTypeDefinition(), out drawerKeySet);
+                    m_DrawerTypeForType.TryGetValue(type.GetGenericTypeDefinition(), out drawerKeySet);
                 }
 
                 type1 = drawerKeySet.drawer;
@@ -1485,16 +1539,16 @@ namespace DevionGames
 
         private static void BuildDrawerTypeForTypeDictionary()
         {
-            EditorTools.m_DrawerTypeForType = new Dictionary<Type, EditorTools.DrawerKeySet>();
+            m_DrawerTypeForType = new Dictionary<Type, DrawerKeySet>();
 
             foreach(Type typesDerivedFrom in TypeCache.GetTypesDerivedFrom<CustomDrawer>()){
                 object[] customAttributes = typesDerivedFrom.GetCustomAttributes(typeof(CustomDrawerAttribute), true);
 
                 for(int i = 0; i < customAttributes.Length; i++){
                     CustomDrawerAttribute customDrawer = (CustomDrawerAttribute)customAttributes[i];
-                    Dictionary<Type, EditorTools.DrawerKeySet> sDrawerTypeForType = EditorTools.m_DrawerTypeForType;
+                    Dictionary<Type, DrawerKeySet> sDrawerTypeForType = m_DrawerTypeForType;
                     Type mType = customDrawer.Type;
-                    EditorTools.DrawerKeySet drawerKeySet = new EditorTools.DrawerKeySet(){
+                    DrawerKeySet drawerKeySet = new DrawerKeySet(){
                         drawer = typesDerivedFrom,
                         type = customDrawer.Type
                     };
@@ -1502,11 +1556,11 @@ namespace DevionGames
 
                     if(customDrawer.UseForChildren){
                         foreach(Type type in TypeCache.GetTypesDerivedFrom(customDrawer.Type)){
-                            if((!EditorTools.m_DrawerTypeForType.ContainsKey(type)
+                            if((!m_DrawerTypeForType.ContainsKey(type)
                                     ? true
-                                    : !customDrawer.Type.IsAssignableFrom(EditorTools.m_DrawerTypeForType[type].type))){
-                                Dictionary<Type, EditorTools.DrawerKeySet> types = EditorTools.m_DrawerTypeForType;
-                                drawerKeySet = new EditorTools.DrawerKeySet(){
+                                    : !customDrawer.Type.IsAssignableFrom(m_DrawerTypeForType[type].type))){
+                                Dictionary<Type, DrawerKeySet> types = m_DrawerTypeForType;
+                                drawerKeySet = new DrawerKeySet(){
                                     drawer = typesDerivedFrom,
                                     type = customDrawer.Type
                                 };
@@ -1520,8 +1574,8 @@ namespace DevionGames
 
         public static IEnumerable<SerializedProperty> EnumerateChildProperties(this SerializedProperty property)
         {
-            var iterator = property.Copy();
-            var end = iterator.GetEndProperty();
+            SerializedProperty iterator = property.Copy();
+            SerializedProperty end = iterator.GetEndProperty();
 
             if(iterator.NextVisible(enterChildren: true)){
                 do{
@@ -1563,33 +1617,33 @@ namespace DevionGames
 
         private static class Styles
         {
-            public static GUIStyle seperator;
-            public static Texture2D rightArrow;
-            public static GUIStyle leftTextButton;
-            public static GUIStyle leftTextToolbarButton;
-            public static GUIStyle inspectorTitle;
-            public static GUIStyle inspectorTitleText;
-            public static GUIStyle inspectorBigTitle;
+            public static readonly GUIStyle seperator;
+            public static readonly Texture2D rightArrow;
+            public static readonly GUIStyle leftTextButton;
+            public static readonly GUIStyle leftTextToolbarButton;
+            public static readonly GUIStyle inspectorTitle;
+            public static readonly GUIStyle inspectorTitleText;
+            public static readonly GUIStyle inspectorBigTitle;
 
             static Styles()
             {
-                Styles.seperator = new GUIStyle("IN Title"){
+                seperator = new GUIStyle("IN Title"){
                     fixedHeight = 1f
                 };
-                Styles.rightArrow = ((GUIStyle)"AC RightArrow").normal.background;
-                Styles.leftTextButton = new GUIStyle("Button"){
+                rightArrow = ((GUIStyle)"AC RightArrow").normal.background;
+                leftTextButton = new GUIStyle("Button"){
                     alignment = TextAnchor.MiddleLeft
                 };
-                Styles.leftTextToolbarButton = new GUIStyle(EditorStyles.toolbarButton){
+                leftTextToolbarButton = new GUIStyle(EditorStyles.toolbarButton){
                     alignment = TextAnchor.MiddleLeft
                 };
-                Styles.inspectorTitle = new GUIStyle("IN Foldout"){
+                inspectorTitle = new GUIStyle("IN Foldout"){
                     overflow = new RectOffset(0, 0, -3, 0),
                     fixedWidth = 0,
                     fixedHeight = 20
                 };
-                Styles.inspectorTitleText = new GUIStyle("IN TitleText");
-                Styles.inspectorBigTitle = new GUIStyle("IN BigTitle");
+                inspectorTitleText = new GUIStyle("IN TitleText");
+                inspectorBigTitle = new GUIStyle("IN BigTitle");
             }
         }
     }

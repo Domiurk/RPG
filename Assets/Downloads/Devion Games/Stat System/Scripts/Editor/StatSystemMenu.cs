@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace DevionGames.StatSystem
@@ -24,7 +22,7 @@ namespace DevionGames.StatSystem
 		[MenuItem("Tools/Devion Games/Stat System/Create Stats Manager", true)]
 		private static bool ValidateCreateStatusSystem()
 		{
-			return GameObject.FindObjectOfType<StatsManager>() == null;
+			return Object.FindObjectOfType<StatsManager>() == null;
 		}
 	}
 }

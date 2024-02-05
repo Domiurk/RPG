@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace DevionGames.InventorySystem
@@ -28,14 +23,14 @@ namespace DevionGames.InventorySystem
 				if (GUI.Button(new Rect(position.xMin + 30f, position.yMax - 20f, position.width - 30f, 20f),gameObject.objectReferenceValue != null?"Remove Prefab Handle":"Attach Prefab Handle"))
                 {
 					if (gameObject.objectReferenceValue != null) {
-						GameObject.DestroyImmediate(gameObject.objectReferenceValue);
+						Object.DestroyImmediate(gameObject.objectReferenceValue);
 						return;
 					}
 					VisibleItem visibleItem = (VisibleItem)property.serializedObject.targetObject;
 					EquipmentHandler handler = visibleItem.GetComponent<EquipmentHandler>();
 					EquipmentHandler.EquipmentBone bone = handler.Bones.Find(x => x.region == region.objectReferenceValue);
 					if (bone != null) {
-						GameObject go=(GameObject)GameObject.Instantiate(prefab.objectReferenceValue,bone.bone.transform);
+						GameObject go=(GameObject)Object.Instantiate(prefab.objectReferenceValue,bone.bone.transform);
 						go.transform.localPosition = pos.vector3Value;
 						go.transform.localEulerAngles = rotation.vector3Value;
 						go.transform.localScale = scale.vector3Value;

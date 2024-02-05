@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using DevionGames.UIWidgets;
 
 public class DialogBoxTrigger : MonoBehaviour
@@ -15,7 +13,7 @@ public class DialogBoxTrigger : MonoBehaviour
 
     private void Start()
     {
-        this.m_DialogBox = FindObjectOfType<DialogBox>();   
+        m_DialogBox = FindObjectOfType<DialogBox>();   
     }
 
     public void Show() {

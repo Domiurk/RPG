@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using DevionGames.UIWidgets;
 
@@ -12,21 +11,21 @@ namespace DevionGames.InventorySystem
     public class Pickup : Action
     {
         [SerializeField]
-        private string m_WindowName = "Inventory";
+        private readonly string m_WindowName = "Inventory";
         [SerializeField]
-        private bool m_DestroyWhenEmpty = true;
+        private readonly bool m_DestroyWhenEmpty = true;
         [SerializeField]
-        private int m_Amount = -1;
+        private readonly int m_Amount = -1;
 
         private ItemCollection m_ItemCollection;
 
         public override void OnStart()
         {
-            this.m_ItemCollection = gameObject.GetComponent<ItemCollection>();
-            this.m_ItemCollection.onChange.AddListener(delegate () {
-                if (this.m_ItemCollection.IsEmpty && this.m_DestroyWhenEmpty)
+            m_ItemCollection = gameObject.GetComponent<ItemCollection>();
+            m_ItemCollection.onChange.AddListener(delegate () {
+                if (m_ItemCollection.IsEmpty && m_DestroyWhenEmpty)
                 {
-                    GameObject.Destroy(gameObject,0.1f);
+                    Object.Destroy(gameObject,0.1f);
                 }
             });
 
@@ -39,21 +38,21 @@ namespace DevionGames.InventorySystem
 
         private ActionStatus  PickupItems()
         {
-            if (this.m_ItemCollection.Count == 0) {
+            if (m_ItemCollection.Count == 0) {
                 InventoryManager.Notifications.empty.Show(gameObject.name.Replace("(Clone)", "").ToLower());
                 return ActionStatus.Failure;
             }
-            ItemContainer[] windows = WidgetUtility.FindAll<ItemContainer>(this.m_WindowName);
+            ItemContainer[] windows = WidgetUtility.FindAll<ItemContainer>(m_WindowName);
             List<Item> items = new List<Item>();
-            if (this.m_Amount < 0)
+            if (m_Amount < 0)
             {
-                items.AddRange(this.m_ItemCollection);
+                items.AddRange(m_ItemCollection);
             }
             else
             {
-                for (int i = 0; i < this.m_Amount; i++)
+                for (int i = 0; i < m_Amount; i++)
                 {
-                    Item item = this.m_ItemCollection[Random.Range(0, this.m_ItemCollection.Count)];
+                    Item item = m_ItemCollection[Random.Range(0, m_ItemCollection.Count)];
                     items.Add(item);
                 }
             }
@@ -69,16 +68,15 @@ namespace DevionGames.InventorySystem
 
                         if (current.StackOrAdd(item))
                         {
-                            this.m_ItemCollection.Remove(item);
+                            m_ItemCollection.Remove(item);
                             break;
                         }
                     }
                 }
                 else
                 {
-                    //Drop items to ground
                     DropItem(item);
-                    this.m_ItemCollection.Remove(item);
+                    m_ItemCollection.Remove(item);
                 }
             }
 

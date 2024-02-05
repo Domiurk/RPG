@@ -1,176 +1,134 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevionGames
 {
-    [System.Serializable]
+    [Serializable]
     public class NamedVariable : INameable
     {
         [SerializeField]
         private string m_Name = "New Variable";
-        public string Name { get => this.m_Name; set => this.m_Name = value; }
+        public string Name { get => m_Name; set => m_Name = value; }
 
 		[TextArea]
 		[SerializeField]
 		private string m_Description=string.Empty;
 
-		public string Description { get => this.m_Description; set => this.m_Description = value; }
+		public string Description { get => m_Description; set => m_Description = value; }
 
 		[SerializeField]
 		private NamedVariableType m_VariableType = 0;
 
 		public NamedVariableType VariableType
 		{
-			get{return this.m_VariableType;}
-			set { this.m_VariableType = value; }
+			get => m_VariableType;
+			set => m_VariableType = value;
 		}
 
 		public Type ValueType {
-			get {
-				switch (VariableType)
-				{
-					case NamedVariableType.Bool:
-						return typeof(bool);
-					case NamedVariableType.Color:
-						return typeof(Color);
-					case NamedVariableType.Float:
-						return typeof(float);
-					case NamedVariableType.Int:
-						return typeof(int);
-					case NamedVariableType.Object:
-						return typeof(UnityEngine.Object);
-					case NamedVariableType.String:
-						return typeof(string);
-					case NamedVariableType.Vector2:
-						return typeof(Vector2);
-					case NamedVariableType.Vector3:
-						return typeof(Vector3);
-				}
-				return null;
+			get{
+				return VariableType switch{
+					NamedVariableType.Bool => typeof(bool),
+					NamedVariableType.Color => typeof(Color),
+					NamedVariableType.Float => typeof(float),
+					NamedVariableType.Int => typeof(int),
+					NamedVariableType.Object => typeof(Object),
+					NamedVariableType.String => typeof(string),
+					NamedVariableType.Vector2 => typeof(Vector2),
+					NamedVariableType.Vector3 => typeof(Vector3),
+					_ => null
+				};
 			}
 		}
 
 		public string[] VariableTypeNames {
 			get {
-				return new string[] {"Bool","Color","Float","Int", "Object", "String","Vector2", "Vector3"};
+				return new[] {"Bool","Color","Float","Int", "Object", "String","Vector2", "Vector3"};
 			}
 		}
 
 		public string stringValue = string.Empty;
-		public int intValue = 0;
-		public float floatValue = 0f;
+		public int intValue;
+		public float floatValue;
 		public Color colorValue = Color.white;
-		public bool boolValue = false;
-		public UnityEngine.Object objectReferenceValue = null;
+		public bool boolValue;
+		public Object objectReferenceValue;
 		public Vector2 vector2Value = Vector2.zero;
 		public Vector3 vector3Value = Vector3.zero;
 
 		public object GetValue()
 		{
-			switch (VariableType) {
-				case NamedVariableType.Bool:
-					return boolValue;
-				case NamedVariableType.Color:
-					return colorValue;
-				case NamedVariableType.Float:
-					return floatValue;
-				case NamedVariableType.Int:
-					return intValue;
-				case NamedVariableType.Object:
-					return objectReferenceValue;
-				case NamedVariableType.String:
-					return stringValue;
-				case NamedVariableType.Vector2:
-					return vector2Value;
-				case NamedVariableType.Vector3:
-					return vector3Value;
-			}
-			return null;
+			return VariableType switch{
+				NamedVariableType.Bool => boolValue,
+				NamedVariableType.Color => colorValue,
+				NamedVariableType.Float => floatValue,
+				NamedVariableType.Int => intValue,
+				NamedVariableType.Object => objectReferenceValue,
+				NamedVariableType.String => stringValue,
+				NamedVariableType.Vector2 => vector2Value,
+				NamedVariableType.Vector3 => vector3Value,
+				_ => null
+			};
 		}
 
 		public void SetValue(object value)
 		{
-			
-			if (value is string)
-			{
-				m_VariableType = NamedVariableType.String;
-				stringValue = (string)value;
-			}
-			else if (value is bool)
-			{
-				m_VariableType = NamedVariableType.Bool;
-				boolValue = (bool)value;
-			}
-			else if (value is Color)
-			{
-				m_VariableType = NamedVariableType.Color;
-				colorValue = (Color)value;
-			}
-			else if (value is float || value is double)
-			{
-				m_VariableType = NamedVariableType.Float;
-				floatValue = System.Convert.ToSingle(value);
-			}
-			else if (value == null || typeof(UnityEngine.Object).IsAssignableFrom(value.GetType()))
-			{
-				m_VariableType = NamedVariableType.Object;
-				objectReferenceValue = (UnityEngine.Object)value;
-			}
-			else if (value is int
-					 || value is uint
-					 || value is long
-					 || value is sbyte
-					 || value is byte
-					 || value is short
-					 || value is ushort
-					 || value is ulong)
-			{
-				m_VariableType = NamedVariableType.Int;
-				intValue = System.Convert.ToInt32(value);
-			}
-			else if (value is Vector2)
-			{
-				m_VariableType = NamedVariableType.Vector2;
-				vector2Value = (Vector2)value;
-			}
-			else if (value is Vector3)
-			{
-				m_VariableType = NamedVariableType.Vector3;
-				vector3Value = (Vector3)value;
+			switch(value){
+				case string s:
+					m_VariableType = NamedVariableType.String;
+					stringValue = s;
+					break;
+				case bool b:
+					m_VariableType = NamedVariableType.Bool;
+					boolValue = b;
+					break;
+				case Color color:
+					m_VariableType = NamedVariableType.Color;
+					colorValue = color;
+					break;
+				case float or double:
+					m_VariableType = NamedVariableType.Float;
+					floatValue = Convert.ToSingle(value);
+					break;
+				case null or Object:
+					m_VariableType = NamedVariableType.Object;
+					objectReferenceValue = (Object)value;
+					break;
+				case int or uint or long or sbyte or byte or short or ushort or ulong:
+					m_VariableType = NamedVariableType.Int;
+					intValue = Convert.ToInt32(value);
+					break;
+				case Vector2 vector2:
+					m_VariableType = NamedVariableType.Vector2;
+					vector2Value = vector2;
+					break;
+				case Vector3 vector3:
+					m_VariableType = NamedVariableType.Vector3;
+					vector3Value = vector3;
+					break;
 			}
 		}
 
 		public string PropertyPath
 		{
-			get
-			{
-				switch (m_VariableType)
-				{
-					case NamedVariableType.Bool:
-						return "boolValue";
-					case NamedVariableType.Color:
-						return "colorValue";
-					case NamedVariableType.Float:
-						return "floatValue";
-					case NamedVariableType.Int:
-						return "intValue";
-					case NamedVariableType.Object:
-						return "objectReferenceValue";
-					case NamedVariableType.String:
-						return "stringValue";
-					case NamedVariableType.Vector2:
-						return "vector2Value";
-					case NamedVariableType.Vector3:
-						return "vector3Value";
-				}
-				return string.Empty;
+			get{
+				return m_VariableType switch{
+					NamedVariableType.Bool => "boolValue",
+					NamedVariableType.Color => "colorValue",
+					NamedVariableType.Float => "floatValue",
+					NamedVariableType.Int => "intValue",
+					NamedVariableType.Object => "objectReferenceValue",
+					NamedVariableType.String => "stringValue",
+					NamedVariableType.Vector2 => "vector2Value",
+					NamedVariableType.Vector3 => "vector3Value",
+					_ => string.Empty
+				};
 			}
 		}
 	}
 
-	public enum NamedVariableType : int
+	public enum NamedVariableType
 	{
 		String = 0,
 		Bool = 2,

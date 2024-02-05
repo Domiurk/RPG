@@ -24,20 +24,20 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         private void FixedUpdate()
         {
-            personController.UpdateMotor();           // updates the ThirdPersonMotor methods
-            personController.ControlLocomotionType(); // handle the controller locomotion type and move speed
-            personController.ControlRotationType();   // handle the controller rotation type
+            personController.UpdateMotor();
+            personController.ControlLocomotionType();
+            personController.ControlRotationType();
         }
 
         private void Update()
         {
-            InputHandle();                     // update the input methods
-            personController.UpdateAnimator(); // updates the Animator Parameters
+            InputHandle();
+            personController.UpdateAnimator();
         }
 
         private void OnEnable()
         {
-            InputActions.Player.Enable();
+            InputActions.PlayerMap.Enable();
             MovementAction.Enable();
             SprintAction.Enable();
             CrouchAction.Enable();
@@ -46,7 +46,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         private void OnDisable()
         {
-            InputActions.Player.Disable();
+            InputActions.PlayerMap.Disable();
             MovementAction.Disable();
             SprintAction.Disable();
             CrouchAction.Disable();
@@ -55,21 +55,17 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         public void OnAnimatorMove()
         {
-            personController.ControlAnimatorRootMotion(); // handle root motion animations 
+            personController.ControlAnimatorRootMotion();
         }
 
         private void InitializeController()
         {
             InputActions = new PlayerInputActions();
             personController = GetComponent<vThirdPersonController>();
-            MovementAction = InputActions.Player.Moving;
-            SprintAction = InputActions.Player.Sprint;
-            CrouchAction = InputActions.Player.Crouch;
-            JumpAction = InputActions.Player.Jump;
-            //InputActions.Player.Jump.performed += _ => JumpInput();
-            //InputActions.Player.Sprint.performed += _ => SprintInput(true);
-            //InputActions.Player.Sprint.canceled += _ => SprintInput(false);
-            //InputActions.Player.Crouch.performed += _ => StrafeInput();
+            MovementAction = InputActions.PlayerMap.Move;
+            SprintAction = InputActions.PlayerMap.Sprint;
+            CrouchAction = InputActions.PlayerMap.Crouch;
+            JumpAction = InputActions.PlayerMap.Jump;
             JumpAction.performed += _ => JumpInput();
             SprintAction.performed += _ => SprintInput(true);
             SprintAction.canceled += _ => SprintInput(false);
@@ -87,7 +83,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
                     return;
 
                 if(personCamera){
-                    personCamera.SetMainTarget(this.transform);
+                    personCamera.SetMainTarget(transform);
                     personCamera.Init();
                 }
             }
@@ -101,7 +97,7 @@ namespace Downloads.Invector_3rdPersonController_LITE.Scripts.CharacterControlle
 
         public void MoveInput()
         {
-            Vector2 input = InputActions.Player.Moving.ReadValue<Vector2>();
+            Vector2 input = InputActions.PlayerMap.Move.ReadValue<Vector2>();
             personController.input.x = input.x;
             personController.input.z = input.y;
         }

@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEditorInternal;
 using DevionGames.UIWidgets;
 using UnityEditor.AnimatedValues;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -36,39 +35,39 @@ namespace DevionGames.InventorySystem
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.m_UseButton = serializedObject.FindProperty("useButton");
-            this.m_DynamicContainer = base.serializedObject.FindProperty("m_DynamicContainer");
+            m_UseButton = serializedObject.FindProperty("useButton");
+            m_DynamicContainer = serializedObject.FindProperty("m_DynamicContainer");
 
-            this.m_SlotParent = serializedObject.FindProperty("m_SlotParent");
-            this.m_SlotPrefab = serializedObject.FindProperty("m_SlotPrefab");
+            m_SlotParent = serializedObject.FindProperty("m_SlotParent");
+            m_SlotPrefab = serializedObject.FindProperty("m_SlotPrefab");
 
-            if (this.m_SlotParent.objectReferenceValue == null)
+            if (m_SlotParent.objectReferenceValue == null)
             {
                 GridLayoutGroup group = ((MonoBehaviour)target).gameObject.GetComponentInChildren<GridLayoutGroup>();
                 if (group != null)
                 {
                     serializedObject.Update();
-                    this.m_SlotParent.objectReferenceValue = group.transform;
+                    m_SlotParent.objectReferenceValue = group.transform;
                     serializedObject.ApplyModifiedProperties();
                 }
             }
 
-            this.m_ShowDynamicContainer = new AnimBool(this.m_DynamicContainer.boolValue);
-            this.m_ShowDynamicContainer.valueChanged.AddListener(new UnityAction(this.Repaint));
+            m_ShowDynamicContainer = new AnimBool(m_DynamicContainer.boolValue);
+            m_ShowDynamicContainer.valueChanged.AddListener(Repaint);
 
-            this.m_UseReferences = serializedObject.FindProperty("m_UseReferences");
+            m_UseReferences = serializedObject.FindProperty("m_UseReferences");
 
-            this.m_MoveUsedItems = serializedObject.FindProperty("m_MoveUsedItem");
-            this.m_MoveItemConditions = serializedObject.FindProperty("moveItemConditions");
-            this.m_ShowMoveUsedItems = new AnimBool(this.m_MoveUsedItems.boolValue);
-            this.m_ShowMoveUsedItems.valueChanged.AddListener(new UnityAction(this.Repaint));
+            m_MoveUsedItems = serializedObject.FindProperty("m_MoveUsedItem");
+            m_MoveItemConditions = serializedObject.FindProperty("moveItemConditions");
+            m_ShowMoveUsedItems = new AnimBool(m_MoveUsedItems.boolValue);
+            m_ShowMoveUsedItems.valueChanged.AddListener(Repaint);
 
-            this.m_MoveItemConditionList = new ReorderableList(serializedObject, m_MoveItemConditions, true, true, true, true);
-            this.m_MoveItemConditionList.drawHeaderCallback = (Rect rect) => {
+            m_MoveItemConditionList = new ReorderableList(serializedObject, m_MoveItemConditions, true, true, true, true);
+            m_MoveItemConditionList.drawHeaderCallback = (Rect rect) => {
                 EditorGUI.LabelField(rect, "Move Conditions (Window, Requires Visibility)");
             };
 
-            this.m_MoveItemConditionList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            m_MoveItemConditionList.drawElementCallback = (Rect rect, int index, bool _, bool _) => {
                 SerializedProperty element = m_MoveItemConditionList.serializedProperty.GetArrayElementAtIndex(index);
                 rect.y += 2;
                 rect.height = EditorGUIUtility.singleLineHeight;
@@ -79,43 +78,43 @@ namespace DevionGames.InventorySystem
                 EditorGUI.PropertyField(rect, element.FindPropertyRelative("requiresVisibility"), GUIContent.none);
             };
 
-            this.m_Restrictions = serializedObject.FindProperty("restrictions");
+            m_Restrictions = serializedObject.FindProperty("restrictions");
            
-            for (int i = 0; i < this.m_Restrictions.arraySize; i++) {
-                this.m_Restrictions.GetArrayElementAtIndex(i).objectReferenceValue.hideFlags = HideFlags.HideInInspector;
+            for (int i = 0; i < m_Restrictions.arraySize; i++) {
+                m_Restrictions.GetArrayElementAtIndex(i).objectReferenceValue.hideFlags = HideFlags.HideInInspector;
             }
 
 
-            this.m_PropertiesToExcludeForDefaultInspector = new [] {
-                this.m_UseButton.propertyPath,
-                this.m_DynamicContainer.propertyPath,
-                this.m_SlotParent.propertyPath,
-                this.m_SlotPrefab.propertyPath,
-                this.m_UseReferences.propertyPath,
-                this.m_MoveUsedItems.propertyPath,
-                this.m_MoveItemConditions.propertyPath,
-                this.m_Restrictions.propertyPath
+            m_PropertiesToExcludeForDefaultInspector = new [] {
+                m_UseButton.propertyPath,
+                m_DynamicContainer.propertyPath,
+                m_SlotParent.propertyPath,
+                m_SlotPrefab.propertyPath,
+                m_UseReferences.propertyPath,
+                m_MoveUsedItems.propertyPath,
+                m_MoveItemConditions.propertyPath,
+                m_Restrictions.propertyPath
             };
         }
 
         protected virtual void OnDisable()
         {
-            if (this.m_ShowMoveUsedItems != null){
-                this.m_ShowMoveUsedItems.valueChanged.RemoveListener(new UnityAction(this.Repaint));
+            if (m_ShowMoveUsedItems != null){
+                m_ShowMoveUsedItems.valueChanged.RemoveListener(Repaint);
             }
         }
 
 
         private void DrawInspector()
         {
-            EditorGUILayout.PropertyField(this.m_UseButton);
-            EditorGUILayout.PropertyField(this.m_DynamicContainer);
-            this.m_ShowDynamicContainer.target = this.m_DynamicContainer.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowDynamicContainer.faded))
+            EditorGUILayout.PropertyField(m_UseButton);
+            EditorGUILayout.PropertyField(m_DynamicContainer);
+            m_ShowDynamicContainer.target = m_DynamicContainer.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowDynamicContainer.faded))
             {
                 EditorGUI.indentLevel = EditorGUI.indentLevel + 1;
-                EditorGUILayout.PropertyField(this.m_SlotParent);
-                EditorGUILayout.PropertyField(this.m_SlotPrefab);
+                EditorGUILayout.PropertyField(m_SlotParent);
+                EditorGUILayout.PropertyField(m_SlotPrefab);
                 EditorGUI.indentLevel = EditorGUI.indentLevel - 1;
             }
             EditorGUILayout.EndFadeGroup();
@@ -123,30 +122,30 @@ namespace DevionGames.InventorySystem
             EditorGUI.BeginDisabledGroup(collection != null);
             if (collection != null) {
                 EditorGUILayout.HelpBox("You can't use references with an ItemCollection component.", MessageType.Warning);
-                this.m_UseReferences.boolValue = false;
+                m_UseReferences.boolValue = false;
             }
-            EditorGUILayout.PropertyField(this.m_UseReferences);
+            EditorGUILayout.PropertyField(m_UseReferences);
             
             EditorGUI.EndDisabledGroup();
 
         
-            DrawTypePropertiesExcluding(typeof(ItemContainer),this.m_PropertiesToExcludeForDefaultInspector);
+            DrawTypePropertiesExcluding(typeof(ItemContainer),m_PropertiesToExcludeForDefaultInspector);
 
-            EditorGUILayout.PropertyField(this.m_MoveUsedItems);
-            this.m_ShowMoveUsedItems.target = this.m_MoveUsedItems.boolValue;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowMoveUsedItems.faded))
+            EditorGUILayout.PropertyField(m_MoveUsedItems);
+            m_ShowMoveUsedItems.target = m_MoveUsedItems.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(m_ShowMoveUsedItems.faded))
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(16f);
                 GUILayout.BeginVertical();
-                this.m_MoveItemConditionList.DoLayoutList();
+                m_MoveItemConditionList.DoLayoutList();
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
             }
             EditorGUILayout.EndFadeGroup();
             if (EditorTools.RightArrowButton(new GUIContent("Restrictions", "Container Restrictions")))
             {
-                AssetWindow.ShowWindow("Container Restrictions", this.m_Restrictions);
+                AssetWindow.ShowWindow("Container Restrictions", m_Restrictions);
             }
         }
 

@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace DevionGames.Graphs
 {
-	[System.Serializable]
+	[Serializable]
     public class GraphEditorWindow : EditorWindow
     {
 		public static GraphEditorWindow ShowWindow()
 		{
-			GraphEditorWindow window = EditorWindow.GetWindow<GraphEditorWindow>(false, "Graph Editor");
+			GraphEditorWindow window = GetWindow<GraphEditorWindow>(false, "Graph Editor");
 			window.minSize = new Vector2(500f, 100f);
 			return window;
 		}
@@ -37,9 +37,9 @@ namespace DevionGames.Graphs
 
 		protected virtual void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-			if (this.m_TargetObject is IGraphProvider)
+			if (m_TargetObject is IGraphProvider)
 			{
-				Load(this.m_GraphView.GetType(), this.m_TargetObject as IGraphProvider, this.m_TargetObject);
+				Load(m_GraphView.GetType(), m_TargetObject as IGraphProvider, m_TargetObject);
 			}else {
 				Close();
 			}
@@ -47,9 +47,9 @@ namespace DevionGames.Graphs
 
 		protected virtual void OnAfterAssemblyReload()
 		{
-			if (this.m_TargetObject is IGraphProvider)
+			if (m_TargetObject is IGraphProvider)
 			{
-				Load(this.m_GraphView.GetType(), this.m_TargetObject as IGraphProvider, this.m_TargetObject);
+				Load(m_GraphView.GetType(), m_TargetObject as IGraphProvider, m_TargetObject);
 			}
 			else
 			{
@@ -64,7 +64,7 @@ namespace DevionGames.Graphs
 
         private void OnGUI()
 		{
-			this.m_GraphView.OnGUI(new Rect(0, 0, position.width, position.height));
+			m_GraphView.OnGUI(new Rect(0, 0, position.width, position.height));
 			Event currentEvent = Event.current;
 			if (currentEvent.type == EventType.ValidateCommand && commandNames.Contains(currentEvent.commandName))
 			{
@@ -79,7 +79,7 @@ namespace DevionGames.Graphs
 						break;
 					case "OnEndDrag":
 						GraphUtility.Save(m_Behavior.GetGraph());
-						PrefabUtility.RecordPrefabInstancePropertyModifications(this.m_TargetObject);
+						PrefabUtility.RecordPrefabInstancePropertyModifications(m_TargetObject);
 						break;
 				}
 			}
@@ -98,12 +98,12 @@ namespace DevionGames.Graphs
 		{
 			if (behavior == null)
 				Close();
-			this.m_TargetObject = target;
-			this.m_Behavior = behavior;
-			this.m_GraphView = Activator.CreateInstance(type, this, behavior.GetGraph(), this.m_TargetObject) as IGraphView;
+			m_TargetObject = target;
+			m_Behavior = behavior;
+			m_GraphView = Activator.CreateInstance(type, this, behavior.GetGraph(), m_TargetObject) as IGraphView;
 			EditorUtility.SetDirty(this);
-			this.titleContent = new GUIContent(ObjectNames.NicifyVariableName(behavior.GetGraph().GetType().Name) + " Editor");
-			this.m_GraphView.CenterGraphView();
+			titleContent = new GUIContent(ObjectNames.NicifyVariableName(behavior.GetGraph().GetType().Name) + " Editor");
+			m_GraphView.CenterGraphView();
 			Repaint();
 		}
 

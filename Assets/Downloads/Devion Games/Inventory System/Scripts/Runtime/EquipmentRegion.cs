@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace DevionGames.InventorySystem{
 	[System.Serializable]
@@ -7,8 +6,8 @@ namespace DevionGames.InventorySystem{
 		[SerializeField]
 		private new string name="";
 		public string Name{
-			get{return this.name;}
-			set{this.name = value;}
+			get => name;
+			set => name = value;
 		}
 	}
 }

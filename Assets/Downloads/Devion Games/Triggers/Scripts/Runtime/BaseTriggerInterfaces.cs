@@ -1,15 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace DevionGames {
+namespace DevionGames
+{
     /// <summary>
     /// Base class that all Trigger events inherit from.
     /// </summary>
-    public interface ITriggerEventHandler
-    {
-    }
+    public interface ITriggerEventHandler { }
 
     public interface ITriggerUsedHandler : ITriggerEventHandler
     {
@@ -27,7 +24,8 @@ namespace DevionGames {
         void OnTriggerUnUsed(GameObject player);
     }
 
-    public interface ITriggerCameInRange : ITriggerEventHandler {
+    public interface ITriggerCameInRange : ITriggerEventHandler
+    {
         /// <summary>
         /// Use this callback to detect when player comes in range
         /// </summary>

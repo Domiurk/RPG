@@ -3,14 +3,6 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
     using UnityEngine;
 
-    //
-    // Instead of adding [CreateAssetMenu] attribute, we've created a Scriptable Object Creator using Odin Selectors.
-    // Characters can then be easily created in the RPG Editor window, which also helps ensure that they get located in the right folder.
-    //
-    // By inheriting from SerializedScriptableObject, we can then also utilize the extra serialization power Odin brings.
-    // In this case, Odin serializes the Inventory which is a two-dimensional array. Everything else is serialized by Unity.
-    // 
-
     public class Character : SerializedScriptableObject
     {
         [HorizontalGroup("Split", 55, LabelWidth = 70)]
@@ -33,7 +25,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
         public ItemSlot[,] Inventory = new ItemSlot[12, 6];
 
         [TabGroup("Starting Stats"), HideLabel]
-        public CharacterStats Skills = new CharacterStats();
+        public CharacterStats Skills = new();
 
         [HideLabel]
         [TabGroup("Starting Equipment")]

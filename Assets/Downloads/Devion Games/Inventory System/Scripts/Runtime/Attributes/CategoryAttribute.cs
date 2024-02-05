@@ -6,14 +6,8 @@ namespace DevionGames.InventorySystem{
 	{
 		private readonly string category;
 		
-		public string Category
-		{
-			get
-			{
-				return this.category;
-			}
-		}
-		
+		public string Category => category;
+
 		public CategoryAttribute(string category)
 		{
 			this.category = category;

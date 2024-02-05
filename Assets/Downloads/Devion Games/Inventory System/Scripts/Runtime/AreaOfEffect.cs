@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -16,20 +15,20 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         private float m_RepeatDelay = 1f;
         [SerializeField]
-        private Object m_Data = null;
+        private Object m_Data;
 
         private IEnumerator Start()
         {
-            yield return new WaitForSeconds(this.m_StartDelay);
-            for (int r = 0; r < this.m_Repeat; r++)
+            yield return new WaitForSeconds(m_StartDelay);
+            for (int r = 0; r < m_Repeat; r++)
             {
-                Collider[] colliders = Physics.OverlapSphere(transform.position, this.m_Radius);
-                colliders = colliders.Where(x => x.GetComponent("StatsHandler") != null).ToArray();
+                Collider[] colliders = Physics.OverlapSphere(transform.position, m_Radius);
+                colliders = colliders.Where(x => x.GetComponent($"DevionGames.StatSystem.StatsHandler") != null).ToArray();
                 for (int i = 0; i < colliders.Length; i++)
                 {
-                    EventHandler.Execute(InventoryManager.current.PlayerInfo.gameObject, "SendDamage", colliders[i].gameObject, this.m_Data);
+                    EventHandler.Execute(InventoryManager.current.PlayerInfo.gameObject, "SendDamage", colliders[i].gameObject, m_Data);
                 }
-                yield return new WaitForSeconds(this.m_RepeatDelay);
+                yield return new WaitForSeconds(m_RepeatDelay);
             }
             Destroy(gameObject, 0.1f);
         }

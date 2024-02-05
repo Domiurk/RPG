@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 namespace Invector.vCharacterController
 {
@@ -12,7 +10,7 @@ namespace Invector.vCharacterController
         Animator charAnimator;
         public  RuntimeAnimatorController controller;
         public GameObject hud;
-        Vector2 rect = new Vector2(500, 540);
+        readonly Vector2 rect = new(500, 540);
         Vector2 scrool;
         Editor humanoidpreview;
         Texture2D m_Logo;
@@ -47,9 +45,9 @@ namespace Invector.vCharacterController
             if (!skin) skin = Resources.Load("vSkin") as GUISkin;
             GUI.skin = skin;
 
-            this.maxSize = rect;
-            this.minSize = rect;
-            this.titleContent = new GUIContent("Character", null, "Third Person Character Creator");
+            maxSize = rect;
+            minSize = rect;
+            titleContent = new GUIContent("Character", null, "Third Person Character Creator");
             GUILayout.BeginVertical("Character Creator Window", "window");
             GUILayout.Label(m_Logo, GUILayout.MaxHeight(25));
             GUILayout.Space(5);
@@ -125,8 +123,7 @@ namespace Invector.vCharacterController
         /// </summary>
         void Create()
         {
-            // base for the character
-            var _ThirdPerson = GameObject.Instantiate(charObj, Vector3.zero, Quaternion.identity) as GameObject;
+            var _ThirdPerson = Instantiate(charObj, Vector3.zero, Quaternion.identity) as GameObject;
             if (!_ThirdPerson)
                 return;          
             _ThirdPerson.name = "vBasicController_" + charObj.gameObject.name;
@@ -136,7 +133,6 @@ namespace Invector.vCharacterController
             var rigidbody = _ThirdPerson.AddComponent<Rigidbody>();
             var collider = _ThirdPerson.AddComponent<CapsuleCollider>();
 
-            // camera
             GameObject camera = null;
             if (Camera.main == null)
             {
@@ -161,13 +157,11 @@ namespace Invector.vCharacterController
 
             _ThirdPerson.tag = "Player";
 
-            // rigidbody
             rigidbody.useGravity = true;
             rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
             rigidbody.mass = 50;
 
-            // capsule collider 
             collider.height = ColliderHeight(_ThirdPerson.GetComponent<Animator>());
             collider.center = new Vector3(0, (float)System.Math.Round(collider.height * 0.5f, 2), 0);
             collider.radius = (float)System.Math.Round(collider.height * 0.15f, 2);
@@ -175,8 +169,8 @@ namespace Invector.vCharacterController
             if (controller)
                 _ThirdPerson.GetComponent<Animator>().runtimeAnimatorController = controller;
             Selection.activeGameObject = _ThirdPerson;
-            UnityEditor.SceneView.lastActiveSceneView.FrameSelected();
-            this.Close();
+            SceneView.lastActiveSceneView.FrameSelected();
+            Close();
         }
 
         /// <summary>
@@ -186,8 +180,8 @@ namespace Invector.vCharacterController
         /// <returns></returns>
         float ColliderHeight(Animator animator)
         {
-            var foot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
-            var hips = animator.GetBoneTransform(HumanBodyBones.Hips);
+            Transform foot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+            Transform hips = animator.GetBoneTransform(HumanBodyBones.Hips);
             return (float)System.Math.Round(Vector3.Distance(foot.position, hips.position) * 2f, 2);
         }       
 

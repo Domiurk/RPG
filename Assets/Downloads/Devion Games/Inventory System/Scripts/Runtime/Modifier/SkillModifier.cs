@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames.InventorySystem
 {
@@ -15,12 +13,12 @@ namespace DevionGames.InventorySystem
         public void Modify(Skill item)
         {
             float currentValue = item.CurrentValue;
-            float chance = this.m_Chance.Evaluate(currentValue / 100f) * 100f;
+            float chance = m_Chance.Evaluate(currentValue / 100f) * 100f;
             float p = Random.Range(0f, 100f);
 
             if (chance > p)
             {
-                float gainValue = this.m_Gain.Evaluate(currentValue / 100f);
+                float gainValue = m_Gain.Evaluate(currentValue / 100f);
                 item.CurrentValue = item.CurrentValue + gainValue;
                 
                 InventoryManager.Notifications.skillGain.Show(item.DisplayName, gainValue.ToString("F1"), item.CurrentValue.ToString("F1"));

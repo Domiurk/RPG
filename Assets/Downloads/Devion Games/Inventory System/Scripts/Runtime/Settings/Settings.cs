@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames.InventorySystem.Configuration
 {
@@ -9,7 +7,7 @@ namespace DevionGames.InventorySystem.Configuration
     {
         public virtual string Name
         {
-            get { return "Settings"; }
+            get => "Settings";
             set { }
         }
     }

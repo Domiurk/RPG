@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DevionGames.UIWidgets;
-using UnityEngine;
+﻿using DevionGames.UIWidgets;
 using UnityEngine.Assertions;
 
 namespace DevionGames.InventorySystem.Configuration
@@ -9,13 +6,7 @@ namespace DevionGames.InventorySystem.Configuration
     [System.Serializable]
     public class UI : Settings
     {
-        public override string Name
-        {
-            get
-            {
-                return "UI";
-            }
-        }
+        public override string Name => "UI";
 
         [InspectorLabel("Context Menu","Name of ContextMenu widget.")]
         public string contextMenuName = "ContextMenu";
@@ -31,11 +22,11 @@ namespace DevionGames.InventorySystem.Configuration
         private Notification m_Notification;
         public Notification notification {
             get {
-                if (this.m_Notification == null) {
-                    this.m_Notification = WidgetUtility.Find<Notification>(this.notificationName);
+                if (m_Notification == null) {
+                    m_Notification = WidgetUtility.Find<Notification>(notificationName);
                 }
-                Assert.IsNotNull(this.m_Notification, "Notification widget with name "+this.notificationName+" is not present in scene.");
-                return this.m_Notification;
+                Assert.IsNotNull(m_Notification, "Notification widget with name "+notificationName+" is not present in scene.");
+                return m_Notification;
             }
         }
 
@@ -44,12 +35,12 @@ namespace DevionGames.InventorySystem.Configuration
         {
             get
             {
-                if (this.m_Tooltip == null)
+                if (m_Tooltip == null)
                 {
-                    this.m_Tooltip = WidgetUtility.Find<Tooltip>(this.tooltipName);
+                    m_Tooltip = WidgetUtility.Find<Tooltip>(tooltipName);
                 }
-                Assert.IsNotNull(this.m_Tooltip, "Tooltip widget with name " + this.tooltipName + " is not present in scene.");
-                return this.m_Tooltip;
+                Assert.IsNotNull(m_Tooltip, "Tooltip widget with name " + tooltipName + " is not present in scene.");
+                return m_Tooltip;
             }
         }
 
@@ -58,11 +49,11 @@ namespace DevionGames.InventorySystem.Configuration
         {
             get
             {
-                if (this.m_SellPriceTooltip == null)
+                if (m_SellPriceTooltip == null)
                 {
-                    this.m_SellPriceTooltip = WidgetUtility.Find<ItemContainer>(this.sellPriceTooltipName);
+                    m_SellPriceTooltip = WidgetUtility.Find<ItemContainer>(sellPriceTooltipName);
                 }
-                return this.m_SellPriceTooltip;
+                return m_SellPriceTooltip;
             }
         }
 
@@ -71,26 +62,26 @@ namespace DevionGames.InventorySystem.Configuration
         {
             get
             {
-                if (this.m_Stack == null)
+                if (m_Stack == null)
                 {
-                    this.m_Stack = WidgetUtility.Find<Stack>(this.stackName);
+                    m_Stack = WidgetUtility.Find<Stack>(stackName);
                 }
-                Assert.IsNotNull(this.m_Stack, "Stack widget with name " + this.stackName + " is not present in scene.");
-                return this.m_Stack;
+                Assert.IsNotNull(m_Stack, "Stack widget with name " + stackName + " is not present in scene.");
+                return m_Stack;
             }
         }
 
-        private UIWidgets.ContextMenu m_ContextMenu;
-        public UIWidgets.ContextMenu contextMenu
+        private ContextMenu m_ContextMenu;
+        public ContextMenu contextMenu
         {
             get
             {
-                if (this.m_ContextMenu == null)
+                if (m_ContextMenu == null)
                 {
-                    this.m_ContextMenu = WidgetUtility.Find<UIWidgets.ContextMenu>(this.contextMenuName);
+                    m_ContextMenu = WidgetUtility.Find<ContextMenu>(contextMenuName);
                 }
-                Assert.IsNotNull(this.m_ContextMenu, "ConextMenu widget with name " + this.contextMenuName + " is not present in scene.");
-                return this.m_ContextMenu;
+                Assert.IsNotNull(m_ContextMenu, "ConextMenu widget with name " + contextMenuName + " is not present in scene.");
+                return m_ContextMenu;
             }
         }
     }

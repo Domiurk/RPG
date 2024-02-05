@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DevionGames.UIWidgets;
 using UnityEngine;
 
@@ -13,18 +12,18 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         private ItemDatabase m_Database;
         [SerializeField]
-        private List<EquipmentBone> m_Bones= new List<EquipmentBone>();
+        private List<EquipmentBone> m_Bones= new();
         public List<EquipmentBone> Bones
         {
-            get { return this.m_Bones; }
-            set { this.m_Bones = value; }
+            get => m_Bones;
+            set => m_Bones = value;
         }
 
         [SerializeField]
-        private List<VisibleItem> m_VisibleItems= new List<VisibleItem>();
+        private List<VisibleItem> m_VisibleItems= new();
         public List<VisibleItem> VisibleItems {
-            get { return this.m_VisibleItems; }
-            set { this.m_VisibleItems = value; }
+            get => m_VisibleItems;
+            set => m_VisibleItems = value;
         }
 
 
@@ -32,15 +31,15 @@ namespace DevionGames.InventorySystem
 
         private void Start()
         {
-            this.m_EquipmentContainer = WidgetUtility.Find<ItemContainer>(this.m_WindowName);
-            if (this.m_EquipmentContainer != null)
+            m_EquipmentContainer = WidgetUtility.Find<ItemContainer>(m_WindowName);
+            if (m_EquipmentContainer != null)
             {
-                for (int i = 0; i < this.m_VisibleItems.Count; i++)
+                for (int i = 0; i < m_VisibleItems.Count; i++)
                 {
-                    this.m_VisibleItems[i].enabled = false;
+                    m_VisibleItems[i].enabled = false;
                 }
-                this.m_EquipmentContainer.OnAddItem += OnAddItem;
-                this.m_EquipmentContainer.OnRemoveItem += OnRemoveItem;
+                m_EquipmentContainer.OnAddItem += OnAddItem;
+                m_EquipmentContainer.OnRemoveItem += OnRemoveItem;
                 UpdateEquipment();
                 if (InventoryManager.current != null) {
                     InventoryManager.current.onDataLoaded.AddListener(UpdateEquipment);
@@ -76,8 +75,8 @@ namespace DevionGames.InventorySystem
                 }
             }
 
-            for (int i = 0; i < this.m_VisibleItems.Count; i++) {
-                VisibleItem visibleItem = this.m_VisibleItems[i];
+            for (int i = 0; i < m_VisibleItems.Count; i++) {
+                VisibleItem visibleItem = m_VisibleItems[i];
                 if (visibleItem.item.Id == item.Id) {
                     visibleItem.OnItemEquip(item);
                     return;
@@ -102,9 +101,9 @@ namespace DevionGames.InventorySystem
                     SendMessage("RemoveModifiersFromSource", new object[] { property.Name, item }, SendMessageOptions.DontRequireReceiver);
                 }
             }
-            for (int i = 0; i < this.m_VisibleItems.Count; i++)
+            for (int i = 0; i < m_VisibleItems.Count; i++)
             {
-                VisibleItem visibleItem = this.m_VisibleItems[i];
+                VisibleItem visibleItem = m_VisibleItems[i];
                 if (visibleItem.item.Id == item.Id)
                 {
                     visibleItem.OnItemUnEquip(item);
@@ -115,7 +114,7 @@ namespace DevionGames.InventorySystem
 
         private void UpdateEquipment()
         {
-            EquipmentItem[] containerItems = this.m_EquipmentContainer.GetItems<EquipmentItem>();
+            EquipmentItem[] containerItems = m_EquipmentContainer.GetItems<EquipmentItem>();
             foreach (EquipmentItem item in containerItems)
             {
                 EquipItem(item);

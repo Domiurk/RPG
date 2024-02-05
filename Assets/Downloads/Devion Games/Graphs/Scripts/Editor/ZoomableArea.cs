@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames
 {
@@ -13,10 +11,10 @@ namespace DevionGames
         {
             GUI.EndGroup();
             Rect rect = ScaleSizeBy(area, 1f / zoom, new Vector2(area.xMin, area.yMin));
-            ZoomableArea.m_TabHeight = tabHeight;
+            m_TabHeight = tabHeight;
             rect.y = rect.y + 18f + tabHeight;
             GUI.BeginGroup(rect);
-            ZoomableArea.m_PrevGuiMatrix = GUI.matrix;
+            m_PrevGuiMatrix = GUI.matrix;
             Matrix4x4 matrix4x4 = Matrix4x4.TRS(new Vector2(rect.xMin, rect.yMin), Quaternion.identity, Vector3.one);
             Vector3 vector3 = Vector3.one;
             float single = zoom;
@@ -30,9 +28,9 @@ namespace DevionGames
 
         public static void End()
         {
-            GUI.matrix = ZoomableArea.m_PrevGuiMatrix;
+            GUI.matrix = m_PrevGuiMatrix;
             GUI.EndGroup();
-            GUI.BeginGroup(new Rect(0f, 18f + ZoomableArea.m_TabHeight, (float)Screen.width, (float)Screen.height));
+            GUI.BeginGroup(new Rect(0f, 18f + m_TabHeight, (float)Screen.width, (float)Screen.height));
         }
 
         private static Rect ScaleSizeBy(Rect rect, float scale, Vector2 pivotPoint)

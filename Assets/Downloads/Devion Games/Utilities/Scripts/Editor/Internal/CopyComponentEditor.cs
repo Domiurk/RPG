@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
@@ -12,10 +11,10 @@ namespace DevionGames
 		private GameObject m_Source;
 		private GameObject m_Destination;
 
-		[UnityEditor.MenuItem("Tools/Devion Games/Internal/Copy Components", false)]
+		[MenuItem("Tools/Devion Games/Internal/Copy Components", false)]
 		public static void ShowWindow()
 		{
-			CopyComponentEditor window = EditorWindow.GetWindow<CopyComponentEditor>("Copy Components");
+			CopyComponentEditor window = GetWindow<CopyComponentEditor>("Copy Components");
 			Vector2 size = new Vector2(300f, 80f);
 			window.minSize = size;
 			window.wantsMouseMove = true;
@@ -26,37 +25,37 @@ namespace DevionGames
 
         private void OnGUI()
         {
-			this.m_Source = EditorGUILayout.ObjectField("Source",this.m_Source, typeof(GameObject),true) as GameObject;
-			this.m_Destination= EditorGUILayout.ObjectField("Destination",this.m_Destination, typeof(GameObject), true) as GameObject;
-			if (this.m_Source == null || this.m_Destination == null)
+			m_Source = EditorGUILayout.ObjectField("Source",m_Source, typeof(GameObject),true) as GameObject;
+			m_Destination= EditorGUILayout.ObjectField("Destination",m_Destination, typeof(GameObject), true) as GameObject;
+			if (m_Source == null || m_Destination == null)
 				return;
 
-			if (this.m_ComponentMap == null)
+			if (m_ComponentMap == null)
 			{
-				this.m_ComponentMap = new Dictionary<Component, bool>();
-				Component[] components = this.m_Source.GetComponents<Component>().Where(x => x.hideFlags == HideFlags.None).ToArray();
+				m_ComponentMap = new Dictionary<Component, bool>();
+				Component[] components = m_Source.GetComponents<Component>().Where(x => x.hideFlags == HideFlags.None).ToArray();
 				for (int i = 0; i < components.Length; i++)
 				{
 					if (ComponentUtility.CopyComponent(components[i]))
 					{
-						this.m_ComponentMap.Add(components[i],true);
+						m_ComponentMap.Add(components[i],true);
 					}
 				}
 			}
-			this.m_ScrollPosition = EditorGUILayout.BeginScrollView(this.m_ScrollPosition);
+			m_ScrollPosition = EditorGUILayout.BeginScrollView(m_ScrollPosition);
 			GUILayout.Label("Components", EditorStyles.boldLabel);
-			for (int i = 0; i < this.m_ComponentMap.Count; i++) {
-				this.m_ComponentMap[this.m_ComponentMap.ElementAt(i).Key] = EditorGUILayout.Toggle(this.m_ComponentMap.ElementAt(i).Key.GetType().Name, this.m_ComponentMap.ElementAt(i).Value);
+			for (int i = 0; i < m_ComponentMap.Count; i++) {
+				m_ComponentMap[m_ComponentMap.ElementAt(i).Key] = EditorGUILayout.Toggle(m_ComponentMap.ElementAt(i).Key.GetType().Name, m_ComponentMap.ElementAt(i).Value);
 			}
 			EditorGUILayout.EndScrollView();
 
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button("Copy Components")) {
-				foreach(KeyValuePair<Component,bool> kvp in this.m_ComponentMap)
+				foreach(KeyValuePair<Component,bool> kvp in m_ComponentMap)
 				{
 					if (kvp.Value && ComponentUtility.CopyComponent(kvp.Key))
 					{
-						Component component = this.m_Destination.AddComponent(kvp.Key.GetType()) as Component;
+						Component component = m_Destination.AddComponent(kvp.Key.GetType()) as Component;
 						ComponentUtility.PasteComponentValues(component);
 					}
 				}

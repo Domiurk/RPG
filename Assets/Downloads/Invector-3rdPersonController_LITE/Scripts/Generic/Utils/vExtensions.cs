@@ -12,7 +12,7 @@ namespace Invector
                     angle += 360;
                 if (angle > 360)
                     angle -= 360;
-            } while (angle < -360 || angle > 360);
+            } while (angle is < -360 or > 360);
 
             return Mathf.Clamp(angle, min, max);
         }
@@ -21,12 +21,12 @@ namespace Invector
         {
             var clipPlanePoints = new ClipPlanePoints();
 
-            var transform = camera.transform;
-            var halfFOV = (camera.fieldOfView / 2) * Mathf.Deg2Rad;
-            var aspect = camera.aspect;
-            var distance = camera.nearClipPlane;
-            var height = distance * Mathf.Tan(halfFOV);
-            var width = height * aspect;
+            Transform transform = camera.transform;
+            float halfFOV = (camera.fieldOfView / 2) * Mathf.Deg2Rad;
+            float aspect = camera.aspect;
+            float distance = camera.nearClipPlane;
+            float height = distance * Mathf.Tan(halfFOV);
+            float width = height * aspect;
             height *= 1 + clipPlaneMargin;
             width *= 1 + clipPlaneMargin;
             clipPlanePoints.LowerRight = pos + transform.right * width;

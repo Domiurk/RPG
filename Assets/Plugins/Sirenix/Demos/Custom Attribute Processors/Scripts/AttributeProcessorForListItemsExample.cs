@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using System;
     using System.Collections;
     using System.Collections.Generic;

@@ -52,12 +52,12 @@ namespace Invector.vCharacterController
 
     public static class vAnimatorParameters
     {
-        public static int InputHorizontal = Animator.StringToHash("InputHorizontal");
-        public static int InputVertical = Animator.StringToHash("InputVertical");
-        public static int InputMagnitude = Animator.StringToHash("InputMagnitude");
-        public static int IsGrounded = Animator.StringToHash("IsGrounded");
-        public static int IsStrafing = Animator.StringToHash("IsStrafing");
-        public static int IsSprinting = Animator.StringToHash("IsSprinting");
-        public static int GroundDistance = Animator.StringToHash("GroundDistance");
+        public static readonly int InputHorizontal = Animator.StringToHash("InputHorizontal");
+        public static readonly int InputVertical = Animator.StringToHash("InputVertical");
+        public static readonly int InputMagnitude = Animator.StringToHash("InputMagnitude");
+        public static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
+        public static readonly int IsStrafing = Animator.StringToHash("IsStrafing");
+        public static readonly int IsSprinting = Animator.StringToHash("IsSprinting");
+        public static readonly int GroundDistance = Animator.StringToHash("GroundDistance");
     }
 }

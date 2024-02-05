@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEditorInternal;
 
@@ -16,13 +14,13 @@ namespace DevionGames.InventorySystem
         {
             base.OnEnable();
             if (target == null) return;
-            this.m_OverrideEquipPrefab = serializedObject.FindProperty("m_OverrideEquipPrefab");
+            m_OverrideEquipPrefab = serializedObject.FindProperty("m_OverrideEquipPrefab");
 
-            this.regionList = new ReorderableList(serializedObject, serializedObject.FindProperty("m_Region"), true, true, true, true);
-            this.regionList.drawHeaderCallback = (Rect rect) => {
+            regionList = new ReorderableList(serializedObject, serializedObject.FindProperty("m_Region"), true, true, true, true);
+            regionList.drawHeaderCallback = (Rect rect) => {
                 EditorGUI.LabelField(rect, "Equipment Region");
             };
-            this.regionList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            regionList.drawElementCallback = (Rect rect, int index, bool _, bool _) => {
                 SerializedProperty element = regionList.serializedProperty.GetArrayElementAtIndex(index);
                 rect.y += 2;
                 rect.height = EditorGUIUtility.singleLineHeight;
@@ -34,7 +32,7 @@ namespace DevionGames.InventorySystem
         private void DrawInspector() {
             GUILayout.Space(5f);
             GUILayout.Label("Equipment:", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(this.m_OverrideEquipPrefab);
+            EditorGUILayout.PropertyField(m_OverrideEquipPrefab);
             EditorGUILayout.HelpBox("The equipment region defines where the item should be equiped to. Use Left Hand and Right Hand for two-handed weapons.", MessageType.Info);
             regionList.DoLayoutList();
         }

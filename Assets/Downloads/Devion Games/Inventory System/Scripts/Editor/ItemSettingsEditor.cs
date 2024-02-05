@@ -1,21 +1,12 @@
-﻿using UnityEngine;
-using UnityEditor;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 
 namespace DevionGames.InventorySystem.Configuration{
-	[System.Serializable]
+	[Serializable]
 	public class ItemSettingsEditor : ScriptableObjectCollectionEditor<Settings>{
 
-        public override string ToolbarName
-        {
-            get
-            {
-                return "Settings";
-            }
-        }
+        public override string ToolbarName => "Settings";
 
         protected override bool CanAdd => false;
 

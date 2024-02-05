@@ -10,10 +10,10 @@ namespace DevionGames
 	public class TextToTextMeshPro : EditorWindow
 	{
 
-		[UnityEditor.MenuItem("Tools/Devion Games/Internal/Update to TextMeshPro", false)]
+		[MenuItem("Tools/Devion Games/Internal/Update to TextMeshPro", false)]
 		public static void ShowWindow()
 		{
-			TextToTextMeshPro window = EditorWindow.GetWindow<TextToTextMeshPro>("Update to TextMeshPro");
+			TextToTextMeshPro window = GetWindow<TextToTextMeshPro>("Update to TextMeshPro");
 			Vector2 size = new Vector2(300f, 80f);
 			window.minSize = size;
 			window.wantsMouseMove = true;
@@ -26,11 +26,11 @@ namespace DevionGames
 
         private void OnEnable()
         {
-			this.m_FontMap = new Dictionary<Font, TMP_FontAsset>();
-			this.m_Texts = GameObject.FindObjectsOfType<Text>();
-			for (int i = 0; i < this.m_Texts.Length; i++) {
-				if (!this.m_FontMap.ContainsKey(this.m_Texts[i].font))
-					this.m_FontMap.Add(this.m_Texts[i].font, null);
+			m_FontMap = new Dictionary<Font, TMP_FontAsset>();
+			m_Texts = FindObjectsOfType<Text>();
+			for (int i = 0; i < m_Texts.Length; i++) {
+				if (!m_FontMap.ContainsKey(m_Texts[i].font))
+					m_FontMap.Add(m_Texts[i].font, null);
 			}
         }
 
@@ -38,12 +38,12 @@ namespace DevionGames
         {
 			EditorGUILayout.LabelField("Font:", EditorStyles.boldLabel);
 			EditorGUILayout.HelpBox("Replace the Text Font with TextMeshPro FontAsset.", MessageType.Info);
-			foreach (Font key in this.m_FontMap.Keys.ToList()) {
+			foreach (Font key in m_FontMap.Keys.ToList()) {
 				EditorGUILayout.BeginHorizontal();
 				EditorGUI.BeginDisabledGroup(true);
 				EditorGUILayout.ObjectField(GUIContent.none, key, typeof(Font), false);
 				EditorGUI.EndDisabledGroup();
-				this.m_FontMap[key] = (TMP_FontAsset)EditorGUILayout.ObjectField(GUIContent.none, this.m_FontMap[key], typeof(TMP_FontAsset), false);
+				m_FontMap[key] = (TMP_FontAsset)EditorGUILayout.ObjectField(GUIContent.none, m_FontMap[key], typeof(TMP_FontAsset), false);
 				EditorGUILayout.EndHorizontal();
 			}
 			EditorGUILayout.LabelField("Effects:", EditorStyles.boldLabel);
@@ -51,8 +51,8 @@ namespace DevionGames
 			shadowRatio = EditorGUILayout.FloatField("Shadow Ratio", shadowRatio);
 
 			if (GUILayout.Button("Update to TextMeshPro")) {
-				for (int i = 0; i < this.m_Texts.Length; i++) {
-					UpdateToTextMeshPro(this.m_Texts[i]);
+				for (int i = 0; i < m_Texts.Length; i++) {
+					UpdateToTextMeshPro(m_Texts[i]);
 				}
 			}
 		}
@@ -60,52 +60,30 @@ namespace DevionGames
 		private void UpdateToTextMeshPro(Text component) {
 			bool enabled = component.enabled;
 			string text = component.text;
-			TMP_FontAsset font = this.m_FontMap[component.font];
-			TMPro.FontStyles fontStyles = FontStyles.Normal;
-			switch (component.fontStyle) {
-				case FontStyle.Bold:
-					fontStyles = FontStyles.Bold;
-					break;
-				case FontStyle.BoldAndItalic:
-					fontStyles = FontStyles.Bold | FontStyles.Italic;
-					break;
-				case FontStyle.Italic:
-					fontStyles = FontStyles.Italic;
-					break;
-			}
+			TMP_FontAsset font = m_FontMap[component.font];
+
+			FontStyles fontStyles = component.fontStyle switch{
+				FontStyle.Bold => FontStyles.Bold,
+				FontStyle.BoldAndItalic => FontStyles.Bold | FontStyles.Italic,
+				FontStyle.Italic => FontStyles.Italic,
+				_ => FontStyles.Normal
+			};
 			int fontSize = component.fontSize;
 			Color color = component.color;
 			bool richText = component.supportRichText;
-			TextAlignmentOptions alignment = TextAlignmentOptions.TopLeft;
-			switch (component.alignment) {
-				case TextAnchor.LowerCenter:
-					alignment = TextAlignmentOptions.Bottom;
-					break;	
-				case TextAnchor.LowerLeft:
-					alignment = TextAlignmentOptions.BottomLeft;
-					break;
-				case TextAnchor.LowerRight:
-					alignment = TextAlignmentOptions.BottomRight;
-					break;
-				case TextAnchor.MiddleCenter:
-					alignment = TextAlignmentOptions.Center;
-					break;
-				case TextAnchor.MiddleLeft:
-					alignment = TextAlignmentOptions.Left;
-					break;
-				case TextAnchor.MiddleRight:
-					alignment = TextAlignmentOptions.Right;
-					break;
-				case TextAnchor.UpperCenter:
-					alignment = TextAlignmentOptions.Top;
-					break;
-				case TextAnchor.UpperLeft:
-					alignment = TextAlignmentOptions.TopLeft;
-					break;
-				case TextAnchor.UpperRight:
-					alignment = TextAlignmentOptions.TopRight;
-					break;
-			}
+
+			TextAlignmentOptions alignment = component.alignment switch{
+				TextAnchor.LowerCenter => TextAlignmentOptions.Bottom,
+				TextAnchor.LowerLeft => TextAlignmentOptions.BottomLeft,
+				TextAnchor.LowerRight => TextAlignmentOptions.BottomRight,
+				TextAnchor.MiddleCenter => TextAlignmentOptions.Center,
+				TextAnchor.MiddleLeft => TextAlignmentOptions.Left,
+				TextAnchor.MiddleRight => TextAlignmentOptions.Right,
+				TextAnchor.UpperCenter => TextAlignmentOptions.Top,
+				TextAnchor.UpperLeft => TextAlignmentOptions.TopLeft,
+				TextAnchor.UpperRight => TextAlignmentOptions.TopRight,
+				_ => TextAlignmentOptions.TopLeft
+			};
 			bool wrap = component.horizontalOverflow == HorizontalWrapMode.Wrap ? true : false;
 			TextOverflowModes overflowModes = component.verticalOverflow == VerticalWrapMode.Overflow? TextOverflowModes.Overflow:TextOverflowModes.Truncate;
 			bool autoSize = component.resizeTextForBestFit;
@@ -120,7 +98,7 @@ namespace DevionGames
 			if (hasOutline) {
 				outlineThickness = ((Mathf.Abs(outline.effectDistance.x) +Mathf.Abs(outline.effectDistance.y))*0.5f)* outlineRatio;
 				outlineColor = outline.effectColor;
-				GameObject.DestroyImmediate(outline);
+				DestroyImmediate(outline);
 			}
 
 			Shadow shadow = component.GetComponent<Shadow>();
@@ -131,7 +109,7 @@ namespace DevionGames
 			if (hasShadow) {
 				offsetX = shadow.effectDistance.x * shadowRatio;
 				offsetY = shadow.effectDistance.y * shadowRatio;
-				GameObject.DestroyImmediate(shadow);
+				DestroyImmediate(shadow);
 			}
 
 			GameObject go = component.gameObject;

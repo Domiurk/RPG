@@ -1,180 +1,194 @@
-﻿using UnityEngine;
-using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevionGames
 {
-	[System.Serializable]
-	public class ObjectProperty : INameable
-	{
-		[SerializeField]
-		private string name= string.Empty;
+    [Serializable]
+    public class ObjectProperty : INameable
+    {
+        [SerializeField]
+        private string name = string.Empty;
 
-		public string Name {
-			get{ return this.name; }
-			set{ this.name = value; }
-		}
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
 
-		[SerializeField]
-		private int typeIndex;
+        [SerializeField]
+        private int typeIndex;
 
-		public Type SerializedType {
-			get {
-				return SupportedTypes [typeIndex];
-			}
-		}
+        public Type SerializedType => SupportedTypes[typeIndex];
 
-		
-		public string stringValue;
-		public int intValue;
+        public string stringValue;
+        public int intValue;
 
-		public float floatValue;
-		public Color colorValue;
-		public bool boolValue;
-		public UnityEngine.Object objectReferenceValue;
-		public Vector2 vector2Value;
-		public Vector3 vector3Value;
-		public bool show;
-		public Color color = Color.white;
+        public float floatValue;
+        public Color colorValue;
+        public bool boolValue;
+        public Object objectReferenceValue;
+        public Vector2 vector2Value;
+        public Vector3 vector3Value;
+        public bool show;
+        public Color color = Color.white;
 
-		public object GetValue ()
-		{
-			Type mType = SerializedType;
-			
-			if (mType == null) {
-				return null;			
-			} else if (mType == typeof(string)) {
-				return stringValue;		
-			} else if (mType == typeof(bool)) {
-				return boolValue;
-			} else if (mType == typeof(Color)) {
-				return colorValue;
-			} else if (mType == typeof(float)) {
-				return floatValue;
-			} else if (typeof(UnityEngine.Object).IsAssignableFrom (mType)) {
-				return objectReferenceValue;
-			} else if (mType == typeof(int)) {
-				return intValue;
-			} else if (mType == typeof(Vector2)) {
-				return vector2Value;
-			} else if (mType == typeof(Vector3)) {
-				return vector3Value;
-			} else {
-				return null;
-			}
-		}
+        public object GetValue()
+        {
+            Type mType = SerializedType;
 
-		public void SetValue (object value)
-		{
-			if (value is string)
-			{
-				typeIndex = 0;
-				stringValue = (string)value;
-			}
-			else if (value is bool)
-			{
-				typeIndex = 1;
-				boolValue = (bool)value;
-			}
-			else if (value is Color)
-			{
-				typeIndex = 2;
-				colorValue = (Color)value;
-			}
-			else if (value is float || value is double)
-			{
-				typeIndex = 3;
-				floatValue = System.Convert.ToSingle(value);
-			}
-			else if (typeof(UnityEngine.Object).IsAssignableFrom(value.GetType()))
-			{
-				typeIndex = 4;
-				objectReferenceValue = (UnityEngine.Object)value;
-			}
-			else if (value is int
-					 || value is uint
-					 || value is long
-					 || value is sbyte
-					 || value is byte
-					 || value is short
-					 || value is ushort
-					 || value is ulong)
-			{
-				typeIndex = 5;
-				intValue = System.Convert.ToInt32(value);
-			}
-			else if (value is Vector2)
-			{
-				typeIndex = 6;
-				vector2Value = (Vector2)value;
-			}
-			else if (value is Vector3)
-			{
-				typeIndex = 7;
-				vector3Value = (Vector3)value;
-			}
-			else {
-				Debug.LogWarning("Type is not supported "+value);
-			}
-		}
+            if(mType == null){
+                return null;
+            }
 
-		public static string GetPropertyName (Type mType)
-		{
-			if (mType == typeof(string)) {
-				return "stringValue";		
-			} else if (mType == typeof(bool)) {
-				return "boolValue";
-			} else if (mType == typeof(Color)) {
-				return "colorValue";
-			} else if (mType == typeof(float)) {
-				return "floatValue";
-			} else if (typeof(UnityEngine.Object).IsAssignableFrom (mType)) {
-				return "objectReferenceValue";
-			} else if (mType == typeof(int)) {
-				return "intValue";
-			} else if (mType == typeof(Vector2)) {
-				return "vector2Value";
-			} else if (mType == typeof(Vector3)) {
-				return "vector3Value";
-			} 
-			return string.Empty;
-		}
+            if(mType == typeof(string)){
+                return stringValue;
+            }
 
-		public string ToString (string format)
-		{
-			return SerializedType == typeof(float) ? floatValue.ToString (format) : GetValue ().ToString ();
-		}
+            if(mType == typeof(bool)){
+                return boolValue;
+            }
 
-		public static Type[] SupportedTypes {
-			get {
-				return new Type[8] {
-					typeof(string),
-					typeof(bool),
-					typeof(Color),
-					typeof(float),
-					typeof(UnityEngine.Object),
-					typeof(int),
-					typeof(Vector2),
-					typeof(Vector3),
-				};
-			}
-		}
+            if(mType == typeof(Color)){
+                return colorValue;
+            }
 
-		public static string[] DisplayNames {
-			get {
-				return new string[8] {
-					"String",
-					"Bool",
-					"Color",
-					"Float",
-					"Object",
-					"Int",
-					"Vector2",
-					"Vector3",
-				};
-			}
-		}
-	}
+            if(mType == typeof(float)){
+                return floatValue;
+            }
+
+            if(typeof(Object).IsAssignableFrom(mType)){
+                return objectReferenceValue;
+            }
+
+            if(mType == typeof(int)){
+                return intValue;
+            }
+
+            if(mType == typeof(Vector2)){
+                return vector2Value;
+            }
+
+            if(mType == typeof(Vector3)){
+                return vector3Value;
+            }
+
+            return null;
+        }
+
+        public void SetValue(object value)
+        {
+            switch(value){
+                case string s:
+                    typeIndex = 0;
+                    stringValue = s;
+                    break;
+                case bool b:
+                    typeIndex = 1;
+                    boolValue = b;
+                    break;
+                case Color color1:
+                    typeIndex = 2;
+                    colorValue = color1;
+                    break;
+                case float or double:
+                    typeIndex = 3;
+                    floatValue = Convert.ToSingle(value);
+                    break;
+                case Object obj:
+                    typeIndex = 4;
+                    objectReferenceValue = obj;
+                    break;
+                case int or uint or long or sbyte or byte or short or ushort or ulong:
+                    typeIndex = 5;
+                    intValue = Convert.ToInt32(value);
+                    break;
+                case Vector2 vector2:
+                    typeIndex = 6;
+                    vector2Value = vector2;
+                    break;
+                case Vector3 vector3:
+                    typeIndex = 7;
+                    vector3Value = vector3;
+                    break;
+                default:
+                    Debug.LogWarning("Type is not supported " + value);
+                    break;
+            }
+        }
+
+        public static string GetPropertyName(Type mType)
+        {
+            if(mType == typeof(string)){
+                return "stringValue";
+            }
+
+            if(mType == typeof(bool)){
+                return "boolValue";
+            }
+
+            if(mType == typeof(Color)){
+                return "colorValue";
+            }
+
+            if(mType == typeof(float)){
+                return "floatValue";
+            }
+
+            if(typeof(Object).IsAssignableFrom(mType)){
+                return "objectReferenceValue";
+            }
+
+            if(mType == typeof(int)){
+                return "intValue";
+            }
+
+            if(mType == typeof(Vector2)){
+                return "vector2Value";
+            }
+
+            if(mType == typeof(Vector3)){
+                return "vector3Value";
+            }
+
+            return string.Empty;
+        }
+
+        public string ToString(string format)
+        {
+            return SerializedType == typeof(float) ? floatValue.ToString(format) : GetValue().ToString();
+        }
+
+        public static Type[] SupportedTypes
+        {
+            get{
+                return new[]{
+                    typeof(string),
+                    typeof(bool),
+                    typeof(Color),
+                    typeof(float),
+                    typeof(Object),
+                    typeof(int),
+                    typeof(Vector2),
+                    typeof(Vector3),
+                };
+            }
+        }
+
+        public static string[] DisplayNames
+        {
+            get{
+                return new[]{
+                    "String",
+                    "Bool",
+                    "Color",
+                    "Float",
+                    "Object",
+                    "Int",
+                    "Vector2",
+                    "Vector3",
+                };
+            }
+        }
+    }
 }

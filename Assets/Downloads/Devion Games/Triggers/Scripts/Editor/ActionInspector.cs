@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,17 +11,17 @@ namespace DevionGames
         protected SerializedProperty m_Actions;
         protected virtual void OnEnable() {
             if (target == null) return;
-            this.m_Script = serializedObject.FindProperty("m_Script");
-            this.m_Actions = serializedObject.FindProperty("m_Actions");
+            m_Script = serializedObject.FindProperty("m_Script");
+            m_Actions = serializedObject.FindProperty("m_Actions");
         }
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.m_Script);
+            EditorGUILayout.PropertyField(m_Script);
             EditorGUI.EndDisabledGroup();
 
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject, this.m_Script.propertyPath, this.m_Actions.propertyPath);
+            DrawPropertiesExcluding(serializedObject, m_Script.propertyPath, m_Actions.propertyPath);
             GUILayout.Space(5f);
             ActionGUI();
             serializedObject.ApplyModifiedProperties();
@@ -31,14 +30,14 @@ namespace DevionGames
         protected void ActionGUI()
         {
             EditorGUIUtility.wideMode = true;
-            for (int i = 0; i < this.m_Actions.arraySize; i++)
+            for (int i = 0; i < m_Actions.arraySize; i++)
             {
-                SerializedProperty action = this.m_Actions.GetArrayElementAtIndex(i);
+                SerializedProperty action = m_Actions.GetArrayElementAtIndex(i);
 
                 object value = action.GetValue();
                 EditorGUI.BeginChangeCheck();
                 Undo.RecordObject(target, "Action");
-                if (EditorTools.Titlebar(value, ElementContextMenu(this.m_Actions.GetValue() as IList, i)))
+                if (EditorTools.Titlebar(value, ElementContextMenu(m_Actions.GetValue() as IList, i)))
                 {
                     EditorGUI.indentLevel += 1;
                     EditorGUI.BeginDisabledGroup(true);
@@ -55,7 +54,7 @@ namespace DevionGames
                     }
                     else
                     {
-                        foreach (var child in action.EnumerateChildProperties())
+                        foreach (SerializedProperty child in action.EnumerateChildProperties())
                         {
                             EditorGUILayout.PropertyField(
                                 child,
@@ -77,11 +76,11 @@ namespace DevionGames
 
         protected void AddAction(Type type)
         {
-            object value = System.Activator.CreateInstance(type);
-            this.m_Actions.serializedObject.Update();
-            this.m_Actions.arraySize++;
-            this.m_Actions.GetArrayElementAtIndex(this.m_Actions.arraySize - 1).managedReferenceValue = value;
-            this.m_Actions.serializedObject.ApplyModifiedProperties();
+            object value = Activator.CreateInstance(type);
+            m_Actions.serializedObject.Update();
+            m_Actions.arraySize++;
+            m_Actions.GetArrayElementAtIndex(m_Actions.arraySize - 1).managedReferenceValue = value;
+            m_Actions.serializedObject.ApplyModifiedProperties();
         }
 
         protected void CreateActionScript(string scriptName)
@@ -113,7 +112,7 @@ namespace DevionGames
             Type elementType = list[index].GetType();
             menu.AddItem(new GUIContent("Reset"), false, delegate {
 
-                object value = System.Activator.CreateInstance(list[index].GetType());
+                object value = Activator.CreateInstance(list[index].GetType());
                 list[index] = value;
                 EditorUtility.SetDirty(target);
             });

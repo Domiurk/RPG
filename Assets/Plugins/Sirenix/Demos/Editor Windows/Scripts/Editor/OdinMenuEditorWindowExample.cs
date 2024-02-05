@@ -1,17 +1,13 @@
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using System.Linq;
     using UnityEngine;
     using Sirenix.Utilities.Editor;
-    using Sirenix.Serialization;
+    using Serialization;
     using UnityEditor;
-    using Sirenix.Utilities;
-
-    // 
-    // Be sure to check out OdinMenuStyleExample.cs as well. It shows you various ways to customize the look and behaviour of OdinMenuTrees.
-    // 
+    using Utilities;
 
     public class OdinMenuEditorWindowExample : OdinMenuEditorWindow
     {
@@ -23,18 +19,18 @@ namespace Sirenix.OdinInspector.Demos
         }
 
         [SerializeField]
-        private SomeData someData = new SomeData(); // Take a look at SomeData.cs to see how serialization works in Editor Windows.
+        private SomeData someData = new();
 
         protected override OdinMenuTree BuildMenuTree()
         {
             OdinMenuTree tree = new OdinMenuTree(supportsMultiSelect: true)
             {
-                { "Home",                           this,                           EditorIcons.House                       }, // Draws the this.someData field in this case.
+                { "Home",                           this,                           EditorIcons.House                       },
                 { "Odin Settings",                  null,                           SdfIconType.GearFill                    },
                 { "Odin Settings/Color Palettes",   ColorPaletteManager.Instance,   SdfIconType.PaletteFill                 },
                 { "Odin Settings/AOT Generation",   AOTGenerationConfig.Instance,   EditorIcons.SmartPhone                  },
                 { "Player Settings",                Resources.FindObjectsOfTypeAll<PlayerSettings>().FirstOrDefault()       },
-                { "Some Class",                     this.someData                                                           }
+                { "Some Class",                     someData                                                           }
             };
 
             tree.AddAllAssetsAtPath("Odin Settings/More Odin Settings", "Plugins/Sirenix", typeof(ScriptableObject), true)
@@ -48,10 +44,6 @@ namespace Sirenix.OdinInspector.Demos
             tree.Add("Menu/Items/Are/Created", new GUIContent("And can be overridden"));
 
             tree.SortMenuItemsByName();
-
-            // As you can see, Odin provides a few ways to quickly add editors / objects to your menu tree.
-            // The API also gives you full control over the selection, etc..
-            // Make sure to check out the API Documentation for OdinMenuEditorWindow, OdinMenuTree and OdinMenuItem for more information on what you can do!
 
             return tree;
         }

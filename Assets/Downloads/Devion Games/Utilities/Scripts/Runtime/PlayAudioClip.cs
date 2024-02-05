@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -8,25 +7,26 @@ namespace DevionGames
     public class PlayAudioClip : MonoBehaviour
     {
         [SerializeField]
-        private AudioClip m_AudioClip=null;
+        private AudioClip m_AudioClip;
         [SerializeField]
-        private AudioMixerGroup m_AudioMixerGroup = null;
+        private AudioMixerGroup m_AudioMixerGroup;
         [SerializeField]
         private float m_Volume = 1f;
         [SerializeField]
-        private float m_Delay = 0f;
-
+        private float m_Delay;
 
         private IEnumerator Start()
         {
-            yield return new WaitForSeconds(this.m_Delay);
+            yield return new WaitForSeconds(m_Delay);
             AudioSource audioSource = GetComponent<AudioSource>();
-            if (audioSource == null) {
+
+            if(audioSource == null){
                 audioSource = gameObject.AddComponent<AudioSource>();
             }
-            audioSource.outputAudioMixerGroup = this.m_AudioMixerGroup;
-            audioSource.volume = this.m_Volume;
-            audioSource.PlayOneShot(this.m_AudioClip);
+
+            audioSource.outputAudioMixerGroup = m_AudioMixerGroup;
+            audioSource.volume = m_Volume;
+            audioSource.PlayOneShot(m_AudioClip);
         }
     }
 }

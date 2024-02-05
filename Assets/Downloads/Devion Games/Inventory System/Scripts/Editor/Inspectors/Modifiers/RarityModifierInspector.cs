@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -15,22 +13,22 @@ namespace DevionGames.InventorySystem
 
         protected virtual void OnEnable()
         {
-            this.m_Rarities = serializedObject.FindProperty("m_Rarities");
-            this.m_RarityList = new ReorderableList(serializedObject, this.m_Rarities, true, true, true, true);
-            this.m_RarityList.drawHeaderCallback = (Rect rect) =>
+            m_Rarities = serializedObject.FindProperty("m_Rarities");
+            m_RarityList = new ReorderableList(serializedObject, m_Rarities, true, true, true, true);
+            m_RarityList.drawHeaderCallback = (Rect rect) =>
             {
                 EditorGUI.LabelField(rect, "Possible Rarities");
             };
-            this.m_RarityList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            m_RarityList.drawElementCallback = (Rect rect, int index, bool _, bool _) =>
             {
                 float verticalOffset = (rect.height - EditorGUIUtility.singleLineHeight)*0.5f;
                 rect.height = EditorGUIUtility.singleLineHeight;
                 rect.y =rect.y+verticalOffset;
-                SerializedProperty element = this.m_RarityList.serializedProperty.GetArrayElementAtIndex(index);
+                SerializedProperty element = m_RarityList.serializedProperty.GetArrayElementAtIndex(index);
                 EditorGUI.PropertyField(rect, element, GUIContent.none, true);
             };
 
-            this.m_RarityList.onRemoveCallback = (ReorderableList list) =>
+            m_RarityList.onRemoveCallback = (ReorderableList list) =>
             {
                 list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue = null;
                 ReorderableList.defaultBehaviours.DoRemoveButton(list);
@@ -40,7 +38,7 @@ namespace DevionGames.InventorySystem
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            this.m_RarityList.DoLayoutList();
+            m_RarityList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
         }
 

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace DevionGames.InventorySystem{
 	[System.Serializable]
@@ -7,31 +6,27 @@ namespace DevionGames.InventorySystem{
 		[SerializeField]
 		private new string name="";
 		public string Name{
-			get{return this.name;}
-			set{this.name = value;}
+			get => name;
+			set => name = value;
 		}
 
 		[SerializeField]
-		private bool m_UseAsNamePrefix = false;
-		public bool UseAsNamePrefix {
-			get { return this.m_UseAsNamePrefix; }
-		}
-
+		private bool m_UseAsNamePrefix;
+		public bool UseAsNamePrefix => m_UseAsNamePrefix;
 
 		[SerializeField]
 		private Color color=Color.white;
 		public Color Color{
-			get{return this.color;}
-			set{this.color = value;}
+			get => color;
+			set => color = value;
 		}
 
-		//Percent to get this rarity
 		[SerializeField]
 		private int chance = 100;
 		public int Chance
 		{
-			get { return this.chance; }
-			set { this.chance = value; }
+			get => chance;
+			set => chance = value;
 		}
 
 		[InspectorLabel("Property Multiplier")]
@@ -39,8 +34,8 @@ namespace DevionGames.InventorySystem{
 		private float multiplier = 1.0f;
 		public float Multiplier
 		{
-			get { return this.multiplier; }
-			set { this.multiplier = value; }
+			get => multiplier;
+			set => multiplier = value;
 		}
 
 		[InspectorLabel("Price Multiplier")]
@@ -48,8 +43,8 @@ namespace DevionGames.InventorySystem{
 		private float m_PriceMultiplier = 1.0f;
 		public float PriceMultiplier
 		{
-			get { return this.m_PriceMultiplier; }
-			set { this.m_PriceMultiplier = value; }
+			get => m_PriceMultiplier;
+			set => m_PriceMultiplier = value;
 		}
 	}
 }

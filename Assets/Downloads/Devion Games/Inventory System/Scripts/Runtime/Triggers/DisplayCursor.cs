@@ -1,6 +1,4 @@
 ﻿using DevionGames.UIWidgets;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,13 +6,10 @@ namespace DevionGames.InventorySystem
 {
     public class DisplayCursor : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        //Cursor image to show
         [SerializeField]
         protected Sprite m_Sprite;
-        //Size of the imgae
         [SerializeField]
-        protected Vector2 m_Size = new Vector2(32f, 32f);
-        //Cursor animation, leave empty for none, 
+        protected Vector2 m_Size = new(32f, 32f);
         [SerializeField]
         protected string m_AnimatorState = "Cursor";
 
@@ -22,7 +17,7 @@ namespace DevionGames.InventorySystem
         {
             if (state)
             {
-                UICursor.Set(this.m_Sprite, this.m_Size, false, this.m_AnimatorState);
+                UICursor.Set(m_Sprite, m_Size, false, m_AnimatorState);
             }
             else
             {

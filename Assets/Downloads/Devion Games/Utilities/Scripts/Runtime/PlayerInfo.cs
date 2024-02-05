@@ -1,95 +1,68 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DevionGames
 {
-    public class PlayerInfo 
+    public class PlayerInfo
     {
-        private string m_Tag = "Player";
+        private readonly string m_Tag;
 
-        public PlayerInfo(string tag) {
-            this.m_Tag = tag;
+        public PlayerInfo(string tag)
+        {
+            m_Tag = tag;
         }
 
-
         private GameObject m_GameObject;
-        public GameObject gameObject {
-            get {
-				if (this.m_GameObject == null)
-				{
-					GameObject[] players = GameObject.FindGameObjectsWithTag(this.m_Tag);
-					for (int i = 0; i < players.Length; i++)
-					{
-						GameObject player = players[i];
+        public GameObject gameObject
+        {
+            get{
+                if(m_GameObject == null){
+                    GameObject[] players = GameObject.FindGameObjectsWithTag(m_Tag);
 
-						this.m_GameObject = player;
-					}
-				}
-				return this.m_GameObject;
-			}
+                    foreach(GameObject player in players)
+                        m_GameObject = player;
+                }
+
+                return m_GameObject;
+            }
         }
 
         private Transform m_Transform;
-        public Transform transform
-        {
-            get
-            {
-                if (gameObject != null)
-                {
-                    return this.gameObject.transform;
-                }
-                return null;
-            }
-        }
+        public Transform transform => gameObject != null ? gameObject.transform : null;
 
         private Collider m_Collider;
         public Collider collider
         {
-            get
-            {
-                if (this.m_Collider == null && this.gameObject != null)
-                {
-                    this.m_Collider = this.gameObject.GetComponent<Collider>();
-                }
-                return this.m_Collider;
+            get{
+                if(m_Collider == null && gameObject != null)
+                    m_Collider = gameObject.GetComponent<Collider>();
+
+                return m_Collider;
             }
         }
 
         private Collider2D m_Collider2D;
         public Collider2D collider2D
         {
-            get
-            {
-                if (this.m_Collider2D == null && this.gameObject != null)
-                {
-                    this.m_Collider2D = this.gameObject.GetComponent<Collider2D>();
-                }
-                return this.m_Collider2D;
+            get{
+                if(m_Collider2D == null && gameObject != null)
+                    m_Collider2D = gameObject.GetComponent<Collider2D>();
+
+                return m_Collider2D;
             }
         }
 
         private Animator m_Animator;
         public Animator animator
         {
-            get
-            {
-                if (this.m_Animator == null && this.gameObject != null)
-                {
-                    this.m_Animator = this.gameObject.GetComponentInChildren<Animator>();
+            get{
+                if(m_Animator == null && gameObject != null){
+                    m_Animator = gameObject.GetComponentInChildren<Animator>();
                 }
-                return this.m_Animator;
+
+                return m_Animator;
             }
         }
 
-        public Bounds bounds
-        {
-            get
-            {
-                return UnityTools.GetBounds(gameObject);
-            }
-        }
-
-      
+        public Bounds bounds => UnityTools.GetBounds(gameObject);
     }
 }

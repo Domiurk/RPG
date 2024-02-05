@@ -13,7 +13,7 @@ public class vThirdPersonCamera : MonoBehaviour
     [Tooltip("Debug purposes, lock the camera behind the character for better align the states")]
     public bool lockCamera;
 
-    public float rightOffset = 0f;
+    public float rightOffset;
     public float defaultDistance = 2.5f;
     public float height = 1.4f;
     public float smoothFollow = 10f;
@@ -44,17 +44,17 @@ public class vThirdPersonCamera : MonoBehaviour
     private Vector3 desired_cPos;
     private Camera _camera;
     private float distance = 5f;
-    private float mouseY = 0f;
-    private float mouseX = 0f;
+    private float mouseY;
+    private float mouseX;
     private float currentHeight;
     private float cullingDistance;
-    private float checkHeightRadius = 0.4f;
-    private float clipPlaneMargin = 0f;
-    private float forward = -1f;
-    private float xMinLimit = -360f;
-    private float xMaxLimit = 360f;
+    private readonly float checkHeightRadius = 0.4f;
+    private readonly float clipPlaneMargin = 0f;
+    private readonly float forward = -1f;
+    private readonly float xMinLimit = -360f;
+    private readonly float xMaxLimit = 360f;
     private float cullingHeight = 0.2f;
-    private float cullingMinDist = 0.1f;
+    private readonly float cullingMinDist = 0.1f;
 
     #endregion
 
@@ -116,7 +116,7 @@ public class vThirdPersonCamera : MonoBehaviour
     /// <returns></returns>
     public Ray ScreenPointToRay(Vector3 Point)
     {
-        return this.GetComponent<Camera>().ScreenPointToRay(Point);
+        return GetComponent<Camera>().ScreenPointToRay(Point);
     }
 
     /// <summary>
@@ -126,7 +126,6 @@ public class vThirdPersonCamera : MonoBehaviour
     /// <param name="y"></param>
     public void RotateCamera(float x, float y)
     {
-        // free rotation 
         mouseX += x * xMouseSensitivity;
         mouseY -= y * yMouseSensitivity;
 
@@ -154,7 +153,7 @@ public class vThirdPersonCamera : MonoBehaviour
 
         distance = Mathf.Lerp(distance, defaultDistance, smoothFollow * Time.deltaTime);
         cullingDistance = Mathf.Lerp(cullingDistance, distance, Time.deltaTime);
-        var camDir = (forward * targetLookAt.forward) + (rightOffset * targetLookAt.right);
+        Vector3 camDir = (forward * targetLookAt.forward) + (rightOffset * targetLookAt.right);
 
         camDir = camDir.normalized;
 
@@ -162,27 +161,24 @@ public class vThirdPersonCamera : MonoBehaviour
         currentTargetPos = targetPos;
         desired_cPos = targetPos + new Vector3(0, height, 0);
         current_cPos = currentTargetPos + new Vector3(0, currentHeight, 0);
-        RaycastHit hitInfo;
 
         ClipPlanePoints planePoints = _camera.NearClipPlanePoints(current_cPos + (camDir * (distance)), clipPlaneMargin);
         ClipPlanePoints oldPoints = _camera.NearClipPlanePoints(desired_cPos + (camDir * distance), clipPlaneMargin);
 
-        //Check if Height is not blocked 
-        if (Physics.SphereCast(targetPos, checkHeightRadius, Vector3.up, out hitInfo, cullingHeight + 0.2f, cullingLayer))
+        if (Physics.SphereCast(targetPos, checkHeightRadius, Vector3.up, out RaycastHit hitInfo, cullingHeight + 0.2f, cullingLayer))
         {
-            var t = hitInfo.distance - 0.2f;
+            float t = hitInfo.distance - 0.2f;
             t -= height;
             t /= (cullingHeight - height);
             cullingHeight = Mathf.Lerp(height, cullingHeight, Mathf.Clamp(t, 0.0f, 1.0f));
         }
 
-        //Check if desired target position is not blocked       
         if (CullingRayCast(desired_cPos, oldPoints, out hitInfo, distance + 0.2f, cullingLayer, Color.blue))
         {
             distance = hitInfo.distance - 0.2f;
             if (distance < defaultDistance)
             {
-                var t = hitInfo.distance;
+                float t = hitInfo.distance;
                 t -= cullingMinDist;
                 t /= cullingMinDist;
                 currentHeight = Mathf.Lerp(cullingHeight, height, Mathf.Clamp(t, 0.0f, 1.0f));
@@ -193,16 +189,16 @@ public class vThirdPersonCamera : MonoBehaviour
         {
             currentHeight = height;
         }
-        //Check if target position with culling height applied is not blocked
+
         if (CullingRayCast(current_cPos, planePoints, out hitInfo, distance, cullingLayer, Color.cyan)) distance = Mathf.Clamp(cullingDistance, 0.0f, defaultDistance);
-        var lookPoint = current_cPos + targetLookAt.forward * 2f;
+        Vector3 lookPoint = current_cPos + targetLookAt.forward * 2f;
         lookPoint += (targetLookAt.right * Vector3.Dot(camDir * (distance), targetLookAt.right));
         targetLookAt.position = current_cPos;
 
         Quaternion newRot = Quaternion.Euler(mouseY, mouseX, 0);
         targetLookAt.rotation = Quaternion.Slerp(targetLookAt.rotation, newRot, smoothCameraRotation * Time.deltaTime);
         transform.position = current_cPos + (camDir * (distance));
-        var rotation = Quaternion.LookRotation((lookPoint) - transform.position);
+        Quaternion rotation = Quaternion.LookRotation((lookPoint) - transform.position);
 
         transform.rotation = rotation;
         movementSpeed = Vector2.zero;

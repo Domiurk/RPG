@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DevionGames.UIWidgets;
-using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Playables;
+﻿using UnityEngine;
 
 namespace DevionGames.InventorySystem
 {
@@ -15,7 +10,7 @@ namespace DevionGames.InventorySystem
         [SerializeField]
         private int m_ReloadClipSize = 1;
         [SerializeField]
-        private bool m_ResetClipSize = false;
+        private bool m_ResetClipSize;
 
         [Header("Projectile:")]
 
@@ -36,7 +31,7 @@ namespace DevionGames.InventorySystem
         protected string m_ProjectileItemWindow = "Inventory";
 
         protected GameObject m_CurrentProjectile;
-        private int m_CurrentClipSize = 0;
+        private int m_CurrentClipSize;
         private bool m_IsReloading;
         private ItemContainer[] m_ItemContainers;
 
@@ -45,25 +40,25 @@ namespace DevionGames.InventorySystem
             base.OnItemActivated(activated);
             if (activated)
             {
-                this.m_IsReloading = false;
+                m_IsReloading = false;
                
-                if (this.m_CurrentClipSize > 0) {
+                if (m_CurrentClipSize > 0) {
                     CreateCurrentProjectile();
                 }
             }
             else {
-                if (this.m_ResetClipSize)
+                if (m_ResetClipSize)
                 {
-                    if (this.m_CurrentClipSize > 0)
+                    if (m_CurrentClipSize > 0)
                     {
                         Item item = Instantiate(m_ProjectileItem);
-                        item.Stack = this.m_CurrentClipSize;
-                        ItemContainer.AddItem(this.m_ProjectileItemWindow, item);
+                        item.Stack = m_CurrentClipSize;
+                        ItemContainer.AddItem(m_ProjectileItemWindow, item);
                     }
-                    this.m_CurrentClipSize = 0;
+                    m_CurrentClipSize = 0;
                 }
-                if (this.m_CurrentProjectile != null) {
-                    Destroy(this.m_CurrentProjectile);
+                if (m_CurrentProjectile != null) {
+                    Destroy(m_CurrentProjectile);
                 }
             }
         }
@@ -78,23 +73,23 @@ namespace DevionGames.InventorySystem
 
         protected override void Use()
         {
-            if (this.m_CurrentClipSize == 0)
+            if (m_CurrentClipSize == 0)
             {
                 TryReload();
             }else {
                 base.Use();
-                if (this.m_ProjectileVisibility == ProjectileVisibility.OnFire || this.m_CurrentProjectile == null)
+                if (m_ProjectileVisibility == ProjectileVisibility.OnFire || m_CurrentProjectile == null)
                 {
                     CreateCurrentProjectile();
                 }
 
-                this.m_CurrentProjectile.transform.position = this.m_FirePoint.transform.position;
-                this.m_CurrentProjectile.transform.parent = null;
-                Rigidbody projectileRigidbody = this.m_CurrentProjectile.GetComponent<Rigidbody>();
-                this.m_CurrentProjectile.GetComponent<Projectile>().enabled = true;
+                m_CurrentProjectile.transform.position = m_FirePoint.transform.position;
+                m_CurrentProjectile.transform.parent = null;
+                Rigidbody projectileRigidbody = m_CurrentProjectile.GetComponent<Rigidbody>();
+                m_CurrentProjectile.GetComponent<Projectile>().enabled = true;
                 projectileRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                 RaycastHit hit;
-                if (Physics.Raycast(this.m_CameraTransform.position, this.m_CameraTransform.forward, out hit, float.PositiveInfinity))
+                if (Physics.Raycast(m_CameraTransform.position, m_CameraTransform.forward, out hit, float.PositiveInfinity))
                 {
                     if(Vector3.Distance(m_CurrentProjectile.transform.position,hit.point)>1f)
                         projectileRigidbody.transform.LookAt(hit.point);
@@ -102,62 +97,62 @@ namespace DevionGames.InventorySystem
                 }
                 else
                 {
-                    projectileRigidbody.transform.forward = this.m_CameraTransform.forward;
+                    projectileRigidbody.transform.forward = m_CameraTransform.forward;
                 }
 
-                projectileRigidbody.velocity = projectileRigidbody.transform.forward * this.m_ProjectileSpeed;
+                projectileRigidbody.velocity = projectileRigidbody.transform.forward * m_ProjectileSpeed;
               
-                this.m_CurrentProjectile = null;
+                m_CurrentProjectile = null;
             }
         }
 
 
         protected override bool CanUse()
         {
-            return this.m_CurrentClipSize > 0;
+            return m_CurrentClipSize > 0;
         }
 
         private bool TryReload() {
-            if (!this.m_IsReloading && this.m_CurrentClipSize == 0 ) {
-                if (ItemContainer.HasItem(this.m_ProjectileItemWindow, this.m_ProjectileItem, this.m_ReloadClipSize))
+            if (!m_IsReloading && m_CurrentClipSize == 0 ) {
+                if (ItemContainer.HasItem(m_ProjectileItemWindow, m_ProjectileItem, m_ReloadClipSize))
                 {
-                    ItemContainer.RemoveItem(this.m_ProjectileItemWindow, m_ProjectileItem, this.m_ReloadClipSize);
-                    this.m_IsReloading = true;
-                    this.m_CharacterAnimator.CrossFadeInFixedTime(this.m_ReloadState, 0.2f);
-                    if (this.m_ProjectileVisibility == ProjectileVisibility.Always)
+                    ItemContainer.RemoveItem(m_ProjectileItemWindow, m_ProjectileItem, m_ReloadClipSize);
+                    m_IsReloading = true;
+                    m_CharacterAnimator.CrossFadeInFixedTime(m_ReloadState, 0.2f);
+                    if (m_ProjectileVisibility == ProjectileVisibility.Always)
                     {
                         CreateCurrentProjectile();
                     }
                     return true;
                 }
-                if(Input.GetButtonDown(this.m_ActivationInputName))
-                    InventoryManager.Notifications.missingItem.Show(this.m_ProjectileItem.Name);
+                if(Input.GetButtonDown(m_ActivationInputName))
+                    InventoryManager.Notifications.missingItem.Show(m_ProjectileItem.Name);
             }
             return false;
         }
 
         protected override void OnStopUse()
         {
-            this.m_CurrentClipSize -= 1;     
+            m_CurrentClipSize -= 1;     
         }
 
         private void OnEndReload()
         {
-            if (this.m_IsReloading)
+            if (m_IsReloading)
             {
-                this.m_IsReloading = false;
-                this.m_CurrentClipSize = this.m_ReloadClipSize;
-                this.m_CharacterAnimator.CrossFadeInFixedTime(this.m_IdleState, 0.2f);
-                this.m_CurrentProjectile.transform.SetParent(this.m_FirePoint, false);
+                m_IsReloading = false;
+                m_CurrentClipSize = m_ReloadClipSize;
+                m_CharacterAnimator.CrossFadeInFixedTime(m_IdleState, 0.2f);
+                m_CurrentProjectile.transform.SetParent(m_FirePoint, false);
             }
         }
 
         protected virtual void CreateCurrentProjectile()
         {
-            this.m_CurrentProjectile = Instantiate(this.m_Projectile);
-            IgnoreCollision(this.m_CurrentProjectile);
-            this.m_CurrentProjectile.transform.SetParent(this.m_ReloadPoint, false);
-            this.m_CurrentProjectile.SetActive(true);
+            m_CurrentProjectile = Instantiate(m_Projectile);
+            IgnoreCollision(m_CurrentProjectile);
+            m_CurrentProjectile.transform.SetParent(m_ReloadPoint, false);
+            m_CurrentProjectile.SetActive(true);
         }
 
         public enum ProjectileVisibility
